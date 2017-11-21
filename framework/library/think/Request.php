@@ -16,108 +16,227 @@ use think\exception\HttpResponseException;
 class Request
 {
     /**
-     * @var object 对象实例
+     * 对象实例
+     * @var object
      */
     protected $instance;
+
+    /**
+     * 配置对象
+     * @var Config
+     */
     protected $config;
 
-    protected $method;
     /**
-     * @var string 域名（含协议和端口）
+     * 请求类型
+     * @var string
+     */
+    protected $method;
+
+    /**
+     * 域名（含协议及端口）
+     * @var string
      */
     protected $domain;
 
     /**
-     * @var string URL地址
+     * 当前URL地址
+     * @var string
      */
     protected $url;
 
     /**
-     * @var string 基础URL
+     * 基础URL
+     * @var string
      */
     protected $baseUrl;
 
     /**
-     * @var string 当前执行的文件
+     * 当前执行的文件
+     * @var string
      */
     protected $baseFile;
 
     /**
-     * @var string 访问的ROOT地址
+     * 访问的ROOT地址
+     * @var string
      */
     protected $root;
 
     /**
-     * @var string pathinfo
+     * pathinfo
+     * @var string
      */
     protected $pathinfo;
 
     /**
-     * @var string pathinfo（不含后缀）
+     * pathinfo（不含后缀）
+     * @var string
      */
     protected $path;
 
     /**
-     * @var array 当前路由信息
+     * 当前路由信息
+     * @var array
      */
     protected $routeInfo = [];
 
     /**
-     * @var array 当前调度信息
+     * 当前调度信息
+     * @var string
      */
     protected $dispatch = [];
+
+    /**
+     * 当前模块名
+     * @var string
+     */
     protected $module;
+
+    /**
+     * 当前控制器名
+     * @var string
+     */
     protected $controller;
+
+    /**
+     * 当前操作名
+     * @var string
+     */
     protected $action;
-    // 当前语言集
+
+    /**
+     * 当前语言集
+     * @var string
+     */
     protected $langset;
 
     /**
-     * @var array 请求参数
+     * 当前请求参数
+     * @var array
      */
-    protected $param   = [];
-    protected $get     = [];
-    protected $post    = [];
-    protected $request = [];
-    protected $route   = [];
-    protected $put;
-    protected $session = [];
-    protected $file    = [];
-    protected $cookie  = [];
-    protected $server  = [];
-    protected $header  = [];
+    protected $param = [];
 
     /**
-     * @var array 资源类型
+     * 当前GET参数
+     * @var array
+     */
+    protected $get = [];
+
+    /**
+     * 当前POST参数
+     * @var array
+     */
+    protected $post = [];
+
+    /**
+     * 当前REQUEST参数
+     * @var array
+     */
+    protected $request = [];
+
+    /**
+     * 当前ROUTE参数
+     * @var array
+     */
+    protected $route = [];
+
+    /**
+     * 当前PUT参数
+     * @var array
+     */
+    protected $put;
+
+    /**
+     * 当前SESSION参数
+     * @var array
+     */
+    protected $session = [];
+
+    /**
+     * 当前FILE参数
+     * @var array
+     */
+    protected $file = [];
+
+    /**
+     * 当前COOKIE参数
+     * @var array
+     */
+    protected $cookie = [];
+
+    /**
+     * 当前SERVER参数
+     * @var array
+     */
+    protected $server = [];
+
+    /**
+     * 当前ENV参数
+     * @var array
+     */
+    protected $env = [];
+
+    /**
+     * 当前HEADER参数
+     * @var array
+     */
+    protected $header = [];
+
+    /**
+     * 资源类型定义
+     * @var array
      */
     protected $mimeType = [
-        'xml'  => 'application/xml,text/xml,application/x-xml',
-        'json' => 'application/json,text/x-json,application/jsonrequest,text/json',
-        'js'   => 'text/javascript,application/javascript,application/x-javascript',
-        'css'  => 'text/css',
-        'rss'  => 'application/rss+xml',
-        'yaml' => 'application/x-yaml,text/yaml',
-        'atom' => 'application/atom+xml',
-        'pdf'  => 'application/pdf',
-        'text' => 'text/plain',
-        'png'  => 'image/png',
-        'jpg'  => 'image/jpg,image/jpeg,image/pjpeg',
-        'gif'  => 'image/gif',
-        'csv'  => 'text/csv',
-        'html' => 'text/html,application/xhtml+xml,*/*',
+        'xml'   => 'application/xml,text/xml,application/x-xml',
+        'json'  => 'application/json,text/x-json,application/jsonrequest,text/json',
+        'js'    => 'text/javascript,application/javascript,application/x-javascript',
+        'css'   => 'text/css',
+        'rss'   => 'application/rss+xml',
+        'yaml'  => 'application/x-yaml,text/yaml',
+        'atom'  => 'application/atom+xml',
+        'pdf'   => 'application/pdf',
+        'text'  => 'text/plain',
+        'image' => 'image/png,image/jpg,image/jpeg,image/pjpeg,image/gif,image/webp,image/*',
+        'csv'   => 'text/csv',
+        'html'  => 'text/html,application/xhtml+xml,*/*',
     ];
 
+    /**
+     * 当前请求内容
+     * @var string
+     */
     protected $content;
 
-    // 全局过滤规则
+    /**
+     * 全局过滤规则
+     * @var array
+     */
     protected $filter;
-    // Hook扩展方法
+
+    /**
+     * 扩展方法
+     * @var array
+     */
     protected static $hook = [];
+
+    /**
+     * php://input内容
+     * @var string
+     */
     // php://input
     protected $input;
-    // 请求缓存
+
+    /**
+     * 请求缓存
+     * @var array
+     */
     protected $cache;
-    // 缓存是否检查
+
+    /**
+     * 缓存是否检查
+     * @var bool
+     */
     protected $isCheckCache;
 
     /**
@@ -258,7 +377,7 @@ class Request
      * 设置或获取当前包含协议的域名
      * @access public
      * @param string $domain 域名
-     * @return string
+     * @return string|$this
      */
     public function domain($domain = null)
     {
@@ -276,7 +395,7 @@ class Request
      * 设置或获取当前完整URL 包括QUERY_STRING
      * @access public
      * @param string|true $url URL地址 true 带域名获取
-     * @return string
+     * @return string|$this
      */
     public function url($url = null)
     {
@@ -304,7 +423,7 @@ class Request
      * 设置或获取当前URL 不含QUERY_STRING
      * @access public
      * @param string $url URL地址
-     * @return string
+     * @return string|$this
      */
     public function baseUrl($url = null)
     {
@@ -323,7 +442,7 @@ class Request
      * 设置或获取当前执行的文件 SCRIPT_NAME
      * @access public
      * @param string $file 当前执行的文件
-     * @return string
+     * @return string|$this
      */
     public function baseFile($file = null)
     {
@@ -356,7 +475,7 @@ class Request
      * 设置或获取URL访问根地址
      * @access public
      * @param string $url URL地址
-     * @return string
+     * @return string|$this
      */
     public function root($url = null)
     {
@@ -628,9 +747,9 @@ class Request
     }
 
     /**
-     * 获取获取当前请求的参数
+     * 获取当前请求的参数
      * @access public
-     * @param string|array  $name 变量名
+     * @param mixed         $name 变量名
      * @param mixed         $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -669,9 +788,9 @@ class Request
     }
 
     /**
-     * 设置获取获取路由参数
+     * 设置获取路由参数
      * @access public
-     * @param string|array  $name 变量名
+     * @param mixed         $name 变量名
      * @param mixed         $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -687,9 +806,9 @@ class Request
     }
 
     /**
-     * 设置获取获取GET参数
+     * 设置获取GET参数
      * @access public
-     * @param string|array  $name 变量名
+     * @param mixed         $name 变量名
      * @param mixed         $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -709,9 +828,9 @@ class Request
     }
 
     /**
-     * 设置获取获取POST参数
+     * 设置获取POST参数
      * @access public
-     * @param string        $name 变量名
+     * @param mixed         $name 变量名
      * @param mixed         $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -736,9 +855,9 @@ class Request
     }
 
     /**
-     * 设置获取获取PUT参数
+     * 设置获取PUT参数
      * @access public
-     * @param string|array      $name 变量名
+     * @param mixed             $name 变量名
      * @param mixed             $default 默认值
      * @param string|array      $filter 过滤方法
      * @return mixed
@@ -763,9 +882,9 @@ class Request
     }
 
     /**
-     * 设置获取获取DELETE参数
+     * 设置获取DELETE参数
      * @access public
-     * @param string|array      $name 变量名
+     * @param mixed             $name 变量名
      * @param mixed             $default 默认值
      * @param string|array      $filter 过滤方法
      * @return mixed
@@ -776,9 +895,9 @@ class Request
     }
 
     /**
-     * 设置获取获取PATCH参数
+     * 设置获取PATCH参数
      * @access public
-     * @param string|array      $name 变量名
+     * @param mixed             $name 变量名
      * @param mixed             $default 默认值
      * @param string|array      $filter 过滤方法
      * @return mixed
@@ -790,7 +909,7 @@ class Request
 
     /**
      * 获取request变量
-     * @param string        $name 数据名称
+     * @param mixed         $name 数据名称
      * @param string        $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -812,7 +931,7 @@ class Request
     /**
      * 获取session数据
      * @access public
-     * @param string|array  $name 数据名称
+     * @param mixed         $name 数据名称
      * @param string        $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -820,7 +939,7 @@ class Request
     public function session($name = '', $default = null, $filter = '')
     {
         if (empty($this->session)) {
-            $this->session = Facade::make('session')->get();
+            $this->session = Container::get('session')->get();
         }
 
         if (is_array($name)) {
@@ -833,14 +952,14 @@ class Request
     /**
      * 获取cookie参数
      * @access public
-     * @param string|array  $name 数据名称
+     * @param mixed         $name 数据名称
      * @param string        $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
      */
     public function cookie($name = '', $default = null, $filter = '')
     {
-        $cookie = Facade::make('cookie');
+        $cookie = Container::get('cookie');
 
         if (empty($this->cookie)) {
             $this->cookie = $cookie->get();
@@ -870,7 +989,7 @@ class Request
     /**
      * 获取server参数
      * @access public
-     * @param string|array  $name 数据名称
+     * @param mixed         $name 数据名称
      * @param string        $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -953,7 +1072,7 @@ class Request
 
     /**
      * 获取环境变量
-     * @param string|array  $name 数据名称
+     * @param mixed         $name 数据名称
      * @param string        $default 默认值
      * @param string|array  $filter 过滤方法
      * @return mixed
@@ -961,7 +1080,7 @@ class Request
     public function env($name = '', $default = null, $filter = '')
     {
         if (empty($this->env)) {
-            $this->env = Facade::make('env')->get();
+            $this->env = Container::get('env')->get();
         }
 
         if (is_array($name)) {
@@ -1090,7 +1209,7 @@ class Request
             $filter = [];
         } else {
             $filter = $filter ?: $this->filter;
-            if (is_string($filter)) {
+            if (is_string($filter) && false === strpos($filter, '/')) {
                 $filter = explode(',', $filter);
             } else {
                 $filter = (array) $filter;
@@ -1118,7 +1237,7 @@ class Request
                 // 调用函数或者方法过滤
                 $value = call_user_func($filter, $value);
             } elseif (is_scalar($value)) {
-                if (strpos($filter, '/')) {
+                if (false !== strpos($filter, '/')) {
                     // 正则过滤
                     if (!preg_match($filter, $value)) {
                         // 匹配不成功返回默认值
@@ -1137,21 +1256,7 @@ class Request
             }
         }
 
-        return $this->filterExp($value);
-    }
-
-    /**
-     * 过滤表单中的表达式
-     * @param string $value
-     * @return void
-     */
-    public function filterExp(&$value)
-    {
-        // 过滤查询特殊字符
-        if (is_string($value) && preg_match('/^(EXP|NEQ|GT|EGT|LT|ELT|OR|XOR|LIKE|NOTLIKE|NOT BETWEEN|NOTBETWEEN|BETWEEN|NOTIN|NOT IN|IN)$/i', $value)) {
-            $value .= ' ';
-        }
-        // TODO 其他安全过滤
+        return $value;
     }
 
     /**
@@ -1283,6 +1388,8 @@ class Request
             return true;
         } elseif (isset($server['HTTP_X_FORWARDED_PROTO']) && 'https' == $server['HTTP_X_FORWARDED_PROTO']) {
             return true;
+        } elseif ($this->config->get('https_agent_name') && isset($server[$this->config->get('https_agent_name')])) {
+            return true;
         }
 
         return false;
@@ -1329,7 +1436,7 @@ class Request
      * @param boolean   $adv 是否进行高级模式获取（有可能被伪装）
      * @return mixed
      */
-    public function ip($type = 0, $adv = false)
+    public function ip($type = 0, $adv = true)
     {
         $type      = $type ? 1 : 0;
         static $ip = null;
@@ -1409,6 +1516,10 @@ class Request
      */
     public function host()
     {
+        if (isset($_SERVER['HTTP_X_REAL_HOST'])) {
+            return $_SERVER['HTTP_X_REAL_HOST'];
+        }
+
         return $this->server('HTTP_HOST');
     }
 
@@ -1597,7 +1708,7 @@ class Request
             header($name . ': ' . $token);
         }
 
-        Facade::make('session')->set($name, $token);
+        Container::get('session')->set($name, $token);
 
         return $token;
     }
@@ -1608,10 +1719,16 @@ class Request
      * @param string $key 缓存标识，支持变量规则 ，例如 item/:name/:id
      * @param mixed  $expire 缓存有效期
      * @param array  $except 缓存排除
+     * @param string $tag    缓存标签
      * @return void
      */
-    public function cache($key, $expire = null, $except = [])
+    public function cache($key, $expire = null, $except = [], $tag = null)
     {
+        if (!is_array($except)) {
+            $tag    = $except;
+            $except = [];
+        }
+
         if (false !== $key && $this->isGet() && !$this->isCheckCache) {
             // 标记请求缓存检查
             $this->isCheckCache = true;
@@ -1624,7 +1741,7 @@ class Request
                 $key = call_user_func_array($key, [$this]);
             } elseif (true === $key) {
                 foreach ($except as $rule) {
-                    if (0 === strpos($this->url(), $rule)) {
+                    if (0 === stripos($this->url(), $rule)) {
                         return;
                     }
                 }
@@ -1658,7 +1775,7 @@ class Request
             if (isset($fun)) {
                 $key = $fun($key);
             }
-            $cache = Facade::make('cache');
+            $cache = Container::get('cache');
             if (strtotime($this->server('HTTP_IF_MODIFIED_SINCE')) + $expire > $_SERVER['REQUEST_TIME']) {
                 // 读取缓存
                 $response = Response::create()->code(304);
@@ -1668,7 +1785,7 @@ class Request
                 $response               = Response::create($content)->header($header);
                 throw new HttpResponseException($response);
             } else {
-                $this->cache = [$key, $expire];
+                $this->cache = [$key, $expire, $tag];
             }
         }
     }

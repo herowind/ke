@@ -16,7 +16,7 @@ use think\Route;
 class Resource extends RuleGroup
 {
     // 资源路由名称
-    protected $rule;
+    protected $resource;
     // 资源路由地址
     protected $route;
     // REST路由方法定义
@@ -26,18 +26,20 @@ class Resource extends RuleGroup
      * 架构函数
      * @access public
      * @param Route         $router     路由对象
-     * @param string        $rule       资源名称
+     * @param RuleGroup     $group      路由所属分组对象
+     * @param string        $name       资源名称
      * @param string        $route      路由地址
      * @param array         $option     路由参数
      * @param array         $pattern    变量规则
      * @param array         $rest       资源定义
      */
-    public function __construct(Route $router, $rule, $route, $option = [], $pattern = [], $rest = [])
+    public function __construct(Route $router, RuleGroup $group = null, $name = '', $route = '', $option = [], $pattern = [], $rest = [])
     {
-        $this->router = $router;
-        $this->rule   = $rule;
-        $this->route  = $route;
-        $this->name   = strpos($rule, '.') ? strstr($rule, '.', true) : $rule;
+        $this->router   = $router;
+        $this->parent   = $group;
+        $this->resource = $name;
+        $this->route    = $route;
+        $this->name     = strpos($name, '.') ? strstr($name, '.', true) : $name;
 
         // 资源路由默认为完整匹配
         $option['complete_match'] = true;
@@ -53,14 +55,15 @@ class Resource extends RuleGroup
      * @param Request      $request  请求对象
      * @param string       $url      访问地址
      * @param string       $depr     路径分隔符
+     * @param bool         $completeMatch   路由是否完全匹配
      * @return Dispatch
      */
-    public function check($request, $url, $depr = '/')
+    public function check($request, $url, $depr = '/', $completeMatch = false)
     {
         // 生成资源路由的路由规则
-        $this->buildResourceRule($this->rule, $this->option);
+        $this->buildResourceRule($this->resource, $this->option);
 
-        return parent::check($request, $url, $depr);
+        return parent::check($request, $url, $depr, $completeMatch);
     }
 
     /**
@@ -103,7 +106,7 @@ class Resource extends RuleGroup
                 $val[1] = str_replace(':id', ':' . $option['var'][$rule], $val[1]);
             }
 
-            $item = ltrim(ltrim($rule . $val[1], '/'), $this->name . '/');
+            $item = trim(substr(trim($rule . $val[1], '/'), strlen($this->name)), '/');
 
             $option['rest'] = $key;
 
@@ -111,6 +114,24 @@ class Resource extends RuleGroup
         }
 
         $this->router->setGroup($group);
+    }
+
+    /**
+     * rest方法定义和修改
+     * @access public
+     * @param string        $name 方法名称
+     * @param array|bool    $resource 资源
+     * @return $this
+     */
+    public function rest($name, $resource = [])
+    {
+        if (is_array($name)) {
+            $this->rest = $resource ? $name : array_merge($this->rest, $name);
+        } else {
+            $this->rest[$name] = $resource;
+        }
+
+        return $this;
     }
 
     /**

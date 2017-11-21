@@ -9,15 +9,28 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-namespace think\route\dispatch;
+namespace think\response;
 
-use think\route\Dispatch;
+use think\Container;
+use think\Response;
 
-class Response extends Dispatch
+class Jump extends Response
 {
-    public function run()
-    {
-        return $this->dispatch;
-    }
+    protected $contentType = 'text/html';
 
+    /**
+     * 处理数据
+     * @access protected
+     * @param mixed $data 要处理的数据
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function output($data)
+    {
+        $config = Container::get('config');
+        $data   = Container::get('view')
+            ->init($config->pull('template'), $config->get('view_replace_str'))
+            ->fetch($this->options['jump_template'], $data);
+        return $data;
+    }
 }

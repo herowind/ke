@@ -13,6 +13,10 @@ namespace think;
 
 class Cookie
 {
+    /**
+     * 配置参数
+     * @var array
+     */
     protected $config = [
         // cookie 名称前缀
         'prefix'    => '',
@@ -30,6 +34,10 @@ class Cookie
         'setcookie' => true,
     ];
 
+    /**
+     * 是否初始化
+     * @var bool
+     */
     protected $init;
 
     /**
@@ -40,7 +48,7 @@ class Cookie
     public function init(array $config = [])
     {
         if (empty($config)) {
-            $config = Facade::make('config')->pull('cookie');
+            $config = Container::get('config')->pull('cookie');
         }
 
         $this->config = array_merge($this->config, array_change_key_case($config));
@@ -73,7 +81,7 @@ class Cookie
      * @param mixed  $value cookie值
      * @param mixed  $option 可选参数 可能会是 null|integer|string
      *
-     * @return mixed
+     * @return void
      * @internal param mixed $options cookie参数
      */
     public function set($name, $value = '', $option = null)
@@ -87,6 +95,7 @@ class Cookie
             } elseif (is_string($option)) {
                 parse_str($option, $option);
             }
+
             $config = array_merge($this->config, array_change_key_case($option));
         } else {
             $config = $this->config;
@@ -169,6 +178,7 @@ class Cookie
             }
         } elseif (isset($_COOKIE[$key])) {
             $value = $_COOKIE[$key];
+
             if (0 === strpos($value, 'think:')) {
                 $value = substr($value, 6);
                 $value = json_decode($value, true);
@@ -185,7 +195,7 @@ class Cookie
      * Cookie删除
      * @param string        $name cookie名称
      * @param string|null   $prefix cookie前缀
-     * @return mixed
+     * @return void
      */
     public function delete($name, $prefix = null)
     {
@@ -206,7 +216,7 @@ class Cookie
     /**
      * Cookie清空
      * @param string|null $prefix cookie前缀
-     * @return mixed
+     * @return void
      */
     public function clear($prefix = null)
     {

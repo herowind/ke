@@ -12,19 +12,37 @@
 namespace think\model\concern;
 
 use think\Collection;
+use think\Exception;
+use think\Loader;
+use think\Model;
 
 /**
  * 模型数据转换处理
  */
 trait Conversion
 {
-    // 显示属性
+    /**
+     * 数据输出显示的属性
+     * @var array
+     */
     protected $visible = [];
-    // 隐藏属性
+
+    /**
+     * 数据输出隐藏的属性
+     * @var array
+     */
     protected $hidden = [];
-    // 附加属性
+
+    /**
+     * 数据输出需要追加的属性
+     * @var array
+     */
     protected $append = [];
-    // 查询数据集对象
+
+    /**
+     * 数据集对象名
+     * @var string
+     */
     protected $resultSetType;
 
     /**
@@ -56,15 +74,19 @@ trait Conversion
         }
 
         $relation = Loader::parseName($attr, 1, false);
-        $model    = $this->getRelation($relation);
+        if (isset($this->relation[$relation])) {
+            $model = $this->relation[$relation];
+        } else {
+            $model = $this->getRelationData($this->$relation());
+        }
 
         if ($model instanceof Model) {
             foreach ($append as $key => $attr) {
                 $key = is_numeric($key) ? $attr : $key;
-                if ($this->__isset($key)) {
+                if (isset($this->data[$key])) {
                     throw new Exception('bind attr has exists:' . $key);
                 } else {
-                    $this->setAttr($key, $model->$attr);
+                    $this->data[$key] = $model->$attr;
                 }
             }
         }
@@ -152,7 +174,10 @@ trait Conversion
                     $relation   = $this->getAttr($key);
                     $item[$key] = $relation->append([$attr])->toArray();
                 } else {
-                    $item[$name] = $this->getAttr($name);
+                    $value = $this->getAttr($name, $item);
+                    if (false !== $value) {
+                        $item[$name] = $value;
+                    }
                 }
             }
         }
@@ -169,6 +194,17 @@ trait Conversion
     public function toJson($options = JSON_UNESCAPED_UNICODE)
     {
         return json_encode($this->toArray(), $options);
+    }
+
+    /**
+     * 移除当前模型的关联属性
+     * @access public
+     * @return $this
+     */
+    public function removeRelation()
+    {
+        $this->relation = [];
+        return $this;
     }
 
     public function __toString()

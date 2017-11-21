@@ -11,8 +11,11 @@
 
 namespace think\route;
 
+use think\Container;
 use think\Request;
+use think\Response;
 use think\Route;
+use think\route\dispatch\Response as ResponseDispatch;
 use think\route\dispatch\Url as UrlDispatch;
 
 class RuleGroup extends Rule
@@ -29,6 +32,8 @@ class RuleGroup extends Rule
         'options' => [],
     ];
 
+    protected $rule;
+
     // MISS路由
     protected $miss;
 
@@ -39,16 +44,32 @@ class RuleGroup extends Rule
      * 架构函数
      * @access public
      * @param Route       $router   路由对象
+     * @param RuleGroup   $group    路由所属分组对象
      * @param string      $name     分组名称
+     * @param mixed       $rule     分组路由
      * @param array       $option   路由参数
      * @param array       $pattern  变量规则
      */
-    public function __construct(Route $router, $name = '', $option = [], $pattern = [])
+    public function __construct(Route $router, RuleGroup $group = null, $name = '', $rule = [], $option = [], $pattern = [])
     {
         $this->router  = $router;
+        $this->parent  = $group;
+        $this->rule    = $rule;
         $this->name    = trim($name, '/');
         $this->option  = $option;
         $this->pattern = $pattern;
+    }
+
+    /**
+     * 设置分组的路由规则
+     * @access public
+     * @param mixed      $rule     路由规则
+     * @return $this
+     */
+    public function setRule($rule)
+    {
+        $this->rule = $rule;
+        return $this;
     }
 
     /**
@@ -57,23 +78,84 @@ class RuleGroup extends Rule
      * @param Request      $request  请求对象
      * @param string       $url      访问地址
      * @param string       $depr     路径分隔符
+     * @param bool         $completeMatch   路由是否完全匹配
      * @return Dispatch|false
      */
-    public function check($request, $url, $depr = '/')
+    public function check($request, $url, $depr = '/', $completeMatch = false)
     {
+        if ($dispatch = $this->checkAllowOptions($request)) {
+            // 允许OPTIONS嗅探
+            return $dispatch;
+        }
+
         // 检查参数有效性
         if (!$this->checkOption($this->option, $request)) {
             return false;
+        }
+
+        if ($this->name && !($this instanceof Domain)) {
+            // 分组URL匹配检查
+            $pos = strpos(str_replace('<', ':', $this->name), ':');
+            if (false !== $pos) {
+                $str = substr($this->name, 0, $pos);
+            } else {
+                $str = $this->name;
+            }
+
+            if (0 !== stripos(str_replace('|', '/', $url), $str)) {
+                return false;
+            }
+        }
+
+        if ($this->rule) {
+            // 延迟解析分组路由
+            if ($this->rule instanceof Response) {
+                return new ResponseDispatch($this->rule);
+            }
+
+            $group = $this->router->getGroup();
+
+            $this->router->setGroup($this);
+
+            if ($this->rule instanceof \Closure) {
+                Container::getInstance()->invokeFunction($this->rule);
+            } else {
+                $this->router->rules($this->rule);
+            }
+
+            $this->router->setGroup($group);
+            $this->rule = null;
+        }
+
+        // 分组匹配后执行的行为
+
+        // 指定Response响应数据
+        if (!empty($this->option['response'])) {
+            Container::get('hook')->add('response_send', $this->option['response']);
+        }
+
+        // 开启请求缓存
+        if (isset($this->option['cache']) && $request->isGet()) {
+            $this->parseRequestCache($request, $this->option['cache']);
         }
 
         // 获取当前路由规则
         $method = strtolower($request->method());
         $rules  = array_merge($this->rules['*'], $this->rules[$method]);
 
+        if ($this->parent) {
+            // 合并分组参数
+            $this->mergeGroupOptions();
+        }
+
+        if (isset($this->option['complete_match'])) {
+            $completeMatch = $this->option['complete_match'];
+        }
+
         if (isset($rules[$url])) {
             // 快速定位
             $item   = $rules[$url];
-            $result = $item->check($request, $url, $depr);
+            $result = $item->check($request, $url, $depr, $completeMatch);
 
             if (false !== $result) {
                 return $result;
@@ -82,7 +164,7 @@ class RuleGroup extends Rule
 
         // 遍历分组路由
         foreach ($rules as $key => $item) {
-            $result = $item->check($request, $url, $depr);
+            $result = $item->check($request, $url, $depr, $completeMatch);
 
             if (false !== $result) {
                 return $result;
@@ -142,6 +224,10 @@ class RuleGroup extends Rule
      */
     public function prefix($prefix)
     {
+        if ($this->parent->getOption('prefix')) {
+            $prefix = $this->parent->getOption('prefix') . $prefix;
+        }
+
         return $this->option('prefix', $prefix);
     }
 

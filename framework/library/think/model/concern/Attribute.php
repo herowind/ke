@@ -13,21 +13,50 @@ namespace think\model\concern;
 
 use InvalidArgumentException;
 use think\Loader;
+use think\model\Relation;
 
 trait Attribute
 {
-    // 数据表主键 复合主键使用数组定义 不设置则自动获取
+    /**
+     * 数据表主键 复合主键使用数组定义
+     * @var string|array
+     */
     protected $pk = 'id';
-    // 数据表字段信息 留空则自动获取
+
+    /**
+     * 数据表字段信息 留空则自动获取
+     * @var array
+     */
     protected $field = [];
-    // 只读字段
+
+    /**
+     * 数据表废弃字段
+     * @var array
+     */
+    protected $disuse = [];
+
+    /**
+     * 数据表只读字段
+     * @var array
+     */
     protected $readonly = [];
-    // 字段类型或者格式转换
+
+    /**
+     * 数据表字段类型
+     * @var array
+     */
     protected $type = [];
 
-    // 当前数据
+    /**
+     * 当前模型数据
+     * @var array
+     */
     private $data = [];
-    // 原始数据
+
+    /**
+     * 原始数据
+     * @var array
+     */
     private $origin = [];
 
     /**
@@ -192,6 +221,10 @@ trait Attribute
     public function getChangedData()
     {
         $data = array_udiff_assoc($this->data, $this->origin, function ($a, $b) {
+            if ((empty($a) || empty($b)) && $a !== $b) {
+                return 1;
+            }
+
             return is_object($a) || $a != $b ? 1 : 0;
         });
 
@@ -236,6 +269,19 @@ trait Attribute
 
         // 设置数据对象属性
         $this->data[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * 是否需要自动写入时间字段
+     * @access public
+     * @param bool $auto
+     * @return $this
+     */
+    public function isAutoWriteTimestamp($auto)
+    {
+        $this->autoWriteTimestamp = $auto;
 
         return $this;
     }
@@ -346,10 +392,11 @@ trait Attribute
      * 获取器 获取数据对象的值
      * @access public
      * @param string $name 名称
+     * @param array  $item 数据
      * @return mixed
      * @throws InvalidArgumentException
      */
-    public function getAttr($name)
+    public function getAttr($name, &$item = null)
     {
         try {
             $notFound = false;
@@ -387,15 +434,31 @@ trait Attribute
 
             if ($relation) {
                 $modelRelation = $this->$relation();
-                $value         = $this->getRelationData($modelRelation);
+                if ($modelRelation instanceof Relation) {
+                    $value = $this->getRelationData($modelRelation);
 
-                // 保存关联对象值
-                $this->relation[$name] = $value;
-            } else {
-                throw new InvalidArgumentException('property not exists:' . static::class . '->' . $name);
+                    if ($item && method_exists($modelRelation, 'getBindAttr') && $bindAttr = $modelRelation->getBindAttr()) {
+
+                        foreach ($bindAttr as $key => $attr) {
+                            $key = is_numeric($key) ? $attr : $key;
+
+                            if (isset($item[$key])) {
+                                throw new Exception('bind attr has exists:' . $key);
+                            } else {
+                                $item[$key] = $value ? $value->getAttr($attr) : null;
+                            }
+                        }
+                        return false;
+                    }
+
+                    // 保存关联对象值
+                    $this->relation[$name] = $value;
+
+                    return $value;
+                }
             }
+            throw new InvalidArgumentException('property not exists:' . static::class . '->' . $name);
         }
-
         return $value;
     }
 

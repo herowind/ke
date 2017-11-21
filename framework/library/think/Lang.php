@@ -13,15 +13,40 @@ namespace think;
 
 class Lang
 {
-    // 语言数据
+    /**
+     * 多语言信息
+     * @var array
+     */
     private $lang = [];
-    // 语言作用域
+
+    /**
+     * 当前语言
+     * @var string
+     */
     private $range = 'zh-cn';
-    // 语言自动侦测的变量
+
+    /**
+     * 多语言自动侦测变量名
+     * @var string
+     */
     protected $langDetectVar = 'lang';
-    // 允许语言列表
+
+    /**
+     * 多语言cookie变量
+     * @var string
+     */
+    protected $langCookieVar = 'think_var';
+
+    /**
+     * 允许的多语言列表
+     * @var array
+     */
     protected $allowLangList = [];
-    // Accept-Language转义为对应语言包名称 系统默认配置
+
+    /**
+     * Accept-Language转义为对应语言包名称 系统默认配置
+     * @var string
+     */
     protected $acceptLanguage = [
         'zh-hans-cn' => 'zh-cn',
     ];
@@ -50,6 +75,7 @@ class Lang
         if (!isset($this->lang[$range])) {
             $this->lang[$range] = [];
         }
+
         if (is_array($name)) {
             return $this->lang[$range] = array_change_key_case($name) + $this->lang[$range];
         } else {
@@ -59,9 +85,9 @@ class Lang
 
     /**
      * 加载语言定义(不区分大小写)
-     * @param string $file 语言文件
-     * @param string $range 语言作用域
-     * @return mixed
+     * @param string|array  $file   语言文件
+     * @param string        $range  语言作用域
+     * @return array
      */
     public function load($file, $range = '')
     {
@@ -80,7 +106,7 @@ class Lang
         foreach ($file as $_file) {
             if (is_file($_file)) {
                 // 记录加载信息
-                Facade::make('app')->log('[ LANG ] ' . $_file);
+                Container::get('app')->log('[ LANG ] ' . $_file);
                 $_lang = include $_file;
                 if (is_array($_lang)) {
                     $lang = array_change_key_case($_lang) + $lang;
@@ -164,11 +190,14 @@ class Lang
         if (isset($_GET[$this->langDetectVar])) {
             // url中设置了语言变量
             $langSet = strtolower($_GET[$this->langDetectVar]);
+        } elseif (isset($_COOKIE[$this->langCookieVar])) {
+            // Cookie中设置了语言变量
+            $langSet = strtolower($_COOKIE[$this->langCookieVar]);
         } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // 自动侦测浏览器语言
             preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);
             $langSet     = strtolower($matches[1]);
-            $acceptLangs = Facade::make('config')->get('header_accept_lang');
+            $acceptLangs = Container::get('config')->get('header_accept_lang');
             if (isset($acceptLangs[$langSet])) {
                 $langSet = $acceptLangs[$langSet];
             } elseif (isset($this->acceptLanguage[$langSet])) {
@@ -185,6 +214,18 @@ class Lang
     }
 
     /**
+     * 设置当前语言到Cookie
+     * @param string $lang 语言
+     * @return void
+     */
+    public function saveToCookie($lang = null)
+    {
+        $range = $lang ?: $this->range;
+
+        $_COOKIE[$this->langCookieVar] = $range;
+    }
+
+    /**
      * 设置语言自动侦测的变量
      * @param string $var 变量名称
      * @return void
@@ -192,6 +233,16 @@ class Lang
     public function setLangDetectVar($var)
     {
         $this->langDetectVar = $var;
+    }
+
+    /**
+     * 设置语言的cookie保存变量
+     * @param string $var 变量名称
+     * @return void
+     */
+    public static function setLangCookieVar($var)
+    {
+        $this->langCookieVar = $var;
     }
 
     /**

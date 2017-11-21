@@ -13,11 +13,22 @@ namespace think;
 
 class Container
 {
-    // 容器对象实例
+    /**
+     * 容器对象实例
+     * @var Container
+     */
     protected static $instance;
-    // 容器中的对象实例
+
+    /**
+     * 容器中的对象实例
+     * @var array
+     */
     protected $instances = [];
-    // 容器中绑定的对象标识
+
+    /**
+     * 容器绑定标识
+     * @var array
+     */
     protected $bind = [];
 
     /**
@@ -35,7 +46,32 @@ class Container
     }
 
     /**
-     * 绑定一个类到容器
+     * 获取容器中的对象实例
+     * @access public
+     * @param string        $abstract       类名或者标识
+     * @param array|true    $vars           变量
+     * @param bool          $newInstance    是否每次创建新的实例
+     * @return object
+     */
+    public static function get($abstract, $vars = [], $newInstance = false)
+    {
+        return static::getInstance()->make($abstract, $vars, $newInstance);
+    }
+
+    /**
+     * 绑定一个类、闭包、实例、接口实现到容器
+     * @access public
+     * @param string  $abstract    类标识、接口
+     * @param mixed   $concrete    要绑定的类、闭包或者实例
+     * @return Container
+     */
+    public static function set($abstract, $concrete = null)
+    {
+        return static::getInstance()->bind($abstract, $concrete);
+    }
+
+    /**
+     * 绑定一个类、闭包、实例、接口实现到容器
      * @access public
      * @param string  $abstract    类标识、接口
      * @param mixed   $concrete    要绑定的类、闭包或者实例
@@ -45,6 +81,8 @@ class Container
     {
         if (is_array($abstract)) {
             $this->bind = array_merge($this->bind, $abstract);
+        } elseif ($concrete instanceof \Closure) {
+            $this->bind[$abstract] = $concrete;
         } elseif (is_object($concrete)) {
             $this->instances[$abstract] = $concrete;
         } else {
@@ -63,6 +101,10 @@ class Container
      */
     public function instance($abstract, $instance)
     {
+        if (isset($this->bind[$abstract])) {
+            $abstract = $this->bind[$abstract];
+        }
+
         $this->instances[$abstract] = $instance;
 
         return $this;
@@ -82,7 +124,7 @@ class Container
     /**
      * 创建类的实例
      * @access public
-     * @param string        $class          类名或者标识
+     * @param string        $abstract       类名或者标识
      * @param array|true    $args           变量
      * @param bool          $newInstance    是否每次创建新的实例
      * @return object
@@ -97,16 +139,18 @@ class Container
 
         if (isset($this->instances[$abstract]) && !$newInstance) {
             $object = $this->instances[$abstract];
-        } elseif (isset($this->bind[$abstract])) {
-            $concrete = $this->bind[$abstract];
-
-            if ($concrete instanceof \Closure) {
-                $object = call_user_func_array($concrete, $vars);
-            } else {
-                $object = $this->make($concrete, $vars, $newInstance);
-            }
         } else {
-            $object = $this->invokeClass($abstract, $vars);
+            if (isset($this->bind[$abstract])) {
+                $concrete = $this->bind[$abstract];
+
+                if ($concrete instanceof \Closure) {
+                    $object = $this->invokeFunction($concrete, $vars);
+                } else {
+                    $object = $this->make($concrete, $vars, $newInstance);
+                }
+            } else {
+                $object = $this->invokeClass($abstract, $vars);
+            }
 
             if (!$newInstance) {
                 $this->instances[$abstract] = $object;

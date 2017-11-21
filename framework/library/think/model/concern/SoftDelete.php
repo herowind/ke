@@ -70,12 +70,26 @@ trait SoftDelete
         if (!$force) {
             // 软删除
             $this->data($name, $this->autoWriteTimestamp($name));
+
             $result = $this->isUpdate()->save();
         } else {
-            $result = $this->db(false)->delete($this->getData());
+            // 读取更新条件
+            $where = $this->getWhere();
+
+            // 删除当前模型数据
+            $result = $this->db(false)->where($where)->delete();
+        }
+
+        // 关联删除
+        if (!empty($this->relationWrite)) {
+            $this->autoRelationDelete();
         }
 
         $this->trigger('after_delete', $this);
+
+        // 清空数据
+        $this->data   = [];
+        $this->origin = [];
 
         return $result;
     }
@@ -93,7 +107,7 @@ trait SoftDelete
         $query = self::withTrashed();
 
         if (is_array($data) && key($data) !== 0) {
-            $query->where($data);
+            $query->where($this->parseWhere($data));
             $data = null;
         } elseif ($data instanceof \Closure) {
             call_user_func_array($data, [ & $query]);
@@ -127,7 +141,7 @@ trait SoftDelete
 
         if (empty($where)) {
             $pk         = $this->getPk();
-            $where[$pk] = $this->getData($pk);
+            $where[$pk] = [$pk, '=', $this->getData($pk)];
         }
 
         // 恢复删除
@@ -135,19 +149,6 @@ trait SoftDelete
             ->where($where)
             ->useSoftDelete($name, ['not null', ''])
             ->update([$name => null]);
-    }
-
-    /**
-     * 查询默认不包含软删除数据
-     * @access protected
-     * @param Query $query 查询对象
-     * @return void
-     */
-    protected function base($query)
-    {
-        $field = $this->getDeleteTimeField(true);
-
-        $query->useSoftDelete($field);
     }
 
     /**

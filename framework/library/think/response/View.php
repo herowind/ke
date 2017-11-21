@@ -11,7 +11,7 @@
 
 namespace think\response;
 
-use think\Facade;
+use think\Container;
 use think\Response;
 
 class View extends Response
@@ -31,8 +31,9 @@ class View extends Response
     protected function output($data)
     {
         // 渲染模板输出
-        return Facade::make('view')
-            ->init(Facade::make('app')->config('template'), Facade::make('app')->config('view_replace_str'))
+        $config = Container::get('config');
+        return Container::get('view')
+            ->init($config->pull('template'), $config->get('view_replace_str'))
             ->fetch($data, $this->vars, $this->replace);
     }
 
@@ -68,6 +69,19 @@ class View extends Response
         }
 
         return $this;
+    }
+
+    /**
+     * 检查模板是否存在
+     * @access private
+     * @param string|array  $name 参数名
+     * @return bool
+     */
+    public function exists($name)
+    {
+        return Container::get('view')
+            ->init(Container::get('config')->pull('template'))
+            ->exists($name);
     }
 
     /**

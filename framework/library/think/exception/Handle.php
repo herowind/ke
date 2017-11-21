@@ -13,15 +13,20 @@ namespace think\exception;
 
 use Exception;
 use think\console\Output;
-use think\Facade;
+use think\Container;
 use think\Response;
 
 class Handle
 {
-
+    protected $render;
     protected $ignoreReport = [
         '\\think\\exception\\HttpException',
     ];
+
+    public function setRender($render)
+    {
+        $this->render = $render;
+    }
 
     /**
      * Report or log an exception.
@@ -33,7 +38,7 @@ class Handle
     {
         if (!$this->isIgnoreReport($exception)) {
             // 收集异常数据
-            if (Facade::make('app')->isDebug()) {
+            if (Container::get('app')->isDebug()) {
                 $data = [
                     'file'    => $exception->getFile(),
                     'line'    => $exception->getLine(),
@@ -49,7 +54,11 @@ class Handle
                 $log = "[{$data['code']}]{$data['message']}";
             }
 
-            Facade::make('log')->record($log, 'error');
+            if (Container::get('app')->config('log.record_trace')) {
+                $log .= "\r\n" . $exception->getTraceAsString();
+            }
+
+            Container::get('log')->record($log, 'error');
         }
     }
 
@@ -71,6 +80,13 @@ class Handle
      */
     public function render(Exception $e)
     {
+        if ($this->render && $this->render instanceof \Closure) {
+            $result = call_user_func_array($this->render, [$e]);
+            if ($result) {
+                return $result;
+            }
+        }
+
         if ($e instanceof HttpException) {
             return $this->renderHttpException($e);
         } else {
@@ -84,7 +100,7 @@ class Handle
      */
     public function renderForConsole(Output $output, Exception $e)
     {
-        if (Facade::make('app')->isDebug()) {
+        if (Container::get('app')->isDebug()) {
             $output->setVerbosity(Output::VERBOSITY_DEBUG);
         }
         $output->renderException($e);
@@ -97,8 +113,8 @@ class Handle
     protected function renderHttpException(HttpException $e)
     {
         $status   = $e->getStatusCode();
-        $template = Facade::make('app')->config('http_exception_template');
-        if (!Facade::make('app')->isDebug() && !empty($template[$status])) {
+        $template = Container::get('app')->config('http_exception_template');
+        if (!Container::get('app')->isDebug() && !empty($template[$status])) {
             return Response::create($template[$status], 'view', $status)->assign(['e' => $e]);
         } else {
             return $this->convertExceptionToResponse($e);
@@ -112,7 +128,7 @@ class Handle
     protected function convertExceptionToResponse(Exception $exception)
     {
         // 收集异常数据
-        if (Facade::make('app')->isDebug()) {
+        if (Container::get('app')->isDebug()) {
             // 调试模式，获取详细的错误信息
             $data = [
                 'name'    => get_class($exception),
@@ -141,9 +157,9 @@ class Handle
                 'message' => $this->getMessage($exception),
             ];
 
-            if (!Facade::make('app')->config('show_error_msg')) {
+            if (!Container::get('app')->config('show_error_msg')) {
                 // 不显示详细错误信息
-                $data['message'] = Facade::make('app')->config('error_message');
+                $data['message'] = Container::get('app')->config('error_message');
             }
         }
 
@@ -156,7 +172,7 @@ class Handle
 
         ob_start();
         extract($data);
-        include Facade::make('app')->config('exception_tmpl');
+        include Container::get('app')->config('exception_tmpl');
         // 获取并清空缓存
         $content  = ob_get_clean();
         $response = Response::create($content, 'html');
@@ -200,7 +216,7 @@ class Handle
         if (PHP_SAPI == 'cli') {
             return $message;
         }
-        $lang = Facade::make('lang');
+        $lang = Container::get('lang');
         if (strpos($message, ':')) {
             $name    = strstr($message, ':', true);
             $message = $lang->has($name) ? $lang->get($name) . strstr($message, ':') : $message;

@@ -13,7 +13,16 @@ namespace think;
 
 class Hook
 {
-    private $tags   = [];
+    /**
+     * 钩子行为定义
+     * @var array
+     */
+    private $tags = [];
+
+    /**
+     * 绑定行为列表
+     * @var array
+     */
     protected $bind = [];
 
     /**
@@ -21,7 +30,7 @@ class Hook
      * @access public
      * @param string|array  $name     行为标识
      * @param mixed         $behavior 行为
-     * @return void
+     * @return $this
      */
     public function alias($name, $behavior = null)
     {
@@ -66,6 +75,7 @@ class Hook
      * @access public
      * @param array     $tags 插件信息
      * @param bool      $recursive 是否递归合并
+     * @return void
      */
     public function import(array $tags, $recursive = true)
     {
@@ -99,17 +109,16 @@ class Hook
      * @access public
      * @param string $tag    标签名称
      * @param mixed  $params 传入参数
-     * @param mixed  $extra  额外参数
      * @param bool   $once   只获取一个有效返回值
      * @return mixed
      */
-    public function listen($tag, $params = null, $extra = null, $once = false)
+    public function listen($tag, $params = null, $once = false)
     {
         $results = [];
         $tags    = $this->get($tag);
 
         foreach ($tags as $key => $name) {
-            $results[$key] = $this->execTag($name, $tag, $params, $extra);
+            $results[$key] = $this->execTag($name, $tag, $params);
 
             if (false === $results[$key]) {
                 // 如果返回false 则中断行为执行
@@ -126,22 +135,21 @@ class Hook
      * 执行行为
      * @access public
      * @param mixed     $class  行为
-     * @param array     $params 参数
+     * @param mixed     $params 参数
      * @return mixed
      */
-    public function exec($class, $params = [])
+    public function exec($class, $params = null)
     {
-        if (isset($this->bind[$class])) {
-            $class = $this->bind[$class];
-        }
-
         if ($class instanceof \Closure || is_array($class)) {
             $method = $class;
         } else {
+            if (isset($this->bind[$class])) {
+                $class = $this->bind[$class];
+            }
             $method = [$class, 'run'];
         }
 
-        return Container::getInstance()->invoke($method, $params);
+        return Container::getInstance()->invoke($method, [$params]);
     }
 
     /**
@@ -150,12 +158,11 @@ class Hook
      * @param mixed     $class  要执行的行为
      * @param string    $tag    方法名（标签名）
      * @param mixed     $params 参数
-     * @param mixed     $extra  额外参数
      * @return mixed
      */
-    protected function execTag($class, $tag = '', $params = null, $extra = null)
+    protected function execTag($class, $tag = '', $params = null)
     {
-        $app = Facade::make('app');
+        $app = Container::get('app');
 
         $app->isDebug() && $app['debug']->remark('behavior_start', 'time');
 
@@ -167,7 +174,7 @@ class Hook
         } elseif (strpos($class, '::')) {
             $call = $class;
         } else {
-            $obj = Facade::make($class);
+            $obj = Container::get($class);
 
             if (!is_callable([$obj, $method])) {
                 $method = 'run';
@@ -177,7 +184,7 @@ class Hook
             $class = $class . '->' . $method;
         }
 
-        $result = Container::getInstance()->invoke($call, [$params, $extra]);
+        $result = Container::getInstance()->invoke($call, [$params]);
 
         if ($app->isDebug()) {
             $debug = $app['debug'];

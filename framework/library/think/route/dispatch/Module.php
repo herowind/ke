@@ -12,6 +12,7 @@
 namespace think\route\dispatch;
 
 use think\Container;
+use think\exception\ClassNotFoundException;
 use think\exception\HttpException;
 use think\Loader;
 use think\route\Dispatch;
@@ -20,7 +21,7 @@ class Module extends Dispatch
 {
     public function run()
     {
-        $result = $this->action;
+        $result = $this->dispatch;
 
         if (is_string($result)) {
             $result = explode('/', $result);
@@ -43,6 +44,9 @@ class Module extends Dispatch
                 }
             } elseif (!in_array($module, $this->app->config('app.deny_module_list')) && is_dir($this->app->getAppPath() . $module)) {
                 $available = true;
+            } elseif ($this->app->config('app.empty_module')) {
+                $module    = $this->app->config('app.empty_module');
+                $available = true;
             }
 
             // 模块初始化
@@ -60,7 +64,6 @@ class Module extends Dispatch
                     $this->app->config('app.request_cache_expire'),
                     $this->app->config('app.request_cache_except')
                 );
-
             } else {
                 throw new HttpException(404, 'module not exists:' . $module);
             }
@@ -74,7 +77,7 @@ class Module extends Dispatch
         $this->app->setModulePath($this->app->getAppPath() . ($module ? $module . '/' : ''));
 
         // 是否自动转换控制器和操作名
-        $convert = is_bool($this->caseUrl) ? $this->caseUrl : $this->app->config('app.url_convert');
+        $convert = is_bool($this->convert) ? $this->convert : $this->app->config('app.url_convert');
         // 获取控制器名
         $controller = strip_tags($result[1] ?: $this->app->config('app.default_controller'));
         $controller = $convert ? strtolower($controller) : $controller;
@@ -90,14 +93,13 @@ class Module extends Dispatch
         $this->app['hook']->listen('module_init', $this->app['request']);
 
         // 实例化控制器
-        $instance = $this->app->controller($controller,
-            $this->app->config('app.url_controller_layer'),
-            $this->app->config('app.controller_suffix'),
-            $this->app->config('app.empty_controller'),
-            false);
-
-        if (is_null($instance)) {
-            throw new HttpException(404, 'controller not exists:' . Loader::parseName($controller, 1));
+        try {
+            $instance = $this->app->controller($controller,
+                $this->app->config('app.url_controller_layer'),
+                $this->app->config('app.controller_suffix'),
+                $this->app->config('app.empty_controller'));
+        } catch (ClassNotFoundException $e) {
+            throw new HttpException(404, 'controller not exists:' . $e->getClass());
         }
 
         // 获取当前操作名

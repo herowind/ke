@@ -13,94 +13,116 @@ namespace think;
 
 use think\exception\ClassNotFoundException;
 use think\exception\HttpResponseException;
+use think\route\Dispatch;
 
 /**
  * App 应用管理
- * @author  liu21st <liu21st@gmail.com>
  */
 class App implements \ArrayAccess
 {
-    const VERSION = '5.1.0beta';
+    const VERSION = '5.1.0RC3';
 
     /**
-     * @var string 当前模块路径
+     * 当前模块路径
+     * @var string
      */
     protected $modulePath;
 
     /**
-     * @var bool 应用调试模式
+     * 应用调试模式
+     * @var bool
      */
     protected $debug = true;
 
     /**
-     * @var float 应用开始时间
+     * 应用开始时间
+     * @var float
      */
     protected $beginTime;
 
     /**
-     * @var integer 应用内存初始占用
+     * 应用内存初始占用
+     * @var integer
      */
     protected $beginMem;
 
     /**
-     * @var string 应用类库命名空间
+     * 应用类库命名空间
+     * @var string
      */
     protected $namespace = 'app';
 
     /**
-     * @var bool 应用类库后缀
+     * 应用类库后缀
+     * @var bool
      */
     protected $suffix = false;
 
     /**
-     * @var bool 严格路由检测
+     * 严格路由检测
+     * @var bool
      */
     protected $routeMust;
 
     /**
-     * @var string 应用类库目录
+     * 应用类库目录
+     * @var string
      */
     protected $appPath;
 
     /**
-     * @var string 框架目录
+     * 框架目录
+     * @var string
      */
     protected $thinkPath;
 
     /**
-     * @var string 应用根目录
+     * 应用根目录
+     * @var string
      */
     protected $rootPath;
 
     /**
-     * @var string 运行时目录
+     * 运行时目录
+     * @var string
      */
     protected $runtimePath;
 
     /**
-     * @var string 配置目录
+     * 配置目录
+     * @var string
      */
     protected $configPath;
 
     /**
-     * @var string 路由目录
+     * 路由目录
+     * @var string
      */
     protected $routePath;
 
     /**
-     * @var string 配置后缀
+     * 配置后缀
+     * @var string
      */
     protected $configExt;
 
     /**
-     * @var Dispatch 应用调度实例
+     * 应用调度实例
+     * @var Dispatch
      */
     protected $dispatch;
 
     /**
-     * @var Container 容器对象实例
+     * 容器对象实例
+     * @var Container
      */
     protected $container;
+
+    /**
+     * 绑定模块（控制器）
+     * @var string
+     */
+    protected $bind;
 
     public function __construct($appPath = '')
     {
@@ -117,7 +139,21 @@ class App implements \ArrayAccess
     }
 
     /**
+     * 绑定模块或者控制器
+     * @access public
+     * @param string $bind
+     * @return $this
+     */
+    public function bind($bind)
+    {
+        $this->bind = $bind;
+        return $this;
+    }
+
+    /**
      * 初始化应用
+     * @access public
+     * @return void
      */
     public function initialize()
     {
@@ -140,6 +176,7 @@ class App implements \ArrayAccess
         }
 
         $this->namespace = $this->env->get('app_namespace', $this->namespace);
+        $this->env->set('app_namespace', $this->namespace);
 
         // 注册应用命名空间
         Loader::addNamespace($this->namespace, $this->appPath);
@@ -154,6 +191,7 @@ class App implements \ArrayAccess
 
         // 应用调试模式
         $this->debug = $this->env->get('app_debug', $this->config('app.app_debug'));
+        $this->env->set('app_debug', $this->debug);
 
         if (!$this->debug) {
             ini_set('display_errors', 'Off');
@@ -205,11 +243,16 @@ class App implements \ArrayAccess
             include $this->runtimePath . $module . 'init.php';
         } else {
             // 自动读取配置文件
-            $dir = $this->configPath . $module;
-            if (is_dir($dir)) {
+            if (is_dir($path . 'config')) {
+                $dir = $path . 'config';
+            } elseif (is_dir($this->configPath . $module)) {
+                $dir = $this->configPath . $module;
+            }
+
+            if (isset($dir)) {
                 $files = scandir($dir);
                 foreach ($files as $file) {
-                    if (strpos($file, $this->configExt)) {
+                    if ('.' . pathinfo($file, PATHINFO_EXTENSION) === $this->configExt) {
                         $filename = $dir . DIRECTORY_SEPARATOR . $file;
                         $this->config->load($filename, pathinfo($file, PATHINFO_FILENAME));
                     }
@@ -245,14 +288,14 @@ class App implements \ArrayAccess
         $this->initialize();
 
         try {
-            if (defined('BIND_MODULE')) {
+            if ($this->bind) {
                 // 模块/控制器绑定
-                BIND_MODULE && $this->route->bindTo(BIND_MODULE);
+                $this->route->bind($this->bind);
             } elseif ($this->config('app.auto_bind_module')) {
                 // 入口自动绑定
                 $name = pathinfo($this->request->baseFile(), PATHINFO_FILENAME);
                 if ($name && 'index' != $name && is_dir($this->appPath . $name)) {
-                    $this->route->bindTo($name);
+                    $this->route->bind($name);
                 }
             }
 
@@ -277,7 +320,7 @@ class App implements \ArrayAccess
             $dispatch = $this->dispatch;
             if (empty($dispatch)) {
                 // 进行URL路由检测
-                $dispatch = $this->routeCheck($this->request);
+                $dispatch = $this->routeCheck();
             }
 
             // 记录当前调度信息
@@ -291,7 +334,7 @@ class App implements \ArrayAccess
             }
 
             // 监听app_begin
-            $this->hook->listen('app_begin', $dispatch);
+            $this->hook->listen('app_begin', $this->request);
 
             // 请求缓存检查
             $this->request->cache(
@@ -313,8 +356,8 @@ class App implements \ArrayAccess
         } elseif (!is_null($data)) {
             // 默认自动识别响应输出类型
             $isAjax = $this->request->isAjax();
+            $type   = $isAjax ? $this->config('app.default_ajax_return') : $this->config('app.default_return_type');
 
-            $type     = $isAjax ? $this->config('app.default_ajax_return') : $this->config('app.default_return_type');
             $response = Response::create($data, $type);
         } else {
             $response = Response::create();
@@ -335,7 +378,6 @@ class App implements \ArrayAccess
     public function dispatch(Dispatch $dispatch)
     {
         $this->dispatch = $dispatch;
-
         return $this;
     }
 
@@ -363,8 +405,7 @@ class App implements \ArrayAccess
     /**
      * URL路由检测（根据PATH_INFO)
      * @access public
-     * @return array
-     * @throws \think\Exception
+     * @return Dispatch
      */
     public function routeCheck()
     {
@@ -384,10 +425,11 @@ class App implements \ArrayAccess
             }
         }
 
+        // 是否强制路由模式
         $must = !is_null($this->routeMust) ? $this->routeMust : $this->config('app.url_route_must');
 
-        // 路由检测（根据路由定义返回不同的URL调度）
-        return $this->route->check($path, $depr, $must);
+        // 路由检测 返回一个Dispatch对象
+        return $this->route->check($path, $depr, $must, $this->config('app.route_complete_match'));
     }
 
     /**
@@ -399,27 +441,18 @@ class App implements \ArrayAccess
     public function routeMust($must = false)
     {
         $this->routeMust = $must;
-
         return $this;
     }
 
     /**
-     * 实例化（分层）模型
-     * @param string $name         Model名称
-     * @param string $layer        业务层名称
+     * 解析模块和类名
+     * @param string $name         资源地址
+     * @param string $layer        验证层名称
      * @param bool   $appendSuffix 是否添加类名后缀
-     * @param string $common       公共模块名
-     * @return Object
-     * @throws ClassNotFoundException
+     * @return array
      */
-    public function model($name = '', $layer = 'model', $appendSuffix = false, $common = 'common')
+    protected function parseModuleAndClass($name, $layer, $appendSuffix)
     {
-        $guid = $name . $layer;
-
-        if ($this->__isset($guid)) {
-            return $this->__get($guid);
-        }
-
         if (false !== strpos($name, '\\')) {
             $class  = $name;
             $module = $this->request->module();
@@ -431,6 +464,27 @@ class App implements \ArrayAccess
             }
             $class = $this->parseClass($module, $layer, $name, $appendSuffix);
         }
+        return [$module, $class];
+    }
+
+    /**
+     * 实例化（分层）模型
+     * @param string $name         Model名称
+     * @param string $layer        业务层名称
+     * @param bool   $appendSuffix 是否添加类名后缀
+     * @param string $common       公共模块名
+     * @return Model
+     * @throws ClassNotFoundException
+     */
+    public function model($name = '', $layer = 'model', $appendSuffix = false, $common = 'common')
+    {
+        $guid = $name . $layer;
+
+        if ($this->__isset($guid)) {
+            return $this->__get($guid);
+        }
+
+        list($module, $class) = $this->parseModuleAndClass($name, $layer, $appendSuffix);
 
         if (class_exists($class)) {
             $model = $this->__get($class);
@@ -444,7 +498,6 @@ class App implements \ArrayAccess
         }
 
         $this->__set($guid, $class);
-
         return $model;
     }
 
@@ -454,29 +507,18 @@ class App implements \ArrayAccess
      * @param string $layer             控制层名称
      * @param bool   $appendSuffix      是否添加类名后缀
      * @param string $empty             空控制器名称
-     * @param bool   $throwException    是否抛异常
-     * @return Object|null
+     * @return object
      * @throws ClassNotFoundException
      */
-    public function controller($name, $layer = 'controller', $appendSuffix = false, $empty = '', $throwException = true)
+    public function controller($name, $layer = 'controller', $appendSuffix = false, $empty = '')
     {
-        if (false !== strpos($name, '\\')) {
-            $class  = $name;
-            $module = $this->request->module();
-        } else {
-            if (strpos($name, '/')) {
-                list($module, $name) = explode('/', $name);
-            } else {
-                $module = $this->request->module();
-            }
-            $class = $this->parseClass($module, $layer, $name, $appendSuffix);
-        }
+        list($module, $class) = $this->parseModuleAndClass($name, $layer, $appendSuffix);
 
         if (class_exists($class)) {
             return $this->__get($class);
         } elseif ($empty && class_exists($emptyClass = $this->parseClass($module, $layer, $empty, $appendSuffix))) {
             return $this->__get($emptyClass);
-        } elseif ($throwException) {
+        } else {
             throw new ClassNotFoundException('class not exists:' . $class, $class);
         }
     }
@@ -487,7 +529,7 @@ class App implements \ArrayAccess
      * @param string $layer        验证层名称
      * @param bool   $appendSuffix 是否添加类名后缀
      * @param string $common       公共模块名
-     * @return Object
+     * @return Validate
      * @throws ClassNotFoundException
      */
     public function validate($name = '', $layer = 'validate', $appendSuffix = false, $common = 'common')
@@ -503,17 +545,7 @@ class App implements \ArrayAccess
             return $this->__get($guid);
         }
 
-        if (false !== strpos($name, '\\')) {
-            $class  = $name;
-            $module = $this->request->module();
-        } else {
-            if (strpos($name, '/')) {
-                list($module, $name) = explode('/', $name);
-            } else {
-                $module = $this->request->module();
-            }
-            $class = $this->parseClass($module, $layer, $name, $appendSuffix);
-        }
+        list($module, $class) = $this->parseModuleAndClass($name, $layer, $appendSuffix);
 
         if (class_exists($class)) {
             $validate = $this->__get($class);
@@ -622,6 +654,7 @@ class App implements \ArrayAccess
     public function setModulePath($path)
     {
         $this->modulePath = $path;
+        $this->env->set('module_path', $path);
     }
 
     /**
@@ -661,6 +694,15 @@ class App implements \ArrayAccess
     }
 
     /**
+     * 获取路由目录
+     * @return string
+     */
+    public function getRoutePath()
+    {
+        return $this->routePath;
+    }
+
+    /**
      * 获取应用配置目录
      * @return string
      */
@@ -695,7 +737,6 @@ class App implements \ArrayAccess
     public function setNamespace($namespace)
     {
         $this->namespace = $namespace;
-
         return $this;
     }
 
@@ -724,6 +765,15 @@ class App implements \ArrayAccess
     public function getBeginMem()
     {
         return $this->beginMem;
+    }
+
+    /**
+     * 获取容器实例
+     * @return Container
+     */
+    public function container()
+    {
+        return $this->container;
     }
 
     public function __set($name, $value)

@@ -13,6 +13,10 @@ namespace think;
 
 class Env
 {
+    /**
+     * 环境变量数据
+     * @var array
+     */
     protected $data = [];
 
     public function __construct()
@@ -52,6 +56,12 @@ class Env
         $result = getenv('PHP_' . $name);
 
         if (false !== $result) {
+            if ('false' === $result) {
+                $result = false;
+            } elseif ('true' === $result) {
+                $result = true;
+            }
+
             if (!isset($this->data[$name])) {
                 $this->data[$name] = $result;
             }

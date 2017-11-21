@@ -12,7 +12,7 @@
 namespace think\cache\driver;
 
 use think\cache\Driver;
-use think\Facade;
+use think\Container;
 
 /**
  * 文件类型缓存类
@@ -25,6 +25,7 @@ class File extends Driver
         'cache_subdir'  => true,
         'prefix'        => '',
         'path'          => '',
+        'hash_type'     => 'md5',
         'data_compress' => false,
     ];
 
@@ -39,7 +40,7 @@ class File extends Driver
         }
 
         if (empty($this->options['path'])) {
-            $this->options['path'] = Facade::make('app')->getRuntimePath() . 'cache/';
+            $this->options['path'] = Container::get('app')->getRuntimePath() . 'cache/';
         } elseif (substr($this->options['path'], -1) != DIRECTORY_SEPARATOR) {
             $this->options['path'] .= DIRECTORY_SEPARATOR;
         }
@@ -72,7 +73,8 @@ class File extends Driver
      */
     protected function getCacheKey($name)
     {
-        $name = md5($name);
+        $name = hash($this->options['hash_type'], $name);
+
         if ($this->options['cache_subdir']) {
             // 使用子目录
             $name = substr($name, 0, 2) . DIRECTORY_SEPARATOR . substr($name, 2);
@@ -124,13 +126,13 @@ class File extends Driver
 
         if (false !== $content) {
             $expire = (int) substr($content, 8, 12);
-            if (0 != $expire && $_SERVER['REQUEST_TIME'] > filemtime($filename) + $expire) {
+            if (0 != $expire && time() > filemtime($filename) + $expire) {
                 //缓存过期删除缓存文件
                 $this->unlink($filename);
                 return $default;
             }
 
-            $content = substr($content, 20, -3);
+            $content = substr($content, 32);
             if ($this->options['data_compress'] && function_exists('gzcompress')) {
                 //启用数据压缩
                 $content = gzuncompress($content);
@@ -147,9 +149,9 @@ class File extends Driver
     /**
      * 写入缓存
      * @access public
-     * @param string    $name 缓存变量名
-     * @param mixed     $value  存储数据
-     * @param int       $expire  有效时间 0为永久
+     * @param string        $name 缓存变量名
+     * @param mixed         $value  存储数据
+     * @param int|\DateTime $expire  有效时间 0为永久
      * @return boolean
      */
     public function set($name, $value, $expire = null)
@@ -158,6 +160,10 @@ class File extends Driver
 
         if (is_null($expire)) {
             $expire = $this->options['expire'];
+        }
+
+        if ($expire instanceof \DateTime) {
+            $expire = $expire->getTimestamp() - time();
         }
 
         $filename = $this->getCacheKey($name);
@@ -173,7 +179,7 @@ class File extends Driver
             $data = gzcompress($data, 3);
         }
 
-        $data   = "<?php\n//" . sprintf('%012d', $expire) . $data . "\n?>";
+        $data   = "<?php\n//" . sprintf('%012d', $expire) . "\n exit();?>\n" . $data;
         $result = file_put_contents($filename, $data);
 
         if ($result) {
@@ -215,7 +221,7 @@ class File extends Driver
         if ($this->has($name)) {
             $value = $this->get($name) - $step;
         } else {
-            $value = $step;
+            $value = -$step;
         }
 
         return $this->set($name, $value, 0) ? $value : false;

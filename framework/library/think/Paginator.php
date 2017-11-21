@@ -20,28 +20,52 @@ use Traversable;
 
 abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 {
-    /** @var bool 是否为简洁模式 */
+    /**
+     * 是否简洁模式
+     * @var bool
+     */
     protected $simple = false;
 
-    /** @var Collection 数据集 */
+    /**
+     * 数据集
+     * @var Collection
+     */
     protected $items;
 
-    /** @var integer 当前页 */
+    /**
+     * 当前页
+     * @var integer
+     */
     protected $currentPage;
 
-    /** @var  integer 最后一页 */
+    /**
+     * 最后一页
+     * @var integer
+     */
     protected $lastPage;
 
-    /** @var integer|null 数据总数 */
+    /**
+     * 数据总数
+     * @var integer|null
+     */
     protected $total;
 
-    /** @var  integer 每页的数量 */
+    /**
+     * 每页数量
+     * @var integer
+     */
     protected $listRows;
 
-    /** @var bool 是否有下一页 */
+    /**
+     * 是否有下一页
+     * @var bool
+     */
     protected $hasMore;
 
-    /** @var array 一些配置 */
+    /**
+     * 分页配置
+     * @var array
+     */
     protected $options = [
         'var_page' => 'page',
         'path'     => '/',
@@ -138,7 +162,7 @@ abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, J
      */
     public static function getCurrentPage($varPage = 'page', $default = 1)
     {
-        $page = Request::instance()->request($varPage);
+        $page = Container::get('request')->param($varPage);
 
         if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
             return $page;
@@ -153,7 +177,7 @@ abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, J
      */
     public static function getCurrentPath()
     {
-        return Request::instance()->baseUrl();
+        return Container::get('request')->baseUrl();
     }
 
     public function total()
@@ -280,6 +304,27 @@ abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, J
     }
 
     /**
+     * 给每个元素执行个回调
+     *
+     * @param  callable $callback
+     * @return $this
+     */
+    public function each(callable $callback)
+    {
+        foreach ($this->items as $key => $item) {
+            $result = $callback($item, $key);
+
+            if (false === $result) {
+                break;
+            } elseif (!is_object($item)) {
+                $this->items[$key] = $result;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieve an external iterator
      * @return Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
@@ -355,6 +400,7 @@ abstract class Paginator implements ArrayAccess, Countable, IteratorAggregate, J
             'total'        => $total,
             'per_page'     => $this->listRows(),
             'current_page' => $this->currentPage(),
+            'last_page'    => $this->lastPage,
             'data'         => $this->items->toArray(),
         ];
     }

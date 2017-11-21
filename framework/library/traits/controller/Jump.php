@@ -13,6 +13,7 @@
  */
 namespace traits\controller;
 
+use think\Container;
 use think\exception\HttpResponseException;
 use think\Response;
 use think\response\Redirect;
@@ -31,21 +32,14 @@ trait Jump
      */
     protected function success($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
     {
-        $code = 1;
-
-        if (is_numeric($msg)) {
-            $code = $msg;
-            $msg  = '';
-        }
-
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
         } elseif ('' !== $url) {
-            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Facade::make('url')->build($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Container::get('url')->build($url);
         }
 
         $result = [
-            'code' => $code,
+            'code' => 1,
             'msg'  => $msg,
             'data' => $data,
             'url'  => $url,
@@ -53,15 +47,12 @@ trait Jump
         ];
 
         $type = $this->getResponseType();
-
+        // 把跳转模板的渲染下沉，这样在 response_send 行为里通过getData()获得的数据是一致性的格式
         if ('html' == strtolower($type)) {
-            $config = Facade::make('config');
-            $result = Facade::make('view')
-                ->init($config->get('template'), $config->get('view_replace_str'))
-                ->fetch($config->get('dispatch_success_tmpl'), $result);
+            $type = 'jump';
         }
 
-        $response = Response::create($result, $type)->header($header);
+        $response = Response::create($result, $type)->header($header)->options(['jump_template' => Container::get('config')->get('dispatch_success_tmpl')]);
 
         throw new HttpResponseException($response);
     }
@@ -78,21 +69,14 @@ trait Jump
      */
     protected function error($msg = '', $url = null, $data = '', $wait = 3, array $header = [])
     {
-        $code = 0;
-
-        if (is_numeric($msg)) {
-            $code = $msg;
-            $msg  = '';
-        }
-
         if (is_null($url)) {
-            $url = Facade::make('request')->isAjax() ? '' : 'javascript:history.back(-1);';
+            $url = Container::get('request')->isAjax() ? '' : 'javascript:history.back(-1);';
         } elseif ('' !== $url) {
-            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Facade::make('url')->build($url);
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : Container::get('url')->build($url);
         }
 
         $result = [
-            'code' => $code,
+            'code' => 0,
             'msg'  => $msg,
             'data' => $data,
             'url'  => $url,
@@ -100,15 +84,11 @@ trait Jump
         ];
 
         $type = $this->getResponseType();
-
         if ('html' == strtolower($type)) {
-            $config = Facade::make('config');
-            $result = Facade::make('view')
-                ->init($config->get('template'), $config->get('view_replace_str'))
-                ->fetch($config->get('dispatch_error_tmpl'), $result);
+            $type = 'jump';
         }
 
-        $response = Response::create($result, $type)->header($header);
+        $response = Response::create($result, $type)->header($header)->options(['jump_template' => Container::get('config')->get('dispatch_error_tmpl')]);
 
         throw new HttpResponseException($response);
     }
@@ -128,7 +108,7 @@ trait Jump
         $result = [
             'code' => $code,
             'msg'  => $msg,
-            'time' => $_SERVER['REQUEST_TIME'],
+            'time' => time(),
             'data' => $data,
         ];
 
@@ -168,8 +148,8 @@ trait Jump
      */
     protected function getResponseType()
     {
-        $isAjax = Facade::make('request')->isAjax();
-        $config = Facade::make('config');
+        $isAjax = Container::get('request')->isAjax();
+        $config = Container::get('config');
 
         return $isAjax
         ? $config->get('default_ajax_return')

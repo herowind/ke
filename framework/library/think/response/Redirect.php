@@ -11,7 +11,8 @@
 
 namespace think\response;
 
-use think\Facade;
+use think\Container;
+use think\Response;
 
 class Redirect extends Response
 {
@@ -50,7 +51,7 @@ class Redirect extends Response
      */
     public function with($name, $value = null)
     {
-        $session = Facade::make('Session');
+        $session = Container::get('session');
 
         if (is_array($name)) {
             foreach ($name as $key => $val) {
@@ -69,7 +70,11 @@ class Redirect extends Response
      */
     public function getTargetUrl()
     {
-        return (strpos($this->data, '://') || 0 === strpos($this->data, '/')) ? $this->data : Facade::make('url')->build($this->data, $this->params);
+        if (strpos($this->data, '://') || (0 === strpos($this->data, '/') && empty($this->params))) {
+            return $this->data;
+        } else {
+            return Container::get('url')->build($this->data, $this->params);
+        }
     }
 
     public function params($params = [])
@@ -85,7 +90,7 @@ class Redirect extends Response
      */
     public function remember()
     {
-        Facade::make('Session')->set('redirect_url', Facade::make('request')->url());
+        Container::get('session')->set('redirect_url', Container::get('request')->url());
 
         return $this;
     }
@@ -96,7 +101,7 @@ class Redirect extends Response
      */
     public function restore()
     {
-        $session = Facade::make('Session');
+        $session = Container::get('session');
 
         if ($session->has('redirect_url')) {
             $this->data = $session->get('redirect_url');

@@ -11,6 +11,7 @@
 
 namespace think\model\concern;
 
+use think\Collection;
 use think\db\Query;
 use think\Loader;
 use think\Model;
@@ -29,13 +30,28 @@ use think\model\relation\MorphTo;
  */
 trait RelationShip
 {
-    // 父关联模型对象
+    /**
+     * 父关联模型对象
+     * @var object
+     */
     private $parent;
-    // 关联模型
+
+    /**
+     * 模型关联数据
+     * @var array
+     */
     private $relation = [];
-    // 关联写入
+
+    /**
+     * 关联写入定义信息
+     * @var array
+     */
     private $together;
-    // 关联自动写入
+
+    /**
+     * 关联自动写入信息
+     * @var array
+     */
     private $relationWrite;
 
     /**
@@ -124,7 +140,7 @@ trait RelationShip
      * @param mixed   $operator 比较操作符
      * @param integer $count    个数
      * @param string  $id       关联表的统计字段
-     * @return Relation|Query
+     * @return Query
      */
     public static function has($relation, $operator = '>=', $count = 1, $id = '*')
     {
@@ -142,11 +158,12 @@ trait RelationShip
      * @access public
      * @param string $relation 关联方法名
      * @param mixed  $where    查询条件（数组或者闭包）
-     * @return Relation|Query
+     * @param mixed  $fields   字段
+     * @return Query
      */
-    public static function hasWhere($relation, $where = [])
+    public static function hasWhere($relation, $where = [], $fields = '*')
     {
-        return (new static())->$relation()->hasWhere($where);
+        return (new static())->$relation()->hasWhere($where, $fields);
     }
 
     /**
@@ -291,18 +308,17 @@ trait RelationShip
      * @access public
      * @param string $model      模型名
      * @param string $foreignKey 关联外键
-     * @param string $localKey   关联主键
-     * @param string $joinType   JOIN类型
+     * @param string $localKey   当前主键
      * @return HasOne
      */
-    public function hasOne($model, $foreignKey = '', $localKey = '', $joinType = 'INNER')
+    public function hasOne($model, $foreignKey = '', $localKey = '')
     {
         // 记录当前关联信息
         $model      = $this->parseModel($model);
         $localKey   = $localKey ?: $this->getPk();
         $foreignKey = $foreignKey ?: $this->getForeignKey($this->name);
 
-        return new HasOne($this, $model, $foreignKey, $localKey, $joinType);
+        return new HasOne($this, $model, $foreignKey, $localKey);
     }
 
     /**
@@ -311,19 +327,18 @@ trait RelationShip
      * @param string $model      模型名
      * @param string $foreignKey 关联外键
      * @param string $localKey   关联主键
-     * @param string $joinType   JOIN类型
      * @return BelongsTo
      */
-    public function belongsTo($model, $foreignKey = '', $localKey = '', $joinType = 'INNER')
+    public function belongsTo($model, $foreignKey = '', $localKey = '')
     {
         // 记录当前关联信息
         $model      = $this->parseModel($model);
-        $foreignKey = $foreignKey ?: $this->getForeignKey($model);
+        $foreignKey = $foreignKey ?: $this->getForeignKey((new $model)->getName());
         $localKey   = $localKey ?: (new $model)->getPk();
         $trace      = debug_backtrace(false, 2);
         $relation   = Loader::parseName($trace[1]['function']);
 
-        return new BelongsTo($this, $model, $foreignKey, $localKey, $joinType, $relation);
+        return new BelongsTo($this, $model, $foreignKey, $localKey, $relation);
     }
 
     /**
@@ -331,7 +346,7 @@ trait RelationShip
      * @access public
      * @param string $model      模型名
      * @param string $foreignKey 关联外键
-     * @param string $localKey   关联主键
+     * @param string $localKey   当前主键
      * @return HasMany
      */
     public function hasMany($model, $foreignKey = '', $localKey = '')
@@ -351,7 +366,7 @@ trait RelationShip
      * @param string $through    中间模型名
      * @param string $foreignKey 关联外键
      * @param string $throughKey 关联外键
-     * @param string $localKey   关联主键
+     * @param string $localKey   当前主键
      * @return HasManyThrough
      */
     public function hasManyThrough($model, $through, $foreignKey = '', $throughKey = '', $localKey = '')
@@ -361,7 +376,7 @@ trait RelationShip
         $through    = $this->parseModel($through);
         $localKey   = $localKey ?: $this->getPk();
         $foreignKey = $foreignKey ?: $this->getForeignKey($this->name);
-        $throughKey = $throughKey ?: $this->getForeignKey($through);
+        $throughKey = $throughKey ?: $this->getForeignKey((new $through)->getName());
 
         return new HasManyThrough($this, $model, $through, $foreignKey, $throughKey, $localKey);
     }
@@ -380,7 +395,7 @@ trait RelationShip
         // 记录当前关联信息
         $model      = $this->parseModel($model);
         $name       = Loader::parseName(basename(str_replace('\\', '/', $model)));
-        $table      = $table ?: $this->getTable(Loader::parseName($this->name) . '_' . $name);
+        $table      = $table ?: Loader::parseName($this->name) . '_' . $name;
         $foreignKey = $foreignKey ?: $name . '_id';
         $localKey   = $localKey ?: $this->getForeignKey($this->name);
 
@@ -412,7 +427,7 @@ trait RelationShip
             $foreignKey = $morph . '_id';
         }
 
-        $type = $type ?: Loader::parseName($this->name);
+        $type = $type ?: get_class($this);
 
         return new MorphOne($this, $model, $foreignKey, $morphType, $type);
     }
@@ -435,7 +450,7 @@ trait RelationShip
             $morph = Loader::parseName($trace[1]['function']);
         }
 
-        $type = $type ?: Loader::parseName($this->name);
+        $type = $type ?: get_class($this);
 
         if (is_array($morph)) {
             list($morphType, $foreignKey) = $morph;
@@ -565,6 +580,9 @@ trait RelationShip
                 }
             } elseif (isset($this->relation[$name])) {
                 $this->relationWrite[$name] = $this->relation[$name];
+            } elseif (isset($this->data[$name])) {
+                $this->relationWrite[$name] = $this->data[$name];
+                unset($this->data[$name]);
             }
         }
     }

@@ -21,8 +21,6 @@ class RuleItem extends Rule
     protected $route;
     // 请求类型
     protected $method;
-    // 所属分组
-    protected $group;
 
     /**
      * 架构函数
@@ -37,25 +35,23 @@ class RuleItem extends Rule
      */
     public function __construct(Route $router, RuleGroup $group, $name, $route, $method = '*', $option = [], $pattern = [])
     {
-        $this->router = $router;
-        $this->group  = $group;
-        $this->route  = $route;
-        $this->method = $method;
-
-        $this->setRule($name, $option);
-
-        $this->option  = array_merge($group->getOption(), $option);
+        $this->router  = $router;
+        $this->parent  = $group;
+        $this->route   = $route;
+        $this->method  = $method;
+        $this->option  = $option;
         $this->pattern = $pattern;
+
+        $this->setRule($name);
     }
 
     /**
      * 路由规则预处理
      * @access public
      * @param string      $rule     路由规则
-     * @param array       $option   路由参数
      * @return void
      */
-    public function setRule($rule, $option = [])
+    public function setRule($rule)
     {
         if ('$' == substr($rule, -1, 1)) {
             // 是否完整匹配
@@ -103,70 +99,86 @@ class RuleItem extends Rule
      * @param Request      $request  请求对象
      * @param string       $url      访问地址
      * @param string       $depr     路径分隔符
+     * @param bool         $completeMatch   路由是否完全匹配
      * @return Dispatch
      */
-    public function check($request, $url, $depr = '/')
+    public function check($request, $url, $depr = '/', $completeMatch = false)
     {
+        if ($dispatch = $this->checkAllowOptions($request)) {
+            // 允许OPTIONS嗅探
+            return $dispatch;
+        }
+
         // 检查参数有效性
         if (!$this->checkOption($this->option, $request)) {
             return false;
         }
 
-        if (isset($this->option['ext'])) {
-            // 路由ext参数 优先于系统配置的URL伪静态后缀参数
-            $url = preg_replace('/\.' . $request->ext() . '$/i', '', $url);
+        // 合并分组参数
+        $this->mergeGroupOptions();
+        $option = $this->option;
+
+        // 检查前置行为
+        if (isset($option['before']) && false === $this->checkBefore($option['before'])) {
+            return false;
         }
 
-        return $this->checkRule($request, $url, $depr);
+        if (isset($option['ext'])) {
+            // 路由ext参数 优先于系统配置的URL伪静态后缀参数
+            $url = preg_replace('/\.(' . $request->ext() . ')$/i', '', $url);
+        }
+
+        return $this->checkRule($request, $url, $depr, $completeMatch, $option);
     }
 
     /**
      * 检测路由规则
      * @access private
-     * @param string    $rule 路由规则
-     * @param string    $route 路由地址
+     * @param Request   $request 请求对象
      * @param string    $url URL地址
-     * @param array     $pattern 变量规则
-     * @param array     $option 路由参数
      * @param string    $depr URL分隔符（全局）
+     * @param bool      $completeMatch   路由是否完全匹配
+     * @param array     $option   路由参数
      * @return array|false
      */
-    private function checkRule($request, $url, $depr)
+    private function checkRule($request, $url, $depr, $completeMatch = false, $option = [])
     {
         // 检查完整规则定义
-        if (isset($this->pattern['__url__']) && !preg_match('/^' . $this->pattern['__url__'] . '/', str_replace('|', $depr, $url))) {
+        if (isset($this->pattern['__url__']) && !preg_match(0 === strpos($this->pattern['__url__'], '/') ? $this->pattern['__url__'] : '/^' . $this->pattern['__url__'] . '/', str_replace('|', $depr, $url))) {
             return false;
         }
 
         // 检查路由的参数分隔符
-        if (isset($this->option['param_depr'])) {
-            $url = str_replace(['|', $this->option['param_depr']], [$depr, '|'], $url);
+        if (isset($option['param_depr'])) {
+            $url = str_replace(['|', $option['param_depr']], [$depr, '|'], $url);
         }
 
         $len1 = substr_count($url, '|');
         $len2 = substr_count($this->name, '/');
 
         // 多余参数是否合并
-        $merge = !empty($this->option['merge_extra_vars']) ? true : false;
+        $merge = !empty($option['merge_extra_vars']) ? true : false;
 
         if ($merge && $len1 > $len2) {
             $url = str_replace('|', $depr, $url);
             $url = implode('|', explode($depr, $url, $len2 + 1));
         }
 
+        if (isset($option['complete_match'])) {
+            $completeMatch = $option['complete_match'];
+        }
+
         if ($len1 >= $len2 || strpos($this->name, '[')) {
-            if (!empty($this->option['complete_match'])) {
-                // 完整匹配
-                if (!$merge && $len1 != $len2 && (false === strpos($this->name, '[') || $len1 > $len2 || $len1 < $len2 - substr_count($this->name, '['))) {
-                    return false;
-                }
+            // 完整匹配
+            if ($completeMatch && (!$merge && $len1 != $len2 && (false === strpos($this->name, '[') || $len1 > $len2 || $len1 < $len2 - substr_count($this->name, '[')))) {
+                return false;
             }
 
-            $pattern = array_merge($this->group->getPattern(), $this->pattern);
+            $pattern = array_merge($this->parent->getPattern(), $this->pattern);
 
             if (false !== $match = $this->match($url, $pattern)) {
                 // 匹配到路由规则
-                return $this->parseRule($request, $this->name, $this->route, $url, $this->option, $match);
+                return $this->parseRule($request, $this->name, $this->route, $url, $option, $match);
             }
         }
 
@@ -241,7 +253,7 @@ class RuleItem extends Rule
                         if (false === $result) {
                             return false;
                         }
-                    } elseif (!preg_match('/^' . $pattern[$name] . '$/', $m1[$key])) {
+                    } elseif (!preg_match(0 === strpos($pattern[$name], '/') ? $pattern[$name] : '/^' . $pattern[$name] . '$/', $m1[$key])) {
                         return false;
                     }
                 }

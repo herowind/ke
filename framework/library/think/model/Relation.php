@@ -47,13 +47,13 @@ abstract class Relation
     }
 
     /**
-     * 获取当前的关联模型类
+     * 获取当前的关联模型类的实例
      * @access public
-     * @return string
+     * @return Model
      */
     public function getModel()
     {
-        return $this->model;
+        return $this->query->getModel();
     }
 
     /**
@@ -67,12 +67,49 @@ abstract class Relation
         return (new $this->model)->toCollection($resultSet);
     }
 
+    protected function getQueryFields($model)
+    {
+        $fields = $this->query->getOptions('field');
+        return $this->getRelationQueryFields($fields, $model);
+    }
+
+    protected function getRelationQueryFields($fields, $model)
+    {
+        if ($fields) {
+
+            if (is_string($fields)) {
+                $fields = explode(',', $fields);
+            }
+
+            foreach ($fields as &$field) {
+                if (false === strpos($field, '.')) {
+                    $field = $model . '.' . $field;
+                }
+            }
+        } else {
+            $fields = $model . '.*';
+        }
+
+        return $fields;
+    }
+
+    protected function getQueryWhere(&$where, $relation)
+    {
+        foreach ($where as $key => $val) {
+            if (is_string($key)) {
+                $where[] = [false === strpos($key, '.') ? $relation . '.' . $key : $key, '=', $val];
+                unset($where[$key]);
+            }
+        }
+    }
+
     /**
      * 执行基础查询（仅执行一次）
      * @access protected
      * @return void
      */
-    abstract protected function baseQuery();
+    protected function baseQuery()
+    {}
 
     public function __call($method, $args)
     {
@@ -80,15 +117,9 @@ abstract class Relation
             // 执行基础查询
             $this->baseQuery();
 
-            $result = call_user_func_array([$this->query, $method], $args);
+            $result = call_user_func_array([$this->query->getModel(), $method], $args);
 
-            if ($result instanceof Query) {
-                return $this;
-            } else {
-                $this->baseQuery = false;
-
-                return $result;
-            }
+            return $result === $this->query ? $this : $result;
         } else {
             throw new Exception('method not exists:' . __CLASS__ . '->' . $method);
         }

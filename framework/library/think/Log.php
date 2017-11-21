@@ -25,15 +25,34 @@ class Log implements LoggerInterface
     const DEBUG     = 'debug';
     const SQL       = 'sql';
 
-    // 日志信息
+    /**
+     * 日志信息
+     * @var array
+     */
     protected $log = [];
-    // 配置参数
+
+    /**
+     * 配置参数
+     * @var array
+     */
     protected $config = [];
-    // 日志写入驱动
+
+    /**
+     * 日志写入驱动
+     * @var log\Driver
+     */
     protected $driver;
-    // 当前日志授权key
+
+    /**
+     * 日志授权key
+     * @var string
+     */
     protected $key;
 
+    /**
+     * 应用对象
+     * @var App
+     */
     protected $app;
 
     public function __construct(App $app)
@@ -91,6 +110,7 @@ class Log implements LoggerInterface
             foreach ($context as $key => $val) {
                 $replace['{' . $key . '}'] = $val;
             }
+
             $msg = strtr($msg, $replace);
         }
 
@@ -187,16 +207,18 @@ class Log implements LoggerInterface
     /**
      * 实时写入日志信息 并支持行为
      * @param mixed  $msg   调试信息
-     * @param string $level 日志级别
+     * @param string $type  日志级别
      * @param bool   $force 是否强制写入
      * @return bool
      */
-    public function write($msg, $level = 'info', $force = false)
+    public function write($msg, $type = 'info', $force = false)
     {
         // 封装日志信息
+        $log = $this->log;
+
         if (true === $force || empty($this->config['level'])) {
             $log[$type][] = $msg;
-        } elseif (in_array($level, $this->config['level'])) {
+        } elseif (in_array($type, $this->config['level'])) {
             $log[$type][] = $msg;
         } else {
             return false;
@@ -210,10 +232,10 @@ class Log implements LoggerInterface
         }
 
         // 写入日志
-        $result = self::$driver->save($log);
+        $result = $this->driver->save($log);
 
         if ($result) {
-            self::$log = [];
+            $this->log = [];
         }
 
         return $result;

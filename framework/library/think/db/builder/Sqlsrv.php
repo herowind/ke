@@ -12,6 +12,7 @@
 namespace think\db\builder;
 
 use think\db\Builder;
+use think\db\Query;
 
 /**
  * Sqlsrv数据库驱动
@@ -21,16 +22,18 @@ class Sqlsrv extends Builder
     protected $selectSql       = 'SELECT T1.* FROM (SELECT thinkphp.*, ROW_NUMBER() OVER (%ORDER%) AS ROW_NUMBER FROM (SELECT %DISTINCT% %FIELD% FROM %TABLE%%JOIN%%WHERE%%GROUP%%HAVING%) AS thinkphp) AS T1 %LIMIT%%COMMENT%';
     protected $selectInsertSql = 'SELECT %DISTINCT% %FIELD% FROM %TABLE%%JOIN%%WHERE%%GROUP%%HAVING%';
     protected $updateSql       = 'UPDATE %TABLE% SET %SET% FROM %TABLE% %JOIN% %WHERE% %LIMIT% %LOCK%%COMMENT%';
-    protected $deleteSql       = 'DELETE FROM %TABLE% %USING% %JOIN% %WHERE% %LIMIT% %LOCK%%COMMENT%';
+    protected $deleteSql       = 'DELETE FROM %TABLE% %USING% FROM %TABLE% %JOIN% %WHERE% %LIMIT% %LOCK%%COMMENT%';
+    protected $insertSql       = 'INSERT INTO %TABLE% (%FIELD%) VALUES (%DATA%) %COMMENT%';
+    protected $insertAllSql    = 'INSERT INTO %TABLE% (%FIELD%) %DATA% %COMMENT%';
 
     /**
      * order分析
      * @access protected
-     * @param mixed $order
-     * @param array $options
+     * @param Query     $query        查询对象
+     * @param mixed     $order
      * @return string
      */
-    protected function parseOrder($query, $order)
+    protected function parseOrder(Query $query, $order)
     {
         if (is_array($order)) {
             $array = [];
@@ -40,7 +43,9 @@ class Sqlsrv extends Builder
                     if (false === strpos($val, '(')) {
                         $array[] = $this->parseKey($query, $val);
                     } elseif ('[rand]' == $val) {
-                        $array[] = $this->parseRand();
+                        $array[] = $this->parseRand($query);
+                    } else {
+                        $array[] = $val;
                     }
                 } else {
                     $sort    = in_array(strtolower(trim($val)), ['asc', 'desc']) ? ' ' . $val : '';
@@ -57,9 +62,10 @@ class Sqlsrv extends Builder
     /**
      * 随机排序
      * @access protected
+     * @param Query     $query        查询对象
      * @return string
      */
-    protected function parseRand($query)
+    protected function parseRand(Query $query)
     {
         return 'rand()';
     }
@@ -67,21 +73,25 @@ class Sqlsrv extends Builder
     /**
      * 字段和表名处理
      * @access protected
-     * @param string $key
-     * @param array  $options
+     * @param Query     $query        查询对象
+     * @param string    $key
      * @return string
      */
-    protected function parseKey($query, $key)
+    protected function parseKey(Query $query, $key)
     {
         $key = trim($key);
 
         if (strpos($key, '.') && !preg_match('/[,\'\"\(\)\[\s]/', $key)) {
             list($table, $key) = explode('.', $key, 2);
-            $alias             = $query->getOptions('alias');
+
+            $alias = $query->getOptions('alias');
+
+            if ('__TABLE__' == $table) {
+                $table = $query->getOptions('table');
+            }
+
             if (isset($alias[$table])) {
                 $table = $alias[$table];
-            } elseif ('__TABLE__' == $table) {
-                $table = $query->getTable();
             }
         }
 
@@ -99,10 +109,11 @@ class Sqlsrv extends Builder
     /**
      * limit
      * @access protected
-     * @param mixed $limit
+     * @param Query     $query        查询对象
+     * @param mixed     $limit
      * @return string
      */
-    protected function parseLimit($query, $limit)
+    protected function parseLimit(Query $query, $limit)
     {
         if (empty($limit)) {
             return '';
@@ -119,7 +130,7 @@ class Sqlsrv extends Builder
         return 'WHERE ' . $limitStr;
     }
 
-    public function selectInsert($query, $fields, $table)
+    public function selectInsert(Query $query, $fields, $table)
     {
         $this->selectSql = $this->selectInsertSql;
 

@@ -5,10 +5,12 @@ return [
     // | 应用设置
     // +----------------------------------------------------------------------
     'app'      => [
-        // 应用命名空间
-        'app_namespace'          => 'app',
+        // 应用名称
+        'app_name'               => '',
+        // 应用地址
+        'app_host'               => '',
         // 应用调试模式
-        'app_debug'              => true,
+        'app_debug'              => false,
         // 应用Trace
         'app_trace'              => false,
         // 应用模式状态
@@ -19,8 +21,6 @@ return [
         'auto_bind_module'       => false,
         // 注册的根命名空间
         'root_namespace'         => [],
-        // 扩展函数文件
-        'extra_file_list'        => [__DIR__ . '/helper.php'],
         // 默认输出类型
         'default_return_type'    => 'html',
         // 默认AJAX 数据返回格式,可选json xml ...
@@ -56,6 +56,8 @@ return [
         'default_action'         => 'index',
         // 默认验证器
         'default_validate'       => '',
+        // 默认的空模块名
+        'empty_module'           => '',
         // 默认的空控制器名
         'empty_controller'       => 'Error',
         // 操作方法前缀
@@ -75,22 +77,20 @@ return [
         'pathinfo_fetch'         => ['ORIG_PATH_INFO', 'REDIRECT_PATH_INFO', 'REDIRECT_URL'],
         // pathinfo分隔符
         'pathinfo_depr'          => '/',
+        // HTTPS代理标识
+        'https_agent_name'       => '',
         // URL伪静态后缀
         'url_html_suffix'        => 'html',
         // URL普通方式参数 用于自动生成
         'url_common_param'       => false,
         // URL参数方式 0 按名称成对解析 1 按顺序解析
         'url_param_type'         => 0,
-        // 是否开启路由
-        'url_route_on'           => true,
-        // 路由配置文件（支持配置多个）
-        'route_config_file'      => ['route'],
-        // 路由使用完整匹配
-        'route_complete_match'   => false,
+        // 是否开启路由延迟解析
+        'url_lazy_route'         => false,
         // 是否强制使用路由
         'url_route_must'         => false,
-        // 域名部署
-        'url_domain_deploy'      => false,
+        // 路由是否完全匹配
+        'route_complete_match'   => false,
         // 域名根，如thinkphp.cn
         'url_domain_root'        => '',
         // 是否自动转换URL中的控制器和操作名
@@ -162,11 +162,13 @@ return [
 
     'log'      => [
         // 日志记录方式，内置 file socket 支持扩展
-        'type'  => 'File',
+        'type'         => 'File',
         // 日志保存目录
         //'path'  => LOG_PATH,
         // 日志记录级别
-        'level' => [],
+        'level'        => [],
+        // 是否记录trace信息到日志
+        'record_trace' => false,
     ],
 
     // +----------------------------------------------------------------------
@@ -208,7 +210,7 @@ return [
         // 是否自动开启 SESSION
         'auto_start'     => true,
         'httponly'       => true,
-        'secure'         => true,
+        'secure'         => false,
     ],
 
     // +----------------------------------------------------------------------
@@ -276,6 +278,8 @@ return [
         'datetime_format' => 'Y-m-d H:i:s',
         // 是否需要进行SQL性能分析
         'sql_explain'     => false,
+        // 查询对象
+        'query'           => '\\think\\db\\Query',
     ],
 
     //分页配置

@@ -2,7 +2,7 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2016 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
@@ -45,6 +45,7 @@ Container::getInstance()->bind([
     'route'                 => Route::class,
     'session'               => Session::class,
     'url'                   => Url::class,
+    'validate'              => Validate::class,
     'view'                  => View::class,
 
     // 接口依赖注入
@@ -68,6 +69,7 @@ Facade::bind([
     facade\Route::class    => Route::class,
     facade\Session::class  => Session::class,
     facade\Url::class      => Url::class,
+    facade\Validate::class => Validate::class,
     facade\View::class     => View::class,
 ]);
 
@@ -90,8 +92,12 @@ Loader::addClassAlias([
     'Route'    => facade\Route::class,
     'Session'  => facade\Session::class,
     'Url'      => facade\Url::class,
+    'Validate' => facade\Validate::class,
     'View'     => facade\View::class,
 ]);
 
 // 加载惯例配置文件
 facade\Config::set(include __DIR__ . '/convention.php');
+
+// 加载composer autofile文件
+Loader::loadComposerAutoloadFiles();

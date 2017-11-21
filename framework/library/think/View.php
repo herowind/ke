@@ -13,13 +13,28 @@ namespace think;
 
 class View
 {
-    // 模板引擎实例
+    /**
+     * 模板引擎实例
+     * @var object
+     */
     public $engine;
-    // 模板变量
+
+    /**
+     * 模板变量
+     * @var array
+     */
     protected $data = [];
-    // 用于静态赋值的模板变量
+
+    /**
+     * 全局模板变量
+     * @var array
+     */
     protected static $var = [];
-    // 视图输出替换
+
+    /**
+     * 模板输出替换
+     * @var array
+     */
     protected $replace = [];
 
     /**
@@ -35,8 +50,9 @@ class View
         $this->engine($engine);
 
         // 基础替换字符串
-        $request     = Facade::make('request');
-        $root        = $request->rootUrl();
+        $request = Container::get('request');
+        $root    = $request->rootUrl();
+
         $baseReplace = [
             '__URL__'    => $request->root() . '/' . $request->module() . '/' . Loader::parseName($request->controller()),
             '__ROOT__'   => $root,
@@ -106,6 +122,7 @@ class View
         if (isset($options['type'])) {
             unset($options['type']);
         }
+
         $this->engine = new $class($options);
 
         return $this;
@@ -126,6 +143,17 @@ class View
     }
 
     /**
+     * 检查模板是否存在
+     * @access private
+     * @param string|array  $name 参数名
+     * @return bool
+     */
+    public function exists($name)
+    {
+        return $this->engine->exists($name);
+    }
+
+    /**
      * 解析和获取模板内容 用于输出
      * @param string    $template 模板文件名或者内容
      * @param array     $vars     模板输出变量
@@ -140,27 +168,28 @@ class View
         // 模板变量
         $vars = array_merge(self::$var, $this->data, $vars);
 
-        if (!isset($vars['App'])) {
-            // 应用对象模板变量
-            $vars['App'] = Facade::make('app');
-        }
-
         // 页面缓存
         ob_start();
         ob_implicit_flush(0);
 
         // 渲染输出
-        $method = $renderContent ? 'display' : 'fetch';
-        $this->engine->$method($template, $vars, $config);
+        try {
+            $method = $renderContent ? 'display' : 'fetch';
+            $this->engine->$method($template, $vars, $config);
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
 
         // 获取并清空缓存
         $content = ob_get_clean();
 
         // 内容过滤标签
-        Facade::make('hook')->listen('view_filter', $content);
+        Container::get('hook')->listen('view_filter', $content);
 
         // 允许用户自定义模板的字符串替换
         $replace = array_merge($this->replace, $replace);
+
         if (!empty($replace)) {
             $content = strtr($content, $replace);
         }

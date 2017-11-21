@@ -13,8 +13,17 @@ namespace think;
 
 class Facade
 {
-
+    /**
+     * 绑定对象
+     * @var array
+     */
     protected static $bind = [];
+
+    /**
+     * 始终创建新的对象实例
+     * @var bool
+     */
+    protected static $alwaysNewInstance;
 
     /**
      * 绑定类的静态代理
@@ -26,6 +35,10 @@ class Facade
      */
     public static function bind($name, $class = null)
     {
+        if (__CLASS__ != static::class) {
+            return self::__callStatic('bind', func_get_args());
+        }
+
         if (is_array($name)) {
             self::$bind = array_merge(self::$bind, $name);
         } else {
@@ -51,6 +64,10 @@ class Facade
             $class = $facadeClass;
         } elseif (isset(self::$bind[$class])) {
             $class = self::$bind[$class];
+        }
+
+        if (static::$alwaysNewInstance) {
+            $newInstance = true;
         }
 
         return Container::getInstance()->make($class, $args, $newInstance);
@@ -79,6 +96,10 @@ class Facade
      */
     public static function make($class, $args = [], $newInstance = false)
     {
+        if (__CLASS__ != static::class) {
+            return self::__callStatic('make', func_get_args());
+        }
+
         if (true === $args) {
             // 总是创建新的实例化对象
             $newInstance = true;

@@ -11,24 +11,67 @@
 
 namespace think\route;
 
-use think\Facade;
+use think\Container;
 use think\Loader;
+use think\Response;
+use think\Route;
 use think\route\dispatch\Callback as CallbackDispatch;
 use think\route\dispatch\Controller as ControllerDispatch;
 use think\route\dispatch\Module as ModuleDispatch;
+use think\route\dispatch\Response as ResponseDispatch;
 
 class Domain extends RuleGroup
 {
+    /**
+     * 架构函数
+     * @access public
+     * @param Route       $router   路由对象
+     * @param string      $name     分组名称
+     * @param mixed       $rule     域名路由
+     * @param array       $option   路由参数
+     * @param array       $pattern  变量规则
+     */
+    public function __construct(Route $router, $name = '', $rule = null, $option = [], $pattern = [])
+    {
+        $this->router  = $router;
+        $this->name    = trim($name, '/');
+        $this->option  = $option;
+        $this->rule    = $rule;
+        $this->pattern = $pattern;
+    }
+
     /**
      * 检测域名路由
      * @access public
      * @param Request      $request  请求对象
      * @param string       $url      访问地址
      * @param string       $depr     路径分隔符
+     * @param bool         $completeMatch   路由是否完全匹配
      * @return Dispatch|false
      */
-    public function check($request, $url, $depr = '/')
+    public function check($request, $url, $depr = '/', $completeMatch = false)
     {
+        if ($this->rule) {
+            // 延迟解析域名路由
+            if ($this->rule instanceof Response) {
+                return new ResponseDispatch($this->rule);
+            }
+
+            $group = new RuleGroup($this->router);
+            $this->addRule($group);
+            $this->router->setGroup($group);
+
+            if ($this->rule instanceof \Closure) {
+                Container::getInstance()->invokeFunction($this->rule);
+            } elseif (is_array($this->rule)) {
+                $this->router->rules($this->rule);
+            } else {
+                $this->router->bind($this->rule);
+            }
+
+            $this->rule = null;
+        }
+
         // 检测别名路由
         if ($this->router->getAlias($url) || $this->router->getAlias(strstr($url, '|', true))) {
             // 检测路由别名
@@ -45,7 +88,7 @@ class Domain extends RuleGroup
             return $result;
         }
 
-        return parent::check($request, $url, $depr);
+        return parent::check($request, $url, $depr, $completeMatch);
     }
 
     /**
@@ -112,7 +155,7 @@ class Domain extends RuleGroup
 
         if (!empty($bind)) {
             // 记录绑定信息
-            Facade::make('app')->log('[ BIND ] ' . var_export($bind, true));
+            Container::get('app')->log('[ BIND ] ' . var_export($bind, true));
 
             // 如果有URL绑定 则进行绑定检测
             if (0 === strpos($bind, '\\')) {
@@ -142,7 +185,7 @@ class Domain extends RuleGroup
     {
         $url    = str_replace($depr, '|', $url);
         $array  = explode('|', $url, 2);
-        $action = !empty($array[0]) ? $array[0] : Facade::make('config')->get('default_action');
+        $action = !empty($array[0]) ? $array[0] : Container::get('config')->get('default_action');
 
         if (!empty($array[1])) {
             $this->parseUrlParams($array[1]);
@@ -163,8 +206,8 @@ class Domain extends RuleGroup
     {
         $url    = str_replace($depr, '|', $url);
         $array  = explode('|', $url, 3);
-        $class  = !empty($array[0]) ? $array[0] : Facade::make('config')->get('default_controller');
-        $method = !empty($array[1]) ? $array[1] : Facade::make('config')->get('default_action');
+        $class  = !empty($array[0]) ? $array[0] : Container::get('config')->get('default_controller');
+        $method = !empty($array[1]) ? $array[1] : Container::get('config')->get('default_action');
 
         if (!empty($array[2])) {
             $this->parseUrlParams($array[2]);
@@ -185,7 +228,7 @@ class Domain extends RuleGroup
     {
         $url    = str_replace($depr, '|', $url);
         $array  = explode('|', $url, 2);
-        $action = !empty($array[0]) ? $array[0] : Facade::make('config')->get('default_action');
+        $action = !empty($array[0]) ? $array[0] : Container::get('config')->get('default_action');
 
         if (!empty($array[1])) {
             $this->parseUrlParams($array[1]);
@@ -206,7 +249,7 @@ class Domain extends RuleGroup
     {
         $url    = str_replace($depr, '|', $url);
         $array  = explode('|', $url, 2);
-        $action = !empty($array[0]) ? $array[0] : Facade::make('config')->get('default_action');
+        $action = !empty($array[0]) ? $array[0] : Container::get('config')->get('default_action');
 
         if (!empty($array[1])) {
             $this->parseUrlParams($array[1]);

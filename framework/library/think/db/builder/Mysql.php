@@ -12,36 +12,70 @@
 namespace think\db\builder;
 
 use think\db\Builder;
+use think\db\Query;
 
 /**
  * mysql数据库驱动
  */
 class Mysql extends Builder
 {
+    // 查询表达式解析
+    protected $parser = [
+        'parseCompare'     => ['=', '<>', '>', '>=', '<', '<='],
+        'parseLike'        => ['LIKE', 'NOT LIKE'],
+        'parseBetween'     => ['NOT BETWEEN', 'BETWEEN'],
+        'parseIn'          => ['NOT IN', 'IN'],
+        'parseExp'         => ['EXP'],
+        'parseRegexp'      => ['REGEXP', 'NOT REGEXP'],
+        'parseNull'        => ['NOT NULL', 'NULL'],
+        'parseBetweenTime' => ['BETWEEN TIME', 'NOT BETWEEN TIME'],
+        'parseTime'        => ['< TIME', '> TIME', '<= TIME', '>= TIME'],
+        'parseExists'      => ['NOT EXISTS', 'EXISTS'],
+    ];
+
     protected $updateSql = 'UPDATE %TABLE% %JOIN% SET %SET% %WHERE% %ORDER%%LIMIT% %LOCK%%COMMENT%';
+
+    /**
+     * 正则查询
+     * @access protected
+     * @param Query     $query        查询对象
+     * @param string    $key
+     * @param string    $exp
+     * @param mixed     $value
+     * @param string    $field
+     * @return string
+     */
+    protected function parseRegexp(Query $query, $key, $exp, $value, $field)
+    {
+        return $key . ' ' . $exp . ' ' . $value;
+    }
 
     /**
      * 字段和表名处理
      * @access protected
-     * @param string $key
-     * @param array  $options
+     * @param Query     $query        查询对象
+     * @param string    $key
      * @return string
      */
-    protected function parseKey($query, $key)
+    protected function parseKey(Query $query, $key)
     {
         $key = trim($key);
 
-        if (strpos($key, '$.') && false === strpos($key, '(')) {
+        if (strpos($key, '->') && false === strpos($key, '(')) {
             // JSON字段支持
-            list($field, $name) = explode('$.', $key);
+            list($field, $name) = explode('->', $key);
             $key                = 'json_extract(' . $field . ', \'$.' . $name . '\')';
         } elseif (strpos($key, '.') && !preg_match('/[,\'\"\(\)`\s]/', $key)) {
             list($table, $key) = explode('.', $key, 2);
-            $alias             = $query->getOptions('alias');
+
+            $alias = $query->getOptions('alias');
+
+            if ('__TABLE__' == $table) {
+                $table = $query->getOptions('table');
+            }
+
             if (isset($alias[$table])) {
                 $table = $alias[$table];
-            } elseif ('__TABLE__' == $table) {
-                $table = $query->getTable();
             }
         }
 
@@ -63,11 +97,11 @@ class Mysql extends Builder
     /**
      * field分析
      * @access protected
+     * @param Query     $query        查询对象
      * @param mixed     $fields
-     * @param array     $options
      * @return string
      */
-    protected function parseField($query, $fields)
+    protected function parseField(Query $query, $fields)
     {
         $fieldsStr = parent::parseField($query, $fields);
         $options   = $query->getOptions();
@@ -116,9 +150,10 @@ class Mysql extends Builder
     /**
      * 随机排序
      * @access protected
+     * @param Query     $query        查询对象
      * @return string
      */
-    protected function parseRand($query)
+    protected function parseRand(Query $query)
     {
         return 'rand()';
     }
