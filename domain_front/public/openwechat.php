@@ -1,6 +1,6 @@
 <?php
 define('APP_SITE', 'http://ke.qyhzlm.com');
-include __DIR__ . '/../extend/EasyWechat/vendor/autoload.php';
+require __DIR__ . '/../../easywechat/vendor/autoload.php';
 use EasyWeChat\OpenPlatform\Server\Guard;
 use EasyWeChat\Factory;
 //use EasyWeChat\OpenPlatform\Auth\VerifyTicket;
