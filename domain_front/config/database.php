@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '10.66.233.114',
+    'hostname'        => '127.0.0.1',
     // 数据库名
     'database'        => 'guanke',
     // 用户名
-    'username'        => 'huzhu',
+    'username'        => 'root',
     // 密码
-    'password'        =>'1q2w3e4r!Q@W#E$R',
+    'password'        =>'',
     // 端口
     'hostport'        => '',
     // 连接dsn
