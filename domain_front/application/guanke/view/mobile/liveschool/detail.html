@@ -1,0 +1,139 @@
+{extend name="mobile@template/common"/} 
+{block name="style"}
+<style>
+.weui-footer_fixed-bottom {
+    bottom: 0;
+}
+.weui-tab{
+	border-top:#999;
+}
+</style>
+{/block}
+{block name="body"}
+<div class="course-hd">
+	<div class="course-camera">
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" src="{$detail.camera.url}" poster="{$detail.school.banner}" controls="controls" width="100%" style=""></video>
+	</div>
+</div>
+<div class="course-hd">
+	<div class="weui-tab">
+		<div class="weui-navbar">
+			<a class="weui-navbar__item weui-bar__item--on" href="#tab1"> 建议留言 </a> 
+			<a class="weui-navbar__item" href="#tab2"> 学校简介 </a>
+		</div>
+		<div class="weui-tab__bd">
+			<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+				<div class="weui-panel weui-panel_access">
+					<div class="weui-panel__bd">
+						<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+							<div class="weui-media-box__hd">
+								<img class="weui-media-box__thumb" src="{$detail.school.logo}">
+							</div>
+							<div class="weui-media-box__bd">
+								<h4 class="weui-media-box__title">{$detail.name}</h4>
+								<p class="weui-media-box__desc">{$detail.intro}</p>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="ui-empty">
+					<div class="ui-empty_icon"></div>
+				</div>
+				<div class="group-topic" style="display: none">
+					<div class="group-topic_avatar">
+						<img class="" src="{$topic.member.avatar}" />
+					</div>
+					<div class="group-topic_body">
+						<div class="group-topic_header">
+							<div class="group-topic_realname">{$topic.member.nickname}</div>
+							<div class="group-topic_manage" data-uid="{$topic.member_id}" data-id="{$topic.id}" bindtap="topicActionSheet">•••</div>
+						</div>
+						<div class="group-topic_content">
+							<text selectable="true">{$topic.content}</text>
+						</div>
+						<div class="group-topic_footer">
+							<div class="group-topic_createtime">{$topic.create_time}</div>
+							<div class="group-topic_action" data-uid="{$topic.uid}">
+								<div class="group-topic_action_icon" data-id="{$topic.id}" bindtap='bindTopicAction'>
+									<img src="/guanke/images/icons/topicaction.png" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 悬浮发布 -->
+				<div class="ui-button-float" id="publishTopic">
+					<img src="/guanke/images/icons/pen.png" />
+				</div>
+			</div>
+			<div id="tab2" class="weui-tab__bd-item">
+				<div>
+					<img src="/guanke/images/test2.jpg" style="width:100%;display:block"> 
+					<img src="/guanke/images/test1.jpg" style="width:100%;display:block">
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="weui-footer weui-footer_fixed-bottom">
+	<button href="javascript:;" class="weui-btn weui-btn_primary" style="border-radius: 0">{$detail.apply.name}</button>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript">
+		var data = {
+			a : 1
+		};
+		var vm = new Vue({
+			data : data
+		})
+
+		var screenW;
+		var flag = false;
+		window.document.title = '{$course.name}';
+
+		total = document.documentElement.clientHeight;
+		document.body.style.height = total + "px";
+		var video = document.getElementById('video');
+		video.oncanplay = function() {
+			flag = true;
+		}
+		var playVideo = setInterval(function() {
+			if (flag) {
+				clearInterval(playVideo);
+			} else {
+				video.load();
+			}
+		}, 20000);
+
+		$(document).on("click", "#publishTopic", function() {
+			$("#video").hide();
+			$.prompt({
+				text : "",
+				title : "请留下您的宝贵意见",
+				onOK : function(text) {
+					$.alert("您的留言是:" + text, "提交成功");
+					$("#video").show();
+				},
+				onCancel : function() {
+					console.log("取消了");
+					$("#video").show();
+				},
+				input : ''
+			});
+		});
+		
+        $.noti({
+            title: "学校有话说",
+            text: "{$detail.apply.content}",
+            media: "<img src='{$detail.school.logo}' />",
+            data: {
+              message: "点击最下面的按钮才可以哦"
+            },
+            time: 5000,
+            onClick: function(data) {
+              $.alert(data.message);
+            }
+          });
+	</script>
+{/block}

@@ -1,0 +1,82 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">直播活动查询
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="index">
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$Think.get.keywords??''}" placeholder="关键词：活动名称" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="index">清空条件</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5 ">序号</th>
+                    <th class=" w15 ">活动名称</th>
+                    <th class=" w9 ">摄像头</th>
+                    <th class=" w10">开始时间</th>
+                    <th class=" w5">状态</th>
+                    <th class=" w5 ">排序</th>
+                    <th class=" w5 ">显示</th>
+                    <th class=" w15 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="pageData" id="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$i}</td>
+                    <td>{$item.name}</td>
+                    <td>{$item.course.name}</td>
+                    <td>{$item.camera.name}</td>
+                    <td>{$item.feetypetext}</td>
+                    <td>{$item.fee}元</td>
+                    <td>{$item.starttime}</td>
+                    <td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isopen']}" data-url="statusChange.html" data-id="{$item.id}" data-field="isopen"  data-status0="未开始" data-status0-css="btn-none" data-status1="直播中" data-status1-css="btn-success"  title="点击是否开始"></button>
+					</td>
+                    <td>	                    
+                    	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sortChange.html"/>
+					</td>
+					<td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isdisplay']}" data-url="statusChange.html" data-id="{$item.id}" data-field="isdisplay"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否显示"></button>
+					</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
+						<a class="text-green btn btn-xs btn-default" href="detail?id={$item.id}"  title="管理"><i class="fa fa-cog"></i> 管理</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        {empty name="pageData"}
+        <div class="non-info show">
+            <span>尚未上线，敬请期待</span>
+        </div>
+        {/empty}
+
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+var $page = {};
+
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+
+</script>
+{/block}

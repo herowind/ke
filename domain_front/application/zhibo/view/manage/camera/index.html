@@ -1,0 +1,74 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">摄像头查询
+        <span class="fr text-small text-normal padding-top"><b class="text-main">如有疑问或购买摄像头，电话0411-88889999</b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="index">
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$Think.get.keywords??''}" placeholder="名称或设备号" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="index">清空条件</button>
+		    <button type="button" class="btn btn-sm  btn-success linkto-btn pull-right" data-url="edit"><i class="fa fa-plus"></i> 新增摄像头</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5 ">序号</th>
+                    <th class=" w30 ">摄像头名称</th>
+                    <th class=" w20 ">设备号</th>
+                    <th class=" w10 ">状态</th>
+                    <th class=" w10 ">排序</th>
+                    <th class=" w20 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="pageData" id="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$i}</tds>
+                    <td>{$item.name}</td>
+                    <td>{$item.code}</td>
+                    <td><span class="{$item.isuse==1?'text-green':''}">{$item.isusetext}</span></td>
+                    <td>	                    
+                    	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sortChange.html"/>
+					</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main btn btn-xs btn-default" href="###"  data-toggle="modal" onclick="popModal('/zhibo/manage.camera/name.html?id={$item.id}')"><i class="fa fa-pencil"></i> 修改名称</a>
+                    	<a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 临时编辑</a>
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        {empty name="pageData"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData->render()|raw}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+var $page = {};
+
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+
+</script>
+{/block}

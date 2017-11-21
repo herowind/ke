@@ -1,0 +1,81 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">教师查询
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="index">
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$Think.get.keywords??''}" placeholder="教师名称，手机号" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="index">清空条件</button>
+		    <button type="button" class="btn btn-sm  btn-success  pull-right" data-toggle="modal" onclick="popModal('/guanke/manage.teacher/search.html')"><i class="fa fa-plus"></i> 新增教师</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center"><input type="checkbox" /></th>
+                    <th class=" w5 ">序号</th>
+                    <th class=" w10 text-center">头像</th>
+                    <th class=" w10 ">姓名</th>
+                    <th class=" w10 ">手机</th>
+                    <th class=" w10 ">头衔</th>
+                    <th class=" w20 ">技能</th>
+                    <th class=" w10 ">排序</th>
+                    <th class=" w10 ">显示</th>
+                    <th class=" w10 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="pageData" id="item"}
+                <tr >
+                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+                    <td>{$i}</td>
+                    <td class="text-center"><img src="{$item.avatar}" width="40" height="40"/></td>
+                    <td>{$item.name}</td>
+                    <td>{$item.mobile}</td>
+                    <td>{$item.capital}</td>
+                    <td>{$item.skill}</td>
+                    <td>	                    
+                    	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sortChange.html"/>
+					</td>
+					<td>
+						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isdisplay']}" data-url="statusChange.html" data-id="{$item.id}" data-field="isdisplay"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否显示"></button>
+					</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+                        <a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 完善信息</a>
+	                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        {empty name="pageData"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData->render()|raw}</div>
+	    </div>
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+var $page = {};
+
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+
+</script>
+{/block}

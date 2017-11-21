@@ -1,0 +1,111 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">{$detail.id?'编辑':'新增'}会员
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">
+	        <div class="form-unit-style" data-title="教师信息">
+	            <h5 class="real-name-head margin-large-top text-main-deep">会员信息<span class="margin-left">可帮助会员设置密码</span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">姓名</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="nickname" name="nickname" value="{$detail.nickname}" placeholder="">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">手机</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="mobile" name="mobile" value="{$detail.mobile}" placeholder="">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">省份</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="province" name="province" value="{$detail.province}" placeholder="">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">城市</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="city" name="city" value="{$detail.city}" placeholder="">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">备注</div>
+	                <div class="input-zoon">
+	                	<textarea class="form-control width-main" id="intro" name="intro" placeholder="备注是前台客户看不到的">{$detail.intro}</textarea>
+	                </div>
+	            </div>
+	            
+	            
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">头像照片</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_avatar"   value="{$detail.avatar}" />
+	                    <input type="hidden" name="oldcheck_avatar" class="oldcheckpic"  value="{$detail.avatar}" />
+	                    <img  class="fileupload-show" src="{$detail['avatar']?$detail['avatar']:'/site/images/manage/upload_blank.jpg'}" width="60" height="60" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_avatar"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['avatar']?$detail['avatar']:'/app/images/no_img.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：200*200</span>
+                	</div>
+            	</div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">状态</div>
+	                <div class="input-zoon">
+	                    <input type="hidden" name="status" value="{$detail.status}">
+	                    <input class="form-control" name="status_check" id="status_check" data-on-color="success" data-on-text="正常" data-off-color="danger" data-off-text="封停" data-size="small" value="1" {$detail.status==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	        </div>	        
+
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="button" class="btn btn-info" id="saveBtn">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15 linkto-btn" data-url="index.html">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+var $page = {};
+$(function(){
+
+    //是否显示初始化
+    $("input[name='status_check']").bootstrapSwitch();
+    $('input[name="status_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='status']").val(1);
+        }else{
+            $("input[name='status']").val(0);
+        }
+    })    
+    
+    //提交表单
+	$("#saveBtn").on("click",function(){
+		$('.ajaxForm').submit();
+        return false;
+    })
+})
+</script>
+{/block}

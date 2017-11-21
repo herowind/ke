@@ -1,0 +1,59 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">
+		<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+	</button>
+	<h4 class="modal-title">新增教师</h4>
+</div>
+<div class="modal-body">
+	<form class="form-inline form-edit border-none" id="formEdit"
+		method="post" action="/guanke/manage.teacher/search" autocomplete="off">
+		<div class="form-unit-style" data-title="输入项信息">
+			<div class="form-group clearfix">
+				<div class="label-zoon"></div>
+				<div class="input-zoon">
+					<input class="form-control width-main" type="text" name="mobile"
+						placeholder="强输入手机号查询" >
+						<button type="button" class="btn btn-primary" id="searchBtn">查询</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<div id="members" style="display:flex;justify-content:center;align-content:start;flex-wrap:wrap">
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function(){   
+    $("#searchBtn").on("click",function(){
+    	$.get("/guanke/manage.teacher/search.html",$("#formEdit").serialize()).success(function(data){
+            if(data.code==0){
+            	showMsg(data.msg,'error');
+            }else if(data.code==1){
+            	$("#members").html('');
+            	let members = data.data;
+            	for(let i in members){
+            		let htmlStr = '<div class="text-center margin">'
+            		+'<img src="'+members[i].avatar+'" width="85" height="85">'
+            		+'<h5 class="margin-small-top">'+members[i].nickname+' </h5>'
+            		+'<button type="button" class="btn btn-primary btn-xs margin-small-top" onclick="createTeacher('+members[i].id+')">授权成为教师</button>'
+            		+'</div>'
+            		$("#members").append(htmlStr)
+            	}
+            }
+        });
+        return false;
+    })
+})
+
+function createTeacher(member_id){
+	$.get("/guanke/manage.teacher/create.html",{member_id:member_id}).success(function(data){
+        if(data.code==0){
+        	showMsg(data.msg,'error');
+        }else if(data.code==1){
+        	showMsg(data.msg,'success');
+        	popModalHide();
+        	refreshFrame();
+        }
+    });
+}
+</script>
