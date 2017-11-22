@@ -23,8 +23,8 @@ return [
 						'callback' => APP_SITE.'/mobile/passport/loginwx.html',
 						
 				],
-				'app_id' => 'wxa82d282aef3dcffa',
-				'secret' => 'b61138219385c9152e59a513b9f298a7',
+				'app_id' => 'wx1114642a77425468',
+				'secret' => 'd0c002791502e950f0c0b8cc882cab17',
 				'token' => 'guanke',
 				'aes_key' => 'KXLT0BdLBTsWx637REQLUFRTOmMqPrastrGqimyMc8n' 
 				
