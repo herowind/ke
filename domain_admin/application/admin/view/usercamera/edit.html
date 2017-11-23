@@ -1,0 +1,72 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">
+		<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+	</button>
+	<h4 class="modal-title">编辑摄像头</h4>
+</div>
+
+<div class="modal-body">
+	<form class="form-inline form-edit border-none" id="formEdit" method="post" action="/admin/usercamera/edit" autocomplete="off">
+		<input  type="hidden" name="id"  value="{$detail.id}">
+		<input  type="hidden" name="cid"  value="{$adminuser.cid}">
+		<div class="form-unit-style" data-title="输入项信息">
+			<div class="form-group clearfix">
+				<div class="label-zoon required">用户账号</div>
+				<div class="input-zoon">
+					<input class="form-control width-main" type="text" name="username"  value="{$adminuser.username}" disabled>
+				</div>
+			</div>
+			<div class="form-group clearfix">
+				<div class="label-zoon required">摄像头名称</div>
+				<div class="input-zoon">
+					<input class="form-control width-main" type="text" name="name" value="{$detail.name}" autocomplete="off">
+					<p class="form-control-static">例如1001号摄像头</p>
+				</div>
+			</div>
+			<div class="form-group clearfix">
+				<div class="label-zoon required">摄像头代码</div>
+				<div class="input-zoon">
+					<input class="form-control width-main" type="text" name="code" value="{$detail.code}" >
+				</div>
+			</div>
+			<div class="form-group clearfix">
+				<div class="label-zoon required">链接地址</div>
+				<div class="input-zoon">
+					<input class="form-control width-main" type="text" name="url" value="{$detail.url}">
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<span id="resultInfo" class="text-success pull-left"></span>
+	<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+</div>
+<script type="text/javascript">
+$(function(){
+	$("#saveBtn").on("click",function(){
+		var btn = $(this);
+        btn.addClass("disabled");
+		$("#formEdit").submit();
+		btn.removeClass("disabled");
+		return false;
+    })    
+});
+$('#formEdit').ajaxForm({
+    success: complete, // 这是提交后的方法
+    dataType: 'json'
+});
+
+//表单检查
+function complete(data){
+	if(data.code==0){
+    	showMsg(data.msg,'error');
+    }else if(data.code==1){
+    	showMsg(data.msg,'success');
+    	popModalHide();
+    	refreshFrame();
+    }
+}
+
+</script>

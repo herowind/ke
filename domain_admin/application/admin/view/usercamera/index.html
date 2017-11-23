@@ -1,0 +1,90 @@
+{extend name="admin@template/iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/cityselect/css/cityselect.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">我的用户管理-【{$adminuser.username}】
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+    	<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="" ><a href="/admin/useraccount/edit.html?cid={$adminuser.cid}">用户基本信息</a></li>
+    		<li class="active"><a href="/admin/usercamera/index.html?cid={$adminuser.cid}">管理用户摄像头</a></li>
+    	</ul>
+ 		<div class="form-inline form-edit" style="margin-top:-1px;" id="formSearch">    
+			<div class="form-unit-style" data-title="摄像头管理">
+				<h5 class="real-name-head margin-large-top text-main-deep">摄像头列表<span class="margin-left"></span>
+					<span class="margin-left">摄像头编码和链接地址是独一无二的</span>			
+				</h5>
+
+		        <table class="table table-hover margin-mid-top">
+		            <thead>
+		                <tr>
+		                    <th class=" w5 text-center"><input type="checkbox" /></th>
+		                    <th class=" w5">序号</th>
+		                    <th class=" w10 ">摄像头名称</th>
+		                    <th class=" w10">编码</th>
+		                    <th class=" w45 ">链接</th>
+		                    <th class=" w10 text-center">使用状态</th>
+		                    <th class=" w15 text-center">操作</th>                 
+		                </tr>
+		            </thead>
+		            <tbody>            		            
+		                {volist name="pageData" id="item"}
+		                <tr >
+		                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+		                    <td>{$i}</tds>
+		                    <td>{$item.name}</td>
+		                    <td>{$item.code}</td>
+		                    <td>{$item.url|substr=0,50}...</td>
+							<td class="text-center">
+								<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isuse']}" data-url="/guanke/manage.slide/statusChange.html" data-id="{$item.id}" data-field="isuse"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否显示"></button>
+							</td>
+		                    <td class="text-center">
+								<div class="btn-group btn-group-xs">
+								  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i> 更多操作</button>
+								  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    <span class="caret"></span>
+								    <span class="sr-only">更多</span>
+								  </button>
+								  <ul class="dropdown-menu" style="z-index:888">
+								    <li><a href="javascript:void(0)" onclick="popModal('/admin/usercamera/preview.html?cid={$item.cid}&id={$item.id}')" data-toggle="tooltip" data-placement="top" title="仅用于调试"><i class="fa fa-video-camera" ></i> 预览摄像头</a></li>
+								    <li role="separator" class="divider"></li>
+								    <li><a class="confirm-rst-url-btn" href="/admin/usercamera/remove.html?cid={$item.cid}&id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a></li>
+								  </ul>
+								</div>
+								<button class="text-main btn btn-xs btn-default" onclick="popModal('/admin/usercamera/edit.html?cid={$item.cid}&id={$item.id}')"  title="编辑"><i class="fa fa-pencil"></i> 编辑</button>		                   
+							 </td>
+						</tr>
+		                {/volist}
+		            </tbody>
+		        </table>
+
+		        <div class="show-page padding-big-right">
+			        <div class="page">{$pageData->render()|raw}</div>
+			    </div>	
+				<div class="non-info show">
+		            <button class="btn btn-success btn-sm text-center"  onclick="popModal('/admin/usercamera/edit.html?cid={$adminuser.cid}')"  >
+						<i class="fa fa-plus"></i> 新增摄像头
+					</button>
+		        </div>            
+			</div>
+		</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+</script>
+{/block}

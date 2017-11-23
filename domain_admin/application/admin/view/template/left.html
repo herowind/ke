@@ -1,0 +1,22 @@
+<div class="view-container-left">
+    <div class="top-border"><span class="nav-side"></span><span class="sub-side"></span></div>
+    {foreach name="menu" item="vo" key="mk"}
+    <div id="adminNavTabs_{$mk}" class="nav-tabs">
+    	{foreach name="vo.child" item="v2"}
+    	{if $v2.isshow == 1}
+	    <dl>
+		    <dt><a href="javascript:void(0);"><img src="{$v2.icon}">{$v2.name}</a></dt>
+		    <dd class="sub-menu">
+			    <ul>
+			    	{foreach name="v2.child" item="v3"}
+				    	<li><a href="javascript:void(0);" data-param="{$v3.a}|{$v3.c}|{$v3.m}">{$v3.name}</a></li>
+				    {/foreach}
+			    </ul>
+		    </dd>
+	    </dl>
+	    {/if}
+    	{/foreach}
+    </div>
+    {/foreach}
+    <div class="about" title="关于系统" onclick="ajax_form('about', '', 'http://www.qyhzlm.com', 640);"><i class="fa fa-copyright"></i><span>互助联盟</span></div>
+</div>
