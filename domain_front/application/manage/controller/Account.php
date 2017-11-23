@@ -20,9 +20,9 @@ use app\manage\model\User;
 class Account extends ManageController
 {
 
-    public function _initialize()
+    public function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
     }
 
     /**

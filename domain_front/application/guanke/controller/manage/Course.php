@@ -17,7 +17,6 @@ namespace app\guanke\controller\manage;
 use app\manage\controller\ManageController;
 use app\guanke\model\GuankeCourse;
 use app\guanke\validate\CourseValid;
-use app\zhibo\model\ZhiboCamera; 
 
 class Course extends ManageController
 {

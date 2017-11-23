@@ -17,6 +17,7 @@ namespace app\guanke\controller\manage;
 use app\manage\controller\ManageController;
 use app\guanke\model\GuankeSchool;
 use app\guanke\validate\SchoolValid;
+use app\guanke\model\GuankeSlide;
 
 class School extends ManageController{
 	
@@ -105,7 +106,6 @@ class School extends ManageController{
 	    }else{
 	        return $this->error('信息不存在');
 	    }
-	    
 	}
 	
 	/**
@@ -144,6 +144,54 @@ class School extends ManageController{
 	    }else{
 	        $this->error('操作失败','',$detail->$field);
 	    }
+	}
+	
+	/**
+	 * 学校幻灯片
+	 */
+	public function slide(){
+		$school_id = $this->request->param('school_id');
+		$detail = GuankeSchool::manage()->find($school_id);
+		if(empty($detail)){
+			$this->error('请先完善学校基本信息','edit');
+		}
+		$pageData = GuankeSlide::manage()->where('channel','school')->where('channelid',$school_id)->order('sort desc')->paginate(10);
+		$this->assign('pageData',$pageData);
+		$this->assign('detail',$detail);
+		return $this->fetch();
+	}
+	
+	/**
+	 * 学校幻灯片添加
+	 */
+	public function slideadd(){
+        if ($this->request->isPost()) {
+            $params = $this->request->param();
+            if (empty($params['name'])) {
+                $this->error('幻灯片名称不能为空');
+            }
+            
+        	//上传banner
+            $rtnBanner = $this->uploadCut('banner',640,320);
+            if($rtnBanner !== false){
+                $params['banner'] = $rtnBanner;
+            }	
+            
+            $params['cid'] = $this->getCid();
+            $params['channel'] = 'school';
+            $params['channelid'] = $params['school_id'];
+            $detail = GuankeSlide::create($params);
+            if($detail && $detail->id>0){
+            	$this->success('添加成功');
+            }else{
+            	$this->error('添加失败');
+            }
+
+        } else {
+        	$detail = ['school_id'=>$this->request->param('school_id')];
+            $this->assign('detail', $detail);
+            exit($this->fetch());
+        }
 	}
 	
 }

@@ -16,8 +16,8 @@ namespace app\manage\controller;
 
 class Index extends ManageController{
 	
-	public function _initialize(){
-		parent::_initialize();
+	public function initialize(){
+		parent::initialize();
 	}
 
 	/**

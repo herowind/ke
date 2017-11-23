@@ -152,7 +152,7 @@ function refreshItem(){
 	if ($.cookie('workspaceParam') == null) {
         // 默认选择第一个菜单
         //$('.nc-module-menu').find('li:first > a').click();
-        openItem('welcome|Index');
+        //openItem('welcome|Index');
     } else {
         openItem($.cookie('workspaceParam'));
     }

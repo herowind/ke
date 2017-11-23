@@ -12,11 +12,17 @@
     </div>
  
     <div class="page-content">
+		<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="active" ><a href="edit.html?id={$detail.id}">学校基本信息</a></li>
+    		<li class=""><a href="slide.html?school_id={$detail.id}">主页幻灯片</a></li>
+    	</ul>
 	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
 	        <input type="hidden" id="id" name="id" value="{$detail.id}">
 	        <input type="hidden" id="type" name="type" value="{$detail.type}">
 	        <div class="form-unit-style" data-title="学校信息">
-	            <h5 class="real-name-head margin-large-top text-main-deep">学校信息<span class="margin-left">完善学校信息</span></h5>
+				<h5 class="real-name-head margin-large-top text-main-deep">录入基本信息<span class="margin-left"></span>
+					<span class="margin-left">录入完学校，就可以为学校添加课程和老师了</span>
+				</h5>
 	            <div class="form-group clearfix">
 	                <div class="label-zoon required">学校名称</div>
 	                <div class="input-zoon">
@@ -43,7 +49,7 @@
 	            <div class="form-group clearfix">
 	                <div class="label-zoon required">简介</div>
 	                <div class="input-zoon">
-	                	<textarea class="form-control width-main" id="intro" name="intro">{$detail.intro}</textarea>
+	                	<textarea class="form-control width-main" id="intro" rows="5" name="intro">{$detail.intro}</textarea>
 	                </div>
 	            </div>
 	            <div class="form-group clearfix">

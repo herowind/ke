@@ -27,6 +27,11 @@
 		<div class="swiper-slide">
 			<img src="{$school.banner}" />
 		</div>
+		{volist name="slide" id="item"}
+		<div class="swiper-slide">
+			<img src="{$item.banner}" />			
+		</div>
+		{/volist}
 	</div>
 </div>
 <div class="school-bd">

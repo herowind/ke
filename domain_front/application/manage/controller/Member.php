@@ -16,8 +16,8 @@ namespace app\manage\controller;
 
 class Member extends ManageController{
 	
-	public function _initialize(){
-		parent::_initialize();
+	public function initialize(){
+		parent::initialize();
 	}
 
 	/**

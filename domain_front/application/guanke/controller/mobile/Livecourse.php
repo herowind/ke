@@ -15,6 +15,7 @@
 namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLivecourse;
+use app\guanke\model\GuankeLivecoursemember;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -25,10 +26,23 @@ class Livecourse extends SchoolController {
 	 * 直播课程详细页
 	 */
 	public function detail(){
+		//验证是否登录
 		$detail = GuankeLivecourse::find($this->request->param('id'));
-		if($detail->membervisibility == 2){
-			//关注才能看
+		if($detail->membervisibility != 1){
 			$this->initMember();
+			$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
+			if(empty($courseMember)){
+				$data = [
+						'livecourse_id' => $detail->id,
+						'member_id'=>$this->getMid(),
+						'cid'=>$this->getCid(),
+						'isfavor'=>0,
+						'islike'=>0,
+				];
+				GuankeLivecoursemember::create($data);
+			}
+		}else{
+			$detail['camera']['url'] = '#';
 		}
 		$this->assign('detail',$detail);
 		return $this->fetch ();
@@ -40,5 +54,47 @@ class Livecourse extends SchoolController {
 	public function lists(){
 		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
+	}
+	
+	/**
+	 * 检查会员是否有权观看
+	 */
+	public function checkMembervisibility(){
+		$this->initMember();
+		$this->initOfficialAccount();
+		$detail = GuankeLivecourse::find($this->request->param('id'));
+		switch($detail->membervisibility){
+			case 1:
+				break;
+			case 2:
+				//验证是否关注,没有关注弹出二维码
+				$user = $this->officialAccount->user->get($this->getOpenid());
+				if($user['subscribe'] != 1){
+					return ['code'=>0,'error'=>'unsubscribe','msg'=>'请先关注公众平台'];
+				}
+				break;
+			case 3:
+				//验证是否审核，审核通过
+				$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
+				if($courseMember->isfavor != 1){
+					return ['code'=>0,'error'=>'unfavor','msg'=>'您尚未报名'];
+				}
+				if($courseMember->isveryfy == 0){
+					return ['code'=>0,'error'=>'unveryfy','msg'=>'请耐心等待审核'];
+				}
+				break;
+			case 4:
+				//验证是否付费
+				$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
+				if($courseMember->isfavor != 1){
+					return ['code'=>0,'error'=>'unfavor','msg'=>'您尚未付费'];
+				}
+				if($courseMember->isveryfy == 0){
+					return ['code'=>0,'error'=>'unveryfy','msg'=>'请耐心等待审核'];
+				}
+			default:
+				return  ['code'=>0,'msg'=>'无权操作'];
+		}
+		return ['code'=>1,'msg'=>'操作成功',data=>$detail->url];
 	}
 }

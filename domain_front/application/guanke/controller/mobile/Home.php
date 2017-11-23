@@ -17,6 +17,7 @@ namespace app\guanke\controller\mobile;
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLiveschool;
 use app\guanke\model\GuankeTeacher;
+use app\guanke\model\GuankeSlide;
 
 class Home extends SchoolController {
 	public function initialize() {
@@ -30,9 +31,11 @@ class Home extends SchoolController {
 		$livecourses = GuankeLivecourse::where('cid',$this->getCid())->select();
 		$liveschools = GuankeLiveschool::where('cid',$this->getCid())->select();
 		$teachers = GuankeTeacher::where('cid',$this->getCid())->select();
+		$slide = GuankeSlide::where('cid',$this->getCid())->where('channel','school')->where('channelid',$this->getSchoolId())->select();
 		$this->assign('livecourses',$livecourses);
 		$this->assign('liveschools',$liveschools);
 		$this->assign('teachers',$teachers);
+		$this->assign('slide',$slide);
 		return $this->fetch();
 	}
 }
