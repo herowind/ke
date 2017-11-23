@@ -1,0 +1,128 @@
+{extend name="manage@template/iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/cityselect/css/cityselect.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">{$detail.id?'编辑':'新增'}学校
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden" id="id" name="id" value="{$detail.id}">
+	        <input type="hidden" id="type" name="type" value="{$detail.type}">
+	        <div class="form-unit-style" data-title="学校信息">
+	            <h5 class="real-name-head margin-large-top text-main-deep">学校信息<span class="margin-left">完善学校信息</span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">学校名称</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="name" name="name" value="{$detail.name}" placeholder="">
+	                </div>
+	            </div>
+				<div class="form-group clearfix">
+	                <div class="label-zoon required">类型</div>
+	                <div class="input-zoon">
+						<select class="form-control width-main" id="type" name="type" data-default="学校类型">
+				           	<option value="1">主校</option>
+				           	<option value="2">分校</option>
+						</select>								
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">校址</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-xs" id="city" name="city" value="{$detail.city}" placeholder="选择城市"/>
+						<input type="text" class="form-control width-sm" id="address" name="address" value="{$detail.address}" placeholder="请输入详细地址">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">简介</div>
+	                <div class="input-zoon">
+	                	<textarea class="form-control width-main" id="intro" name="intro">{$detail.intro}</textarea>
+	                </div>
+	            </div>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">客服</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="phone" name="phone" value="{$detail.phone}" placeholder="请输入客服电话或手机">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">Logo图片</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_logo"   value="{$detail.logo}" />
+	                    <input type="hidden" name="oldcheck_logo" class="oldcheckpic"  value="{$detail.logo}" />
+	                    <img  class="fileupload-show" src="{$detail['logo']?$detail['logo']:'/site/images/manage/upload_blank.jpg'}" width="60" height="60" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_logo"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['logo']?$detail['logo']:'/app/images/no_img.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：200*200</span>
+                	</div>
+            	</div>
+            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">Banner图片</div>
+	                <div class="input-zoon fileupload-container">
+	                    <input type="hidden" name="check_banner"   value="{$detail.banner}" />
+	                    <input type="hidden" name="oldcheck_banner" class="oldcheckpic"  value="{$detail.banner}" />
+	                    <img  class="fileupload-show" src="{$detail['banner']?$detail['banner']:'/guanke/images/school_banner2.jpg'}" width="160" height="80" >&nbsp;&nbsp;
+	                    <a href="javascript:;" class="file" title="点击选择所要上传的图片"><input type="file" name="file_banner"/>选择上传文件</a>&nbsp;
+	                    <a href="javascript:;" class="file fileupload-reset" data-src="{$detail['banner']?$detail['banner']:'/guanke/images/school_banner2.jpg'}" title="还原修改前的图片">撤销修改图片</a> 
+	                    <span class="lbl">&nbsp;&nbsp;建议尺寸：640*320</span>
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">前台显示</div>
+	                <div class="input-zoon">
+	                    <input type="hidden" name="isdisplay" value="{$detail.isdisplay}">
+	                    <input class="form-control" name="isdisplay_check" id="isdisplay_check" data-on-color="success" data-on-text="显示" data-off-color="danger" data-off-text="隐藏" data-size="small" value="1" {$detail.isdisplay==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="button" class="btn btn-info" id="saveBtn">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15 linkto-btn" data-url="index.html">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script src="/lib/components/cityselect/js/cityselect.js"></script>
+<script>
+var $page = {};
+var city = new Vcity.CitySelector({input:'city'});
+$(function(){
+	$("#type").val("{$detail.type|default='1'}");
+
+    //初始化checkbox插件
+    $("input[name='isdisplay_check']").bootstrapSwitch();
+    $('input[name="isdisplay_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='isdisplay']").val(1);
+        }else{
+            $("input[name='isdisplay']").val(0);
+        }
+    }) 
+    
+	$("#saveBtn").on("click",function(){
+		$('.ajaxForm').submit();
+        return false;
+    })
+})
+</script>
+{/block}
