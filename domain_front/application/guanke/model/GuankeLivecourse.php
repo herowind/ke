@@ -33,16 +33,13 @@ class GuankeLivecourse extends CommonMod
     	
     	switch($data['membervisibility']){
     		case 2:
-    			return ['name'=>'立即关注','content'=>$data['intro']?$data['intro']:'请关注公众号后，免费观看课程'];
+    			return ['name'=>'立即报名','content'=>$data['intro']?$data['intro']:'本课程报名即可观看'];
     			break;
     		case 3:
-    			return ['name'=>'立即申请','content'=>$data['intro']?$data['intro']:'申请审核通过后才能观看课程，如有疑问请拨打客服电话'];
-    			break;
-    		case 4:
-    			return ['name'=>'微信支付','content'=>"本课程为收费课程，需付费观看"];
+    			return ['name'=>'立即报名','content'=>$data['intro']?$data['intro']:'本课程报名审核通过后即可观看'];
     			break;
     		default:
-    			return ['name'=>'立即申请','content'=>'如有疑问请拨打客服电话'];
+    			return ['name'=>'立即报名','content'=>'如有疑问请拨打客服电话'];
     	}
     }
     

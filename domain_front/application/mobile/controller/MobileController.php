@@ -60,6 +60,10 @@ class MobileController extends MobileBaseController{
 		}
 	}
 	
+	protected function initMemberTest(){
+		$this->member = (object)['id'=>14];
+	}
+	
 	/**
 	 * 验证登录状态
 	 */

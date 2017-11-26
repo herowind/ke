@@ -59,7 +59,7 @@
 	<!-- 商友圈 -->
 	<div class="school-tab-content" id="content_course">
 		{volist name="livecourses" id="item"} 
-		<a class="ui-item" href="/guanke/mobile.livecourse/detail.html?id={$item.id}&school_id={$school.id}" style="border-bottom: 1px solid #efefef">
+		<a class="ui-item" href="/guanke/mobile.livecourse/detail.html?live_id={$item.id}&school_id={$school.id}" style="border-bottom: 1px solid #efefef">
 			<div class="ui-item-box">
 				<div class="item-sec1">
 					<img src="{$item.course.banner}" /> <span class="live">直播课程</span>
@@ -83,7 +83,7 @@
 		<div class="weui-panel weui-panel_access">
 			<div class="weui-panel__bd">
 				{volist name="liveschools" id="item"} 
-				<a href="/guanke/mobile.liveschool/detail.html?id={$item.id}&school_id={$school.id}" class="weui-media-box weui-media-box_appmsg">
+				<a href="/guanke/mobile.liveschool/detail.html?live_id={$item.id}&school_id={$school.id}" class="weui-media-box weui-media-box_appmsg">
 					<div class="weui-media-box__hd">
 						<img class="weui-media-box__thumb"
 							src="{$item.school.logo}"
@@ -102,7 +102,7 @@
 		<div class="weui-panel weui-panel_access">
 			<div class="weui-panel__bd">
 				{volist name="teachers" id="item"} 
-				<a href="javascript:alert('敬请关注公众号')" class="weui-media-box weui-media-box_appmsg">
+				<a href="/guanke/mobile.teacher/detail.html?teacher_id={$item.id}&school_id={$school.id}" class="weui-media-box weui-media-box_appmsg">
 					<div class="weui-media-box__hd">
 						<img class="weui-media-box__thumb"
 							src="{$item.avatar}"
@@ -126,10 +126,6 @@
 {/block} {block name="script"}
 <script>
 $(function(){
-	$(".ui-item").on('click',function(){
-		document.location.href = '/guanke/mobile.livecourse/detail.html?course_token='+$(this).data('token');
-	})
-	
     $(".swiper-container").swiper({
         autoplay: 3000
       });	

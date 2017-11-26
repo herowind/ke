@@ -10,32 +10,32 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 教师页面
+// | 课程页面
 // +----------------------------------------------------------------------
 namespace app\guanke\controller\mobile;
 
+use app\guanke\model\GuankeCourse;
 use app\guanke\model\GuankeContentpage;
-use app\guanke\model\GuankeTeacher;
 
-class Teacher extends SchoolController {
+class Course extends SchoolController {
 	public function initialize() {
 		parent::initialize ();
 	}
 	
 	/**
-	 * 教师首页面
+	 * 课程首页面
 	 */
 	public function index(){
-		$list = GuankeTeacher::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$list = GuankeCourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$this->assign('list',$list);
 		return $this->fetch ();
 	}
 	
 	/**
-	 * 教师详细页面
+	 * 课程详细页面
 	 */
 	public function detail(){
-	$detail = GuankeTeacher::get($this->request->param('teacher_id'));
+	$detail = GuankeCourse::get($this->request->param('course_id'));
 		if($detail->contenttype == 2){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
@@ -45,10 +45,10 @@ class Teacher extends SchoolController {
 		return $this->fetch ();
 	}
 	/**
-	 * 教师详细ajax
+	 * 课程详细ajax
 	 */
 	public function detaildata(){
-		$detail = GuankeTeacher::get($this->request->param('course_id'));
+		$detail = GuankeCourse::get($this->request->param('course_id'));
 		if($detail->contenttype == 2){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
@@ -58,10 +58,10 @@ class Teacher extends SchoolController {
 	}
 	
 	/**
-	 * 教师列表页
+	 * 课程列表页
 	 */
 	public function listdata(){
-		$list = GuankeTeacher::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$list = GuankeCourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
 	}
 }

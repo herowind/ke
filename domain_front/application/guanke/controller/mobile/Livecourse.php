@@ -16,6 +16,7 @@ namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLivecoursemember;
+use app\admin\model\ZhiboCamera;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -23,106 +24,104 @@ class Livecourse extends SchoolController {
 	}
 	
 	/**
+	 * 直播课程列表页
+	 */
+	public function index(){
+		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$this->assign('list',$list);
+		return $this->fetch (); 
+	}
+	
+	/**
 	 * 直播课程详细页
 	 */
 	public function detail(){
-		//验证是否登录
-		$detail = GuankeLivecourse::find($this->request->param('id'));
-		if($detail->membervisibility != 1){
-			$this->initMember();
-			$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
-			if(empty($courseMember)){
-				$data = [
-						'livecourse_id' => $detail->id,
-						'member_id'=>$this->getMid(),
-						'cid'=>$this->getCid(),
-						'isfavor'=>0,
-						'islike'=>0,
-				];
-				GuankeLivecoursemember::create($data);
-			}
-			$detail['camera']['url'] = '#';
-		}
-		$this->assign('detail',$detail);
+		$live_id = $this->request->param('live_id');
+		$this->initMember();
+		$this->assign('live_id',$live_id);
 		return $this->fetch ();
 	}
 	
 	/**
-	 * 直播课程列表页
+	 * 直播课程列表数据
 	 */
-	public function lists(){
+	public function listdata(){
 		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
 	}
 	
-	/**
-	 * 检查会员是否有权观看
-	 */
-	public function checkMembervisibility(){
+	public function detaildata(){
+		$live_id = $this->request->param('live_id');
 		$this->initMember();
+		//$this->initMember();
 		$this->initOfficialAccount();
-		$detail = GuankeLivecourse::find($this->request->param('id'));
-		switch($detail->membervisibility){
-			case 1:
-				break;
-			case 2:
-				//验证是否关注,没有关注弹出二维码
-				$user = $this->officialAccount->user->get($this->getOpenid());
-				if($user['subscribe'] != 1){
-					return ['code'=>0,'error'=>'unsubscribe','msg'=>'请先关注公众平台'];
-				}
-				break;
-			case 3:
-				//验证是否审核，审核通过
-				$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
-				if($courseMember->isfavor != 1){
-					return ['code'=>0,'error'=>'unfavor','msg'=>'您尚未报名'];
-				}
-				if($courseMember->isveryfy == 0){
-					return ['code'=>0,'error'=>'unveryfy','msg'=>'请耐心等待审核'];
-				}
-				break;
-			case 4:
-				//验证是否付费
-				$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
-				if($courseMember->isfavor != 1){
-					return ['code'=>0,'error'=>'unfavor','msg'=>'您尚未付费'];
-				}
-				if($courseMember->isveryfy == 0){
-					return ['code'=>0,'error'=>'unveryfy','msg'=>'请耐心等待审核'];
-				}
-			default:
-				return  ['code'=>0,'msg'=>'无权操作'];
+		$detail = GuankeLivecourse::find($live_id);
+		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
+		//①判断是否强制关注公众号
+		if($detail->issubscribe == 1){
+			//验证是否关注,没有关注弹出二维码
+			$user = $this->officialAccount->user->get($this->getOpenid());
+			$detail->member->issubscribe = $user['subscribe'];
+			if($detail->member->issubscribe !=1){
+				return ['code'=>0,'msg'=>'请先关注公众平台','error'=>'unsubscribe','data'=>$detail];
+			}
 		}
-		return ['code'=>1,'msg'=>'操作成功',data=>$detail->url];
+		
+		//②判断是否需要报名
+		if($detail->membervisibility != 1){
+			$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
+			if(empty($courseMember)){
+				//需报名
+				$detail->member->isfavor = 0;
+				return ['code'=>0,'msg'=>'您尚未报名','error'=>'unfavor','data'=>$detail];
+			}else{
+				$detail->member->isfavor = $courseMember['isfavor'];
+				if($detail->membervisibility == 3){
+					//需审核
+					$detail->member->isveryfy = $courseMember['isveryfy'];
+					if($detail->member->isveryfy !=1){
+						return ['code'=>0,'msg'=>'请耐心等待审核','error'=>'unveryfy','data'=>$detail];
+					}
+				}
+			}
+		}
+		$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
+		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
 	}
 	
-	public function enroll(){
+	/**
+	 * 报名观看
+	 */
+	public function favor(){
+		$live_id = $this->request->param('live_id');
+		$membervisibility = $this->request->param('membervisibility');
 		$this->initMember();
-		//验证是否审核，审核通过
-		$courseMember = GuankeLivecoursemember::where('livecourse_id',$this->request->param('id'))->where('member_id',$this->getMid())->find();
+		//验证是否报过名
+		$courseMember = GuankeLivecoursemember::where('livecourse_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($courseMember)){
+			//未报过名，进行报名
 			$data = [
-					'livecourse_id' => $this->request->param('id'),
+					'livecourse_id' => $live_id,
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
 					'isfavor'=>1,
 					'islike'=>0,
 			];
 			GuankeLivecoursemember::create($data);
-			$this->success('报名成功');
-		}else{
-			if($courseMember->isfavor == 1){
-				if($courseMember->isveryfy == 1){
-					$this->success('您已审核通过了');
-				}else{
-					$this->success('您已报过名了');
-				}
+			if($membervisibility == 3){
+				return ['code'=>1,'msg'=>'报名成功,审核中请稍等'];
 			}else{
-				$courseMember->isfavor = 1;
-				$courseMember->save();
-				$this->success('报名成功');
+				return ['code'=>1,'msg'=>'报名成功,可以观看了'];
 			}
+			
+		}else{
+			if($membervisibility == 3 && $courseMember->isveryfy==1){
+				return ['code'=>0,'msg'=>'报名成功，可以观看了'];
+			}else{
+				return ['code'=>0,'msg'=>'报名成功，审核中请稍等'];
+			}
+			
 		}
 	}
+
 }

@@ -79,7 +79,15 @@
 	        </div>
 	        
 			<div id="zhibo" class="form-unit-style" data-title="权限设置">
-	            <h5 class="real-name-head margin-large-top text-main-deep">权限设置<span class="margin-left">选择付费观看，则必须设置【观看费用】</span></h5>
+	            <h5 class="real-name-head margin-large-top text-main-deep">权限设置<span class="margin-left">如果选择必须关注，只有关注公众号的成员才可以观看视频</span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">是否必须关注</div>
+	                <div class="input-zoon">
+	                    <input type="hidden" name="issubscribe" value="{$detail.issubscribe}">
+	                    <input class="form-control" name="issubscribe_check" id="issubscribe_check" data-on-color="success" data-on-text="必须" data-off-color="danger" data-off-text="不必" data-size="small" value="1" {$detail.isdisplay==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	            
 	            <div class="form-group clearfix">
 	                <div class="label-zoon required">可视群体</div>
 	                <div class="input-zoon">
@@ -91,18 +99,18 @@
 	                </div>
 	            </div>
 	            
-	            <div class="form-group clearfix">
+	            <!--div class="form-group clearfix">
 	                <div id="memberfeeInput" class="label-zoon">观看费用</div>
 	                <div class="input-zoon">
 						<input type="text" class="form-control width-main" id="memberfee" name="memberfee" value="{$detail.memberfee}" placeholder="请输入金额">								
 	                </div>
-	            </div>
+	            </div -->
 	            
 	            <div class="form-group clearfix">
 	                <div class="label-zoon">客户提醒</div>
 	                <div class="input-zoon">
 	                	<textarea class="form-control width-main" id="intro" name="intro" placeholder="">{$detail.intro}</textarea>
-	                	<p class="form-control-static"> （选填）对于本次课程直播，提醒客户注意事项，如付费说明，嘉宾说明等</p>	
+	                	<p class="form-control-static"> （选填）对于本次课程直播，需要客户提醒客户的信息等</p>	
 	                </div>
 	            </div>
 	            
@@ -172,6 +180,15 @@ $(function(){
             $("input[name='isdisplay']").val(0);
         }
     })   
+    
+    $("input[name='issubscribe_check']").bootstrapSwitch();
+    $('input[name="issubscribe_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+            $("input[name='issubscribe']").val(1);
+        }else{
+            $("input[name='issubscribe']").val(0);
+        }
+    })  
     
     //提交表单
 	$("#saveBtn").on("click",function(){

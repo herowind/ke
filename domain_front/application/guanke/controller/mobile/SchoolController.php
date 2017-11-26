@@ -32,12 +32,17 @@ class SchoolController extends MobileController {
 	private function initSchool(){
 		//获得学校信息
 		$school_id = $this->request->param('school_id');
-		$this->school = GuankeSchool::get($school_id);
+		if(empty($school_id)){
+			$this->school = cookie('school');
+		}else{
+			$this->school = GuankeSchool::get($school_id);
+		}
 		if(empty($this->school)){
 			$this->error('您尚未选择学校');
 		}
 		//保存CID及最后访问的页面（用于登录回调页面）
 		cookie('currentCid',$this->school->cid);
+		cookie('school',$this->school);
 		if(!$this->request->isAjax()){
 			$this->setLastUrl();
 		}
