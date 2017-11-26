@@ -95,6 +95,7 @@ class Livecourse extends SchoolController {
 	 */
 	public function favor(){
 		$live_id = $this->request->param('live_id');
+		$camera_id = $this->request->param('camera_id');
 		$membervisibility = $this->request->param('membervisibility');
 		$this->initMember();
 		//验证是否报过名
@@ -110,16 +111,18 @@ class Livecourse extends SchoolController {
 			];
 			GuankeLivecoursemember::create($data);
 			if($membervisibility == 3){
-				return ['code'=>1,'msg'=>'报名成功,审核中请稍等'];
+				return ['code'=>0,'msg'=>'报名成功,审核中请稍等','error'=>'unveryfy'];
 			}else{
-				return ['code'=>1,'msg'=>'报名成功,可以观看了'];
+				$url = ZhiboCamera::where('id',$camera_id)->value('url');
+				return ['code'=>1,'msg'=>'报名成功,可以观看了','url'=>$url];
 			}
 			
 		}else{
 			if($membervisibility == 3 && $courseMember->isveryfy==1){
-				return ['code'=>0,'msg'=>'报名成功，可以观看了'];
+				$url = ZhiboCamera::where('id',$camera_id)->value('url');
+				return ['code'=>1,'msg'=>'报名成功，可以观看了','url'=>$url];
 			}else{
-				return ['code'=>0,'msg'=>'报名成功，审核中请稍等'];
+				return ['code'=>0,'msg'=>'报名成功，审核中请稍等','error'=>'unveryfy'];
 			}
 			
 		}

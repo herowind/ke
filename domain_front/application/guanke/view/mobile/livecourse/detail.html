@@ -49,8 +49,8 @@
 </div>
 <div class="weui-footer weui-footer_fixed-bottom">
 	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
-	<button class="weui-btn weui-btn_primary" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
-	<button class="weui-btn weui-btn_primary"  style="border-radius: 0" v-if="isshowqrcode">关注公众号</button>
+	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
+	<button class="weui-btn weui-btn_primary" style="border-radius: 0" v-if="isshowqrcode">关注公众号</button>
 </div>
 {/block} 
 {block name="script"}
@@ -87,7 +87,7 @@
 						console.log(_this.live.course_id);
 						_this.getCourse(_this.live.course_id);
 						if(res.code==1){
-							$("#video").prop("src",_this.live.camera.url);
+							$("#video").prop("src",_this.live.member.url);
 							$("#video").load();
 						}else{
 							if(res.error=="unsubscribe"){
@@ -121,12 +121,19 @@
 				},
 				doFavor:function(e){
 					let _this = this;
-					$.get('favor.html',{live_id:live_id,membervisibility:_this.live.membervisibility},function(res){
+					$.get('favor.html',{live_id:live_id,membervisibility:_this.live.membervisibility,camera_id:_this.live.camera_id},function(res){
 						console.log(res);
 						if(res.code==1){
 							$.alert(res.msg, "友情提示");
-							_this.isshowfavor = 1;
+							_this.isshowfavor = false;
+							_this.isshowveryfy = false;
+							$("#video").prop("src",res.url);
+							$("#video").load();
 						}else{
+							if(res.error=='unveryfy'){
+								$.alert(res.msg, "友情提示");
+								_this.isshowveryfy = true;
+							}
 							 $.alert("加载失败，请重新打开页面", "网速不给力");
 						}
 					})
