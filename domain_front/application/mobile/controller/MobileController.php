@@ -18,6 +18,7 @@ use EasyWeChat\Factory;
 use app\mobile\service\MobileLoginSvc;
 use app\wechat\model\WechatSetting;
 use app\common\controller\MobileBaseController;
+use function GuzzleHttp\json_decode;
 
 class MobileController extends MobileBaseController{
 	protected $pageTitle = '官网';
@@ -25,6 +26,7 @@ class MobileController extends MobileBaseController{
 	protected $theme = 'default';//暂时未用
 	//init之后才可以调用$officialAccount
 	protected $officialAccount;
+	protected $authorizer_info;
 	
 	/**
 	 * 描述：全局初始化
@@ -93,6 +95,7 @@ class MobileController extends MobileBaseController{
 		$wechat = WechatSetting::field('cid,appid,authorizer_refresh_token,authorizer_info')->find($this->getCid());
 		if($wechat){
 			$this->officialAccount = $openPlatform->officialAccount($wechat->appid, $wechat->authorizer_refresh_token);
+			$this->authorizer_info = json_decode($wechat->authorizer_info,true);
 		}else{
 			$this->officialAccount = null;
 		}

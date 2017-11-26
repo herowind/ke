@@ -18,6 +18,8 @@ use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLiveschool;
 use app\guanke\model\GuankeTeacher;
 use app\guanke\model\GuankeSlide;
+use app\wechat\model\WechatSetting;
+use function GuzzleHttp\json_decode;
 
 class Home extends SchoolController {
 	public function initialize() {
@@ -37,5 +39,21 @@ class Home extends SchoolController {
 		$this->assign('teachers',$teachers);
 		$this->assign('slide',$slide);
 		return $this->fetch();
+	}
+	
+	/**
+	 * 验证是否关注平台
+	 */
+	public function issubscribe(){
+		$this->initMember();
+		$this->initOfficialAccount();
+		//验证是否关注,没有关注弹出二维码
+		$user = $this->officialAccount->user->get($this->getOpenid());
+		$data['subscribe'] = $user['subscribe'];
+		$data['qrcode_rul'] = $this->authorizer_info['qrcode_url'].'.jpg';
+		$data['head_img'] = $this->authorizer_info['head_img'];
+		$data['nick_name'] = $this->authorizer_info['nick_name'];
+		$data['signature'] = $this->authorizer_info['signature'];
+		return ['code'=>1,'msg'=>'查询成功','data'=>$data];
 	}
 }
