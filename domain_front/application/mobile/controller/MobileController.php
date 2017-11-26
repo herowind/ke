@@ -95,7 +95,7 @@ class MobileController extends MobileBaseController{
 		$wechat = WechatSetting::field('cid,appid,authorizer_refresh_token,authorizer_info')->find($this->getCid());
 		if($wechat){
 			$this->officialAccount = $openPlatform->officialAccount($wechat->appid, $wechat->authorizer_refresh_token);
-			$this->authorizer_info = json_decode($wechat->authorizer_info,true);
+			$this->authorizer_info = $wechat->authorizer_info;
 		}else{
 			$this->officialAccount = null;
 		}

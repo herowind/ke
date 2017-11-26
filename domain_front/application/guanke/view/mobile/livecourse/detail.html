@@ -107,9 +107,9 @@
 							$("#video").prop("src",_this.live.member.url);
 							$("#video").load();
 						}else{
-							_this.isshowfavor=false,
-							_this.isshowveryfy=false,
-							_this.isshowqrcode=false,
+							_this.isshowfavor=false;
+							_this.isshowveryfy=false;
+							_this.isshowqrcode=false;
 							if(res.error=="unsubscribe"){
 								_this.isshowqrcode = true;
 								$("#wechat").popup();
