@@ -184,7 +184,9 @@ class Livecourse extends ManageController
 	public function favormembers(){
 		$id = $this->request->param('live_id');
 		$pageData = Db::view('GuankeLivecoursemember', 'livecourse_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLivecoursemember.member_id = UserMember.id and GuankeLivecoursemember.livecourse_id ={$id}")->paginate(20);
+		$detail = GuankeLivecourse::manage()->find($id);
 		$this->assign('pageData',$pageData);
+		$this->assign('detail',$detail);
 		return $this->fetch();
 	}
 	
