@@ -18,6 +18,7 @@ use app\manage\controller\ManageController;
 use app\guanke\model\GuankeSchool;
 use app\guanke\validate\SchoolValid;
 use app\guanke\model\GuankeSlide;
+use app\guanke\model\GuankeContentpage;
 
 class School extends ManageController{
 	
@@ -192,6 +193,55 @@ class School extends ManageController{
             $this->assign('detail', $detail);
             exit($this->fetch());
         }
+	}
+	/**
+	 * 学校详情页
+	 */
+	public function contentedit(){
+		$params = $this->request->param();
+		$detail = GuankeSchool::manage()->field('id,contenttype,contenturl,contentpageid')->find($params['school_id']);
+		if(empty($detail)){
+			$this->error('请先完善学校基本信息','edit');
+		}
+		if($this->request->isPost()){
+			if($params['contentpageid']){
+				//查询详情
+				$contentDetail = GuankeContentpage::get($params['contentpageid']);
+				if($contentDetail){
+					//更新详情
+					$contentDetail->content =  $params['content'];
+					$contentDetail->save();
+					
+					//更新学校
+					$detail->contenttype = $params['contenttype'];
+					$detail->contenturl = $params['contenturl'];
+					$detail->save();
+					$this->success('保存成功','index');
+				}else{
+					//存在脏数据，需要管理员介入
+					$this->error('保存异常，请联系管理员');
+				}
+			}else{
+				//新增详情
+				$data['cid'] = $this->getCid();
+				$data['content'] = $params['content'];
+				$contentDetail = GuankeContentpage::create($data);
+				if($contentDetail && $contentDetail->id){
+					//更新学校
+					$detail->contenttype = $params['contenttype'];
+					$detail->contenturl = $params['contenturl'];
+					$detail->contentpageid = $contentDetail->id;
+					$detail->save();
+					$this->success('保存成功','index');
+				}else{
+					$this->error('保存异常，请联系管理员');
+				}
+			}
+		}else{
+			$detail['content'] = GuankeContentpage::where('id',$detail['contentpageid'])->value('content');
+			$this->assign('detail',$detail);
+			return $this->fetch();
+		}
 	}
 	
 }

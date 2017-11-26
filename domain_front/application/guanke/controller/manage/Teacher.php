@@ -18,6 +18,7 @@ use app\manage\controller\ManageController;
 use app\guanke\model\GuankeTeacher;
 use app\guanke\validate\TeacherValid;
 use app\manage\model\UserMember;
+use app\guanke\model\GuankeContentpage;
 
 class Teacher extends ManageController{
 	
@@ -48,7 +49,7 @@ class Teacher extends ManageController{
 	    if(empty($mobile)){
 	        exit($this->fetch());
 	    }else{
-	        $list = UserMember::field('id,nickname,mobile,avatar')->manage()->where('mobile',$mobile)->limit(20)->select();
+	        $list = UserMember::field('id,nickname,mobile,avatar')->manage()->where('mobile|nickname','like','%'.$mobile.'%')->limit(20)->select();
 	        $this->success('查询成功','',$list);
 	    }
 	}
@@ -189,5 +190,55 @@ class Teacher extends ManageController{
 	        $this->error('操作失败','',$detail->$field);
 	    }
 	}
+	
+	/**
+	 * 课程详情页
+	 */
+	public function contentedit(){
+		$params = $this->request->param();
+		$detail = GuankeTeacher::manage()->field('id,contenttype,contenturl,contentpageid')->find($params['teacher_id']);
+		if(empty($detail)){
+			$this->error('请先完善老师基本信息','edit');
+		}
+		if($this->request->isPost()){
+			if($params['contentpageid']){
+				//查询详情
+				$contentDetail = GuankeContentpage::get($params['contentpageid']);
+				if($contentDetail){
+					//更新详情
+					$contentDetail->content =  $params['content'];
+					$contentDetail->save();
+	
+					//更新学校
+					$detail->contenttype = $params['contenttype'];
+					$detail->contenturl = $params['contenturl'];
+					$detail->save();
+					$this->success('保存成功','index');
+				}else{
+					//存在脏数据，需要管理员介入
+					$this->error('保存异常，请联系管理员');
+				}
+			}else{
+				//新增详情
+				$data['cid'] = $this->getCid();
+				$data['content'] = $params['content'];
+				$contentDetail = GuankeContentpage::create($data);
+				if($contentDetail && $contentDetail->id){
+					//更新学校
+					$detail->contenttype = $params['contenttype'];
+					$detail->contenturl = $params['contenturl'];
+					$detail->contentpageid = $contentDetail->id;
+					$detail->save();
+					$this->success('保存成功','index');
+				}else{
+					$this->error('保存异常，请联系管理员');
+				}
+			}
+		}else{
+			$detail['content'] = GuankeContentpage::where('id',$detail['contentpageid'])->value('content');
+			$this->assign('detail',$detail);
+			return $this->fetch();
+		}
+	}	
 	
 }

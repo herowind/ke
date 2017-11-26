@@ -42,7 +42,6 @@
                     <th class=" w10 ">课程名称</th>
                     <th class=" w10 ">摄像头</th>
                     <th class=" w10 ">观看权限</th>
-                    <th class=" w10">价格</th>
                     <th class=" w10">开始时间</th>
                     <th class=" w5 ">排序</th>
                     <th class=" w5 ">显示</th>
@@ -58,7 +57,6 @@
                     <td>{$item.course.name}</td>
                     <td>{$item.camera.name}</td>
                     <td>{$item.membervisibilitytext}</td>
-                    <td>{$item.memberfee}元</td>
                     <td>{$item.starttime}</td>
                     <td>	                    
                     	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sortChange.html"/>

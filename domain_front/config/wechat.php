@@ -31,7 +31,7 @@ return [
 		],
 		
 		'oauth_userinfo' => [
-				'scopes'   => ['snsapi_userinfo'],
+				'scopes'   => ['snsapi_base'],
 				'callback' => APP_SITE.'/mobile/passport/loginwx.html',
 		],
 		

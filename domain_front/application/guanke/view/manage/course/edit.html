@@ -9,6 +9,10 @@
     </div>
  
     <div class="page-content">
+    	<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="active" ><a href="edit.html?id={$detail.id}">课程基本信息</a></li>
+    		<li class=""><a href="contentedit.html?course_id={$detail.id}">图文详情</a></li>
+    	</ul>
 	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
 	        <input type="hidden" id="id" name="id" value="{$detail.id}">
 	        <div class="form-unit-style" data-title="课程信息">

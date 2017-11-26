@@ -14,6 +14,8 @@
 // +----------------------------------------------------------------------
 namespace app\manage\controller;
 
+use app\common\service\UploadSvc;
+
 class Index extends ManageController{
 	
 	public function initialize(){
@@ -27,6 +29,26 @@ class Index extends ManageController{
 		$menu = $this->getMenu();
 		$this->assign('menu',$menu);
 		return $this->fetch();
+	}
+	
+	public function upload(){
+		$file = $this->request->file('upfile');
+		$rtnData = UploadSvc::uploadImage($file,'editor');
+		
+		if($rtnData['code']==1){
+			
+			$info = ['url'=>$rtnData['url']['o'],'state'=>'SUCCESS'];
+		}else{
+			$info = ['url'=>'','state'=>$rtnData['msg']];
+		}
+		$callback=$_GET['callback'];
+		if($callback) {
+			echo '<script>'.$callback.'('.json_encode($info).')</script>';
+		} else {
+			echo json_encode($info);
+		}
+		
+		
 	}
 	
 }

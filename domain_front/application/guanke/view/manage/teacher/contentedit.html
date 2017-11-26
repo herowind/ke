@@ -1,0 +1,96 @@
+{extend name="manage@template/iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/umeditor/themes/default/css/umeditor.min.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">{$detail.id?'编辑':'新增'}老师
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+		<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="" ><a href="edit.html?id={$detail.id}">老师基本信息</a></li>
+    		<li class="active"><a href="contentedit.html?teacher_id={$detail.id}">图文详情</a></li>
+    	</ul>
+	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="contentedit" autocomplete="off">
+	        <input type="hidden" id="id" name="school_id" value="{$detail.id}">
+	        <input type="hidden" id="id" name="contentpageid" value="{$detail.contentpageid}">
+	        <div class="form-unit-style" data-title="学校信息">
+				<h5 class="real-name-head margin-large-top text-main-deep">老师详情页<span class="margin-left"></span>
+					<span class="margin-left">链接类型：前台客户点击查看老师详情会跳转至该链接（推荐使用微信公众号文章的链接地址）</span>
+				</h5>
+				<div class="form-group clearfix">
+	                <div class="label-zoon required">详情类型</div>
+	                <div class="input-zoon">
+						<div class="btn-group" data-toggle="buttons">
+						  <label class="btn btn-default {eq name='detail.contenttype' value='1' }active{/eq} contenttype-btn" data-target="contenturlInput">
+						    <input type="radio" name="contenttype" id="contenttype1" autocomplete="off" value="1" {eq name="detail.contenttype" value='1' }checked{/eq}> 链接
+						  </label>
+						  <label class="btn btn-default {eq name='detail.contenttype' value='2' }active{/eq} contenttype-btn" data-target="contentInput">
+						    <input type="radio" name="contenttype" id="contenttype2" autocomplete="off" value="2" {eq name="detail.contenttype" value='2' }checked{/eq}> 自定义图文
+						  </label>
+						</div>							
+	                </div>
+	            </div>
+	            <div class="form-group clearfix {neq name='detail.contenttype' value='1' }hide{/neq}" id="contenturlInput">
+	                <div class="label-zoon required">链接地址</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main" id="contenturl" name="contenturl" value="{$detail.contenturl}" placeholder="请输入链接地址">
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix {neq name='detail.contenttype' value='2' }hide{/neq}" id="contentInput">
+	                <div class="label-zoon required">自定义图文</div>
+	                <div class="input-zoon">
+	                	<script type="text/plain" id="container" name="content" style="width:800px;height:480px;"></script>
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="button" class="btn btn-info" id="saveBtn">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15 linkto-btn" data-url="index.html">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script type="text/javascript" src="/lib/components/umeditor/third-party/template.min.js"></script>
+<script type="text/javascript" src="/lib/components/umeditor/umeditor.config.js"></script>
+<script type="text/javascript" src="/lib/components/umeditor/umeditor.min.js"></script>
+<script type="text/javascript" src="/lib/components/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script>
+$(function(){
+    $(".contenttype-btn").on('click',function(){
+    	if($(this).data('target')=='contenturlInput'){
+    		$("#contenturlInput").removeClass('hide');
+    		$("#contentInput").addClass('hide');
+    	}else{
+    		$("#contenturlInput").addClass('hide');
+    		$("#contentInput").removeClass('hide');
+    	}
+    })
+	
+	$("#saveBtn").on("click",function(){
+		$('.ajaxForm').submit();
+        return false;
+    })
+})
+var um = UM.getEditor('container');
+um.setContent('{$detail.content|raw}', false);
+
+
+</script>
+{/block}

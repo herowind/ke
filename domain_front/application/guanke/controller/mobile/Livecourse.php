@@ -41,7 +41,6 @@ class Livecourse extends SchoolController {
 				];
 				GuankeLivecoursemember::create($data);
 			}
-		}else{
 			$detail['camera']['url'] = '#';
 		}
 		$this->assign('detail',$detail);
@@ -96,5 +95,34 @@ class Livecourse extends SchoolController {
 				return  ['code'=>0,'msg'=>'无权操作'];
 		}
 		return ['code'=>1,'msg'=>'操作成功',data=>$detail->url];
+	}
+	
+	public function enroll(){
+		$this->initMember();
+		//验证是否审核，审核通过
+		$courseMember = GuankeLivecoursemember::where('livecourse_id',$this->request->param('id'))->where('member_id',$this->getMid())->find();
+		if(empty($courseMember)){
+			$data = [
+					'livecourse_id' => $this->request->param('id'),
+					'member_id'=>$this->getMid(),
+					'cid'=>$this->getCid(),
+					'isfavor'=>1,
+					'islike'=>0,
+			];
+			GuankeLivecoursemember::create($data);
+			$this->success('报名成功');
+		}else{
+			if($courseMember->isfavor == 1){
+				if($courseMember->isveryfy == 1){
+					$this->success('您已审核通过了');
+				}else{
+					$this->success('您已报过名了');
+				}
+			}else{
+				$courseMember->isfavor = 1;
+				$courseMember->save();
+				$this->success('报名成功');
+			}
+		}
 	}
 }
