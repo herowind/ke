@@ -83,8 +83,6 @@
 					let _this = this;
 					$.get('detaildata.html',{live_id:live_id},function(res){
 						_this.live = res.data;
-						console.log(_this.live);
-						console.log(_this.live.course_id);
 						_this.getCourse(_this.live.course_id);
 						if(res.code==1){
 							$("#video").prop("src",_this.live.member.url);
@@ -133,6 +131,7 @@
 							if(res.error=='unveryfy'){
 								$.alert(res.msg, "友情提示");
 								_this.isshowveryfy = true;
+								return;
 							}
 							 $.alert("加载失败，请重新打开页面", "网速不给力");
 						}
