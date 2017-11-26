@@ -62,6 +62,8 @@ class WechatSetting extends CommonMod
 					$atthinfo['verify_type_info'] = '未知';
 					break;
 			}
+			//qrcode 要去掉结尾的/0
+			$atthinfo['qrcode_url'] = substr($atthinfo['qrcode_url'],0,-2).'/640';
 		}else{
 			return [];
 		}
