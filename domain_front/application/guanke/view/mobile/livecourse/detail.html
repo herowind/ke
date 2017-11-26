@@ -112,14 +112,50 @@
 							_this.isshowqrcode=false;
 							if(res.error=="unsubscribe"){
 								_this.isshowqrcode = true;
+								$.noti({
+						            title: "本课程需要关注公众号才可观看",
+						            text: "关注公众号",
+						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            data: {
+						              message: "您还为关注"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
 								$("#wechat").popup();
 								return;
 							}
 							if(res.error=="unfavor"){
 								_this.isshowfavor = true;
+						        $.noti({
+						            title: "本课程需要报名才可以观看",
+						            text: "点击下方按钮立即报名吧",
+						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            data: {
+						              message: "点击立即报名吧"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
 								return;
 							}
 							if(res.error=="unveryfy"){
+								$.noti({
+						            title: "本课程需要管理员审核才可以观看",
+						            text: "请耐心等待，或电话联系我们  {$school.phone}",
+						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            data: {
+						              message: "审核中"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
 								_this.isshowveryfy = true;
 								return;
 							}
@@ -182,35 +218,6 @@
 // 			}
 // 		}, 20000);
 
-		$(document).on("click", "#publishTopic", function() {
-			$("#video").hide();
-			$.prompt({
-				text : "",
-				title : "请输入您的问题",
-				onOK : function(text) {
-					$.alert("您的问题是:" + text, "提交成功");
-					$("#video").show();
-				},
-				onCancel : function() {
-					console.log("取消了");
-					$("#video").show();
-				},
-				input : ''
-			});
-		});
-		
-        $.noti({
-            title: "老师有话说",
-            text: "{$detail.apply.content}",
-            media: "<img src='{$detail.teacher.avatar}' />",
-            data: {
-              message: "点击最下面的按钮才可以哦"
-            },
-            time: 5000,
-            onClick: function(data) {
-              $.alert(data.message);
-            }
-          });
 </script>
 
 
