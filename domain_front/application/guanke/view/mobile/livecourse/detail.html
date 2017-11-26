@@ -11,7 +11,7 @@
 {/block} {block name="body"}
 <div class="course-hd">
 	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" src="" :poster="course.banner" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
 	</div>
 </div>
 <div class="course-bd">
@@ -104,7 +104,7 @@
 						_this.live = res.data;
 						_this.getCourse(_this.live.course_id);
 						if(res.code==1){
-							$("#video").prop("src",_this.live.member.url);
+							//$("#video").prop("src",_this.live.member.url);
 							$("#video").load();
 						}else{
 							_this.isshowfavor=false;
@@ -115,7 +115,7 @@
 								$.noti({
 						            title: "本课程需要关注公众号才可观看",
 						            text: "关注公众号",
-						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
 						            data: {
 						              message: "您还为关注"
 						            },
@@ -132,7 +132,7 @@
 						        $.noti({
 						            title: "本课程需要报名才可以观看",
 						            text: "点击下方按钮立即报名吧",
-						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
 						            data: {
 						              message: "点击立即报名吧"
 						            },
@@ -147,7 +147,7 @@
 								$.noti({
 						            title: "本课程需要管理员审核才可以观看",
 						            text: "请耐心等待，或电话联系我们  {$school.phone}",
-						            media: "<img src='{$school.logo}' width='60' height='60' />",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
 						            data: {
 						              message: "审核中"
 						            },
@@ -184,7 +184,8 @@
 							$.alert(res.msg, "友情提示");
 							_this.isshowfavor = false;
 							_this.isshowveryfy = false;
-							$("#video").prop("src",res.url);
+							_this.live.member.url = res.url;
+							//$("#video").prop("src",res.url);
 							$("#video").load();
 						}else{
 							if(res.error=='unveryfy'){
