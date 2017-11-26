@@ -95,7 +95,7 @@ class MobileLoginSvc
      */
     public static function setSession($id)
     {
-        $detail = UserMember::field('id,cid,nickname,avatar,mobile')->where('id', $id)->find();       
+        $detail = UserMember::field('id,cid,nickname,avatar,mobile,openid')->where('id', $id)->find();       
         session('member'.$detail['cid'], $detail);
         //session('membersign'.$detail['cid'], FncCrypt::dataAuthSign($detail));
         return true;

@@ -27,7 +27,7 @@ class Passport extends MobileController {
 	}
 	
 	public function dologin(){
-		cookie('currentCid',1);
+		cookie('currentCid',5);
 		$this->initMember();
 	}
 	
