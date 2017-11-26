@@ -58,7 +58,7 @@ class Livecourse extends SchoolController {
 		$detail = GuankeLivecourse::find($live_id);
 		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
 		$detail->wechat = (object)[
-				'qrcode_rul' => $this->authorizer_info['qrcode_url'].'.jpg',
+				'qrcode_url' => $this->authorizer_info['qrcode_url'].'.jpg',
 				'head_img' => $this->authorizer_info['head_img'],
 				'nick_name' => $this->authorizer_info['nick_name'],
 				'signature' => $this->authorizer_info['signature']
