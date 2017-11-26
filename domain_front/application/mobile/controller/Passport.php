@@ -59,7 +59,7 @@ class Passport extends MobileController {
 			];
 		}
 		//查询用户是否存在
-		$detail = UserMember::where('openid',$memberDetail['openid'])->find();
+		$detail = UserMember::where('cid',$data['cid'])->where('openid',$data['openid'])->find();
 		if(empty($detail)){
 			//不存在则创建用户
 			$detail = UserMember::create($data);
