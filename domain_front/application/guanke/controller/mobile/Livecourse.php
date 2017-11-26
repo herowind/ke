@@ -16,7 +16,7 @@ namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLivecoursemember;
-use app\admin\model\ZhiboCamera;
+use app\zhibo\model\ZhiboCamera;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -85,6 +85,7 @@ class Livecourse extends SchoolController {
 				}
 			}
 		}
+		
 		$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
 		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
 	}
