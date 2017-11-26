@@ -19,6 +19,8 @@ use app\guanke\model\GuankeLivecourse;
 use app\guanke\validate\LivecourseValid;
 use app\guanke\service\GuankeManageSvc;
 use app\zhibo\model\ZhiboCamera;
+use think\Db;
+use app\guanke\model\GuankeLivecoursemember;
 
 class Livecourse extends ManageController
 {
@@ -177,6 +179,36 @@ class Livecourse extends ManageController
 	    }else{
 	        $this->error('操作失败','',$detail->$field);
 	    }
+	}
+	
+	public function favormembers(){
+		$id = $this->request->param('live_id');
+		$pageData = Db::view('GuankeLivecoursemember', 'livecourse_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLivecoursemember.member_id = UserMember.id and GuankeLivecoursemember.livecourse_id ={$id}")->paginate(20);
+		$this->assign('pageData',$pageData);
+		$this->fetch();
+	}
+	
+	/**
+	 * 状态变更
+	 */
+	public function memberStatusChange()
+	{
+		$member_id = $this->request->param('id');
+		$livecourse_id = $this->request->param('livecourse_id');
+		$field = $this->request->param('field');
+		$detail = GuankeLivecourse::manage()->where('member_id',$member_id)->where('livecourse_id',$livecourse_id)->find();
+	
+		if ($detail->$field === 1) {
+			$detail->$field = 0;
+		} else {
+			$detail->$field = 1;
+		}
+		$flag = $detail->save();
+		if ($flag !== false) {
+			$this->success('操作成功', '', $detail->$field);
+		}else{
+			$this->error('操作失败','',$detail->$field);
+		}
 	}
 	
 }

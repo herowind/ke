@@ -1,0 +1,73 @@
+{extend name="manage@template/iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/cityselect/css/cityselect.css" />
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">直播课程报名
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+    	<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="" ><a href="edit.html?id={$detail.id}">直播基本信息</a></li>
+    		<li class="active"><a href="favormembers.html?live_id={$detail.id}">报名列表</a></li>
+    	</ul>
+ 		<div class="form-inline form-edit" style="margin-top:-1px;" id="formSearch">    
+			<div class="form-unit-style" data-title="直播管理">
+				<h5 class="real-name-head margin-large-top text-main-deep">报名列表<span class="margin-left"></span>
+					<span class="margin-left"></span>			
+				</h5>
+
+		        <table class="table table-hover margin-mid-top">
+		            <thead>
+		                <tr>
+		                    <th class=" w5 text-center"><input type="checkbox" /></th>
+		                    <th class=" w10">头像</th>
+		                    <th class=" w10 text-center">姓名</th>
+		                    <th class=" w10 text-center">手机</th>
+		                    <th class=" w15 text-center">openid</th>
+		                    <th class=" w15 text-center">省份</th>
+		                    <th class=" w15 text-center">城市</th>
+		                    <th class=" w20 text-center">审核状态</th>               
+		                </tr>
+		            </thead>
+		            <tbody>            		            
+		                {volist name="pageData" id="item"}
+		                <tr >
+		                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
+		                    <td><img src="{$item.avatar}" width="60" height="60"></tds>
+		                    <td class="text-center">{$item.nickname}</td>
+		                    <td class="text-center">{$item.mobile}</td>
+		                    <td class="text-center">{$item.openid}</td>
+		                    <td class="text-center">{$item.province}</td>
+		                    <td class="text-center">{$item.city}</td>
+							<td class="text-center">
+								<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isveryfy']}" data-url="/guanke/manage.livecourse/memberStatusChange.html?livecourse_id={$item.livecourse_id}" data-id="{$item.member_id}" data-field="isveryfy"  data-status0="未审核" data-status0-css="btn-none" data-status1="已审核" data-status1-css="btn-success"  title="点击是否审核"></button>
+							</td>
+		                </tr>
+		                {/volist}
+		            </tbody>
+		        </table>
+
+		        <div class="show-page padding-big-right">
+			        <div class="page">{$pageData->render()|raw}</div>
+			    </div>	           
+			</div>
+		</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+})
+</script>
+{/block}
