@@ -78,6 +78,8 @@ class Passport extends MobileController {
 		}
 		
 		MobileLoginSvc::setSession($detail->id);
-		header('location:'. $lastUrl);
+		//header('location:'.$lastUrl);
+		$this->redirect($lastUrl);
+		//exit();
 	}
 }
