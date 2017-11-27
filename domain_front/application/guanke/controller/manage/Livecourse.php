@@ -20,6 +20,7 @@ use app\guanke\validate\LivecourseValid;
 use app\guanke\service\GuankeManageSvc;
 use think\Db;
 use app\guanke\model\GuankeLivecoursemember;
+use app\guanke\model\GuankeSchool;
 
 class Livecourse extends ManageController
 {
@@ -55,6 +56,8 @@ class Livecourse extends ManageController
             $where[] = ['camera_id','=',$params['camera_id']];
         }
         
+        $school = GuankeSchool::manage()->where('type',1)->find();
+        
         $pageData = GuankeLivecourse::manage()->keywords([
             'name',
             $this->request->param('keywords')
@@ -63,6 +66,7 @@ class Livecourse extends ManageController
             ->order('sort desc')
             ->paginate(10);
         $this->assign('pageData', $pageData);
+        $this->assign('school', $school);
         return $this->fetch();
     }
     

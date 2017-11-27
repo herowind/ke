@@ -65,9 +65,21 @@
 						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isdisplay']}" data-url="statusChange.html" data-id="{$item.id}" data-field="isdisplay"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否显示"></button>
 					</td>
                     <td class="text-center">
-                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
-                        <a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
-						<a class="text-green btn btn-xs btn-default" href="###" data-toggle="modal" onclick="popModal('/zhibo/manage.camera/preview.html?id={$item.camera_id}&title={$item.name}')" title="预览"><i class="fa fa-video-camera"></i> 预览</a>
+						<div class="btn-group btn-group-xs">
+						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i> 更多操作</button>
+						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    <span class="caret"></span>
+						    <span class="sr-only">更多</span>
+						  </button>
+						  <ul class="dropdown-menu" style="z-index:888">
+						    <li><a href="javascript:void(0)" class="btn-previewQrcode"  data-url="{$Think.APP_SITE}/guanke/mobile.livescourse/detail.html?school_id={$school.id}&live_id={$item.id}" data-toggle="tooltip" data-placement="top" title="微信扫一扫，预览手机显示效果"><i class="fa fa-dashboard"></i> 前台预览</a></li>
+						    <li role="separator" class="divider"></li>
+						    <li><a href="javascript:void(0)" class="previewCopy" data-clipboard-text="{$Think.APP_SITE}/guanke/mobile.liveschool/detail.html?school_id={$school.id}&live_id={$item.id}" data-toggle="tooltip" data-placement="top" title="复制的链接可以粘贴到公众号的菜单中"><i class="fa fa-link" ></i> 复制链接</a></li>
+						    <li role="separator" class="divider"></li>
+						    <li><a class="confirm-rst-url-btn" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a></li>
+						  </ul>
+						</div>                        
+						<a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
                     </td>
                 </tr>
                 {/volist}
@@ -82,40 +94,27 @@
 	        <div class="page">{$pageData->render()|raw}</div>
 	    </div>
     </div>
-
-<div class="modal fade" id="liveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+</div>
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-	            <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                <h4 class="modal-title" id="myModalLabel">直播预览</h4>
-	            </div>
-	            <div class="modal-body">
-	            	<div id="player" style="width: 560px; height: 280px; ">
-	            </div>
-	            <div class="modal-footer">
-	                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-	            </div>
-	        </div><!-- /.modal-content -->
-	    </div><!-- /.modal -->
-	</div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">扫描二维码预览</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="text-center" id="previewQrcode"></div>
+            	<div class="text-center" >链接地址：<span id="previewCopy"></span></div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success previewCopy"  data-clipboard-action="copy" data-clipboard-target="#previewCopy" >复制链接</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 {/block}
 {block name="script"}
-<script type="text/javascript" src="/guanke/js/sewise.player.min.js"></script>  <!--引入js文件-->
-<script type="text/javascript">
-			SewisePlayer.setup({
-				server: "vod",  //服务器给播放器提供的数据请求接口方法   
-				type: "m3u8",     //支持视频格式为m3u8
-				autostart: "true",   //是否自动播放（true为自动播放，false为不自动播放，默认为true）
-				poster: "http://jackzhang1204.github.io/materials/poster.png",  //视频停止时，播放器上面显示的背景图片(若没有设置图片或者图片路径不对，则显示黑色背景)
-				videourl: "http://alhlscdn.lechange.cn/LCL/2C02432PAW01541/0/0/20160922123329/dev_20160922123329_at9mpdnsahtm3csp.m3u8",   //您的视频源的地址（目前是乐橙示例播放地址）
-		        skin: "vodOrange",  //播放器主题风格（样式）
-		        title: "demo示例",     //视频标题，位于视频的左上角（可以进行修改操作）
-		        claritybutton: "disable", //清晰度按钮的显示（默认为显示，disable为不显示，enable为显示）
-		        lang: "zh_CN"   //视频播放器下面的一系列操作元素的提示信息的语言格式（zh_cN为中文）
-			}, "player");
-		</script>
 <script>
 var $page = {};
 
@@ -123,6 +122,14 @@ $(function(){
 	$(".status-btn").each(function(){
         loadStatusBtn($(this));
     })
+    
+    $(".btn-previewQrcode").on('click',function(){
+    	$("#previewQrcode").html("");
+    	$("#previewQrcode").qrcode($(this).data("url"));    	
+    	$("#previewModal").modal('show');
+    	$("#previewCopy").html($(this).data("url"));
+    })  
+    $('[data-toggle="tooltip"]').tooltip()
 })
 
 </script>

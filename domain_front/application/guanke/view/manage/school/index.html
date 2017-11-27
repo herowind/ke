@@ -75,27 +75,26 @@
 	        <div class="page">{$pageData->render()|raw}</div>
 	    </div>
     </div>
-
-	<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	    <div class="modal-dialog">
-	        <div class="modal-content">
-		            <div class="modal-header">
-		                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-		                <h4 class="modal-title" id="myModalLabel">扫描二维码预览</h4>
-		            </div>
-		            <div class="modal-body">
-		            	<div class="text-center" id="previewQrcode"></div>
-		            	<div class="text-center" >链接地址：<span id="previewCopy"></span></div>
-		            </div>
-		            <div class="modal-footer">
-		            	<button type="button" class="btn btn-success previewCopy"  data-clipboard-action="copy" data-clipboard-target="#previewCopy" >复制链接</button>
-		                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-		            </div>
-		        </div><!-- /.modal-content -->
-		    </div><!-- /.modal -->
-		</div>
-	</div>
 </div>
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">扫描二维码预览</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="text-center" id="previewQrcode"></div>
+            	<div class="text-center" >链接地址：<span id="previewCopy"></span></div>
+            </div>
+            <div class="modal-footer">
+            	<button type="button" class="btn btn-success previewCopy"  data-clipboard-action="copy" data-clipboard-target="#previewCopy" >复制链接</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
 {/block}
 {block name="script"}
 <script>
