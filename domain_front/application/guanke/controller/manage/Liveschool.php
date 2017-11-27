@@ -18,6 +18,7 @@ use app\manage\controller\ManageController;
 use app\guanke\model\GuankeLiveschool;
 use app\guanke\validate\LiveschoolValid;
 use app\guanke\service\GuankeManageSvc;
+use think\Db;
 
 class Liveschool extends ManageController
 {
