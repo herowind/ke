@@ -38,7 +38,7 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
 /*表格*/
 .table { width: 100%; border: 1px solid #e8e8e9; border-collapse:collapse; border-spacing:0; font-size:12px;}
 .table thead tr th { border-bottom: 0; height:40px;font-weight: normal; vertical-align: middle; text-align: left; color: #888; background: #f5f6fa; }
-.table tbody tr td { border-bottom: 1px solid #e8e8e9; height:40px; vertical-align: middle; white-space: nowrap; text-overflow: ellipsis;color: #333;position:relative }
+.table tbody tr td { border-bottom: 1px solid #e8e8e9; height:40px; vertical-align: middle; white-space: wrap; text-overflow: ellipsis;color: #333;position:relative; }
 .table-padding tr th, .table-padding tr td { padding: 0 10px; }
 .table tr.tr-check{width:100%;background:#E5E5E5;}
 .check-table tr { padding-left: 35px; }
