@@ -49,7 +49,7 @@
 			<image src="/guanke/images/icons/menu_teacher.png" />
 			<div>教师团队</div>
 		</div>
-		<div class="school-tab" data-content="#content_school" data-contenturl="{$school.contenturl}" data-contenttype="{$school.contenttype}">
+		<div class="school-tab" data-content="#content_school">
 			<image src="/guanke/images/icons/menu_school.png" />
 			<div>学校简介</div>
 		</div>
@@ -102,7 +102,7 @@
 		<div class="weui-panel weui-panel_access">
 			<div class="weui-panel__bd">
 				{volist name="teachers" id="item"} 
-				<a href="/guanke/mobile.teacher/detail.html?teacher_id={$item.id}&school_id={$school.id}" class="weui-media-box weui-media-box_appmsg">
+				<a href="/guanke/mobile.teacher/detail.html?teacher_id={$item.id}&school_id={$school.id}"  class="weui-media-box weui-media-box_appmsg">
 					<div class="weui-media-box__hd">
 						<img class="weui-media-box__thumb"
 							src="{$item.avatar}"
@@ -117,10 +117,24 @@
 			</div>
 		</div>
 	</div>
-		<div class="school-tab-content ui-hide" id="content_school">
-		<div class="ui-empty">
-			<div class="ui-empty_icon"></div>
+	<div class="school-tab-content ui-hide" id="content_school">
+		<div class="weui-panel weui-panel_access">
+			<div class="weui-panel__bd">
+				<a href="javascript:void(0)" class="weui-media-box weui-media-box_appmsg" id="schoolpage" data-contenturl="{$school.contenturl}" data-contenttype="{$school.contenttype}">
+					<div class="weui-media-box__hd">
+						<img class="weui-media-box__thumb"
+							src="{$school.logo}"
+							alt="">
+					</div>
+					<div class="weui-media-box__bd">
+						<p class="weui-media-box__desc">{$school.intro}</p>
+					</div>
+				</a>
+			</div>
 		</div>
+		<article class="weui-article">
+			{$school_content}
+		</article>
 	</div>
 </div>
 {/block} {block name="script"}
@@ -136,10 +150,11 @@ $(function(){
 		$(".school-tab-content").addClass("ui-hide");
 		let id = $(this).data('content');
 		$(id).removeClass("ui-hide");
-		if(id == '#content_school'){
-			if($(this).data('contenttype')==1 && $(this).data('contenturl')!=''){
-				document.location.href=$(this).data('contenturl');
-			}
+	})
+	
+	$("#schoolpage").on("click",function(){
+		if($(this).data('contenttype')==1 && $(this).data('contenturl')!=''){
+			document.location.href=$(this).data('contenturl');
 		}
 	})
 })
