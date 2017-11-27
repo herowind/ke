@@ -24,6 +24,10 @@ class SchoolController extends MobileController {
 		$this->initSchool();
 	}
 	
+	/**
+	 * cookie url
+	 */
+	
 	protected function getSchoolId(){
 		return $this->school->id;
 	}

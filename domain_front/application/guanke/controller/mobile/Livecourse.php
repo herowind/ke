@@ -27,6 +27,9 @@ class Livecourse extends SchoolController {
 	 * 直播课程列表页
 	 */
 	public function index(){
+		if(!$this->request->isAjax()){
+			$this->setLastUrl();
+		}
 		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$this->assign('list',$list);
 		return $this->fetch (); 
@@ -36,6 +39,9 @@ class Livecourse extends SchoolController {
 	 * 直播课程详细页
 	 */
 	public function detail(){
+		if(!$this->request->isAjax()){
+			$this->setLastUrl();
+		}
 		$live_id = $this->request->param('live_id');
 		$this->initMember();
 		$this->assign('live_id',$live_id);
