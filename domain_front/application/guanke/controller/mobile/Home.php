@@ -18,8 +18,6 @@ use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLiveschool;
 use app\guanke\model\GuankeTeacher;
 use app\guanke\model\GuankeSlide;
-use app\wechat\model\WechatSetting;
-use function GuzzleHttp\json_decode;
 use app\guanke\model\GuankeContentpage;
 
 class Home extends SchoolController {
@@ -31,9 +29,6 @@ class Home extends SchoolController {
 	 * 学校主页面
 	 */
 	public function index() {
-		if(!$this->request->isAjax()){
-			$this->setLastUrl();
-		}
 		$livecourses = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$liveschools = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$teachers = GuankeTeacher::where('cid',$this->getCid())->where('isdisplay',1)->select();

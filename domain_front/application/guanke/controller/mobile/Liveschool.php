@@ -27,9 +27,6 @@ class Liveschool extends SchoolController {
 	 * 直播监控列表页
 	 */
 	public function index(){
-		if(!$this->request->isAjax()){
-			$this->setLastUrl();
-		}
 		$list = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$this->assign('list',$list);
 		return $this->fetch (); 
@@ -39,9 +36,6 @@ class Liveschool extends SchoolController {
 	 * 直播监控详细页
 	 */
 	public function detail(){
-		if(!$this->request->isAjax()){
-			$this->setLastUrl();
-		}
 		$live_id = $this->request->param('live_id');
 		$this->initMember();
 		$this->assign('live_id',$live_id);
@@ -88,12 +82,9 @@ class Liveschool extends SchoolController {
 				return ['code'=>0,'msg'=>'您尚未报名','error'=>'unfavor','data'=>$detail];
 			}else{
 				$detail->member->isfavor = $schoolMember['isfavor'];
-				if($detail->membervisibility == 3){
-					//需审核
-					$detail->member->isveryfy = $schoolMember['isveryfy'];
-					if($detail->member->isveryfy !=1){
-						return ['code'=>0,'msg'=>'请耐心等待审核','error'=>'unveryfy','data'=>$detail];
-					}
+				$detail->member->isveryfy = $schoolMember['isveryfy'];
+				if($detail->member->isveryfy !=1){
+					return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy','data'=>$detail];
 				}
 			}
 		}
@@ -106,10 +97,11 @@ class Liveschool extends SchoolController {
 	 * 报名观看
 	 */
 	public function favor(){
-		$live_id = $this->request->param('live_id');
-		$camera_id = $this->request->param('camera_id');
-		$membervisibility = $this->request->param('membervisibility');
+		//验证登录
 		$this->initMember();
+		//获取直播详情
+		$live_id = $this->request->param('live_id');
+		$detail = GuankeLiveschool::find($live_id);
 		//验证是否报过名
 		$schoolMember = GuankeLiveschoolmember::where('liveschool_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($schoolMember)){
@@ -119,24 +111,17 @@ class Liveschool extends SchoolController {
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
 					'isfavor'=>1,
-					'islike'=>0,
+					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
-			GuankeLiveschoolmember::create($data);
-			if($membervisibility == 3){
-				return ['code'=>0,'msg'=>'申请成功,审核中请稍等','error'=>'unveryfy'];
-			}else{
-				$url = ZhiboCamera::where('id',$camera_id)->value('url');
-				return ['code'=>1,'msg'=>'申请成功,可以观看了','url'=>$url];
-			}
-			
+			$schoolMember = GuankeLiveschoolmember::create($data);	
+		}
+
+		
+		if($schoolMember->isveryfy == 1){
+			$url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
+			return ['code'=>1,'msg'=>'已申请成功，可以观看了','url'=>$url];
 		}else{
-			if($membervisibility == 3 && $schoolMember->isveryfy==1){
-				$url = ZhiboCamera::where('id',$camera_id)->value('url');
-				return ['code'=>1,'msg'=>'申请成功，可以观看了','url'=>$url];
-			}else{
-				return ['code'=>0,'msg'=>'申请成功，审核中请稍等','error'=>'unveryfy'];
-			}
-			
+			return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy'];
 		}
 	}
 
