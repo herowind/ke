@@ -166,6 +166,9 @@ class Liveschool extends ManageController
 	
 	public function favormembers(){
 		$id = $this->request->param('live_id');
+		if(empty($id)){
+			$this->error('请先完善监控基本信息','edit');
+		}
 		$pageData = Db::view('GuankeLiveschoolmember', 'liveschool_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLiveschoolmember.member_id = UserMember.id and GuankeLiveschoolmember.liveschool_id ={$id}")->paginate(20);
 		$detail = GuankeLiveschool::manage()->find($id);
 		$this->assign('pageData',$pageData);
