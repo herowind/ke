@@ -19,6 +19,7 @@ use app\guanke\model\GuankeLiveschool;
 use app\guanke\validate\LiveschoolValid;
 use app\guanke\service\GuankeManageSvc;
 use think\Db;
+use app\guanke\model\GuankeLiveschoolmember;
 
 class Liveschool extends ManageController
 {
@@ -184,7 +185,7 @@ class Liveschool extends ManageController
 		$member_id = $this->request->param('id');
 		$liveschool_id = $this->request->param('liveschool_id');
 		$field = $this->request->param('field');
-		$detail = GuankeLiveschool::manage()->where('member_id',$member_id)->where('liveschool_id',$liveschool_id)->find();
+		$detail = GuankeLiveschoolmember::manage()->where('member_id',$member_id)->where('liveschool_id',$liveschool_id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;

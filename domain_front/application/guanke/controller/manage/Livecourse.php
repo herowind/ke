@@ -204,7 +204,7 @@ class Livecourse extends ManageController
 		$member_id = $this->request->param('id');
 		$livecourse_id = $this->request->param('livecourse_id');
 		$field = $this->request->param('field');
-		$detail = GuankeLivecourse::manage()->where('member_id',$member_id)->where('livecourse_id',$livecourse_id)->find();
+		$detail = GuankeLivecoursemember::manage()->where('member_id',$member_id)->where('livecourse_id',$livecourse_id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;
