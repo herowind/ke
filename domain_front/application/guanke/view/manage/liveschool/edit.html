@@ -3,12 +3,16 @@
 <div class="view-page">
     <!-- 页面标题 -->
     <div class="page-head">
-        <h6 class="padding-left page-head-title">{$detail.id?'编辑':'新增'}监控
+        <h6 class="padding-left page-head-title">{$detail.id?'编辑':'新增'}学校监控
         <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
         </h6>
     </div>
  
     <div class="page-content">
+    	<ul class="nav nav-tabs" style="margin-left:1px;">
+    		<li class="active" ><a href="edit.html?id={$detail.id}">监控基本信息</a></li>
+    		<li class=""><a href="favormembers.html?live_id={$detail.id}">申请观看列表</a></li>
+    	</ul>
 	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
 	        <input type="hidden" id="id" name="id" value="{$detail.id}">
 	        <div class="form-unit-style" data-title="学校信息">
@@ -48,7 +52,15 @@
 	        </div>
 	        
 	        <div id="zhibo" class="form-unit-style" data-title="权限设置">
-	            <h5 class="real-name-head margin-large-top text-main-deep">权限设置<span class="margin-left">申请授权可见：用户前台需要提交查看申请，管理后台需审核通过</span></h5>
+	            <h5 class="real-name-head margin-large-top text-main-deep">权限设置<span class="margin-left">建议选择：必须关注，报名审核观看</span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">是否必须关注</div>
+	                <div class="input-zoon">
+	                    <input type="hidden" name="issubscribe" value="{$detail.issubscribe}">
+	                    <input class="form-control" name="issubscribe_check" id="issubscribe_check" data-on-color="success" data-on-text="必须" data-off-color="danger" data-off-text="不必" data-size="small" value="1" {$detail.isdisplay==1?'checked':''} type="checkbox" />
+	                </div>
+	            </div>
+	            
 	            <div class="form-group clearfix">
 	                <div class="label-zoon required">可视群体</div>
 	                <div class="input-zoon">

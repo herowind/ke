@@ -163,4 +163,35 @@ class Liveschool extends ManageController
 	    }
 	}
 	
+	public function favormembers(){
+		$id = $this->request->param('live_id');
+		$pageData = Db::view('GuankeLiveschoolmember', 'liveschool_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLiveschoolmember.member_id = UserMember.id and GuankeLiveschoolmember.liveschool_id ={$id}")->paginate(20);
+		$detail = GuankeLiveschool::manage()->find($id);
+		$this->assign('pageData',$pageData);
+		$this->assign('detail',$detail);
+		return $this->fetch();
+	}
+	
+	/**
+	 * 状态变更
+	 */
+	public function memberStatusChange()
+	{
+		$member_id = $this->request->param('id');
+		$liveschool_id = $this->request->param('liveschool_id');
+		$field = $this->request->param('field');
+		$detail = GuankeLiveschool::manage()->where('member_id',$member_id)->where('liveschool_id',$liveschool_id)->find();
+	
+		if ($detail->$field === 1) {
+			$detail->$field = 0;
+		} else {
+			$detail->$field = 1;
+		}
+		$flag = $detail->save();
+		if ($flag !== false) {
+			$this->success('操作成功', '', $detail->$field);
+		}else{
+			$this->error('操作失败','',$detail->$field);
+		}
+	}
 }

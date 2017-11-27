@@ -1,139 +1,213 @@
-{extend name="mobile@template/common"/} 
-{block name="style"}
+{extend name="mobile@template/common"/} {block name="style"}
 <style>
 .weui-footer_fixed-bottom {
-    bottom: 0;
+	bottom: 0;
 }
-.weui-tab{
-	border-top:#999;
+
+.weui-tab {
+	border-top: #999;
 }
 </style>
-{/block}
+{/block} 
 {block name="body"}
 <div class="course-hd">
 	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" src="{$detail.camera.url}" poster="{$detail.school.banner}" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="school.banner" controls="controls" width="100%" style=""></video>
 	</div>
 </div>
-<div class="course-hd">
-	<div class="weui-tab">
-		<div class="weui-navbar">
-			<a class="weui-navbar__item weui-bar__item--on" href="#tab1"> 建议留言 </a> 
-			<a class="weui-navbar__item" href="#tab2"> 学校简介 </a>
-		</div>
-		<div class="weui-tab__bd">
-			<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
-				<div class="weui-panel weui-panel_access">
-					<div class="weui-panel__bd">
-						<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-							<div class="weui-media-box__hd">
-								<img class="weui-media-box__thumb" src="{$detail.school.logo}">
-							</div>
-							<div class="weui-media-box__bd">
-								<h4 class="weui-media-box__title">{$detail.name}</h4>
-								<p class="weui-media-box__desc">{$detail.intro}</p>
-							</div>
-						</a>
-					</div>
+<div class="course-bd">
+	<div class="weui-panel weui-panel_access">
+		<div class="weui-panel__bd">
+			<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+				<div class="weui-media-box__hd">
+					<img class="weui-media-box__thumb" src="{$school.logo}">
 				</div>
-				<div class="ui-empty">
-					<div class="ui-empty_icon"></div>
+				<div class="weui-media-box__bd">
+					<h4 class="weui-media-box__title">{$school.name}-{{live.name}}</h4>
+					<p class="weui-media-box__desc">{$school.intro}</p>
 				</div>
-				<div class="group-topic" style="display: none">
-					<div class="group-topic_avatar">
-						<img class="" src="{$topic.member.avatar}" />
-					</div>
-					<div class="group-topic_body">
-						<div class="group-topic_header">
-							<div class="group-topic_realname">{$topic.member.nickname}</div>
-							<div class="group-topic_manage" data-uid="{$topic.member_id}" data-id="{$topic.id}" bindtap="topicActionSheet">•••</div>
-						</div>
-						<div class="group-topic_content">
-							<text selectable="true">{$topic.content}</text>
-						</div>
-						<div class="group-topic_footer">
-							<div class="group-topic_createtime">{$topic.create_time}</div>
-							<div class="group-topic_action" data-uid="{$topic.uid}">
-								<div class="group-topic_action_icon" data-id="{$topic.id}" bindtap='bindTopicAction'>
-									<img src="/guanke/images/icons/topicaction.png" />
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 悬浮发布 -->
-				<div class="ui-button-float" id="publishTopic">
-					<img src="/guanke/images/icons/pen.png" />
-				</div>
-			</div>
-			<div id="tab2" class="weui-tab__bd-item">
-				<div>
-					<img src="/guanke/images/test2.jpg" style="width:100%;display:block"> 
-					<img src="/guanke/images/test1.jpg" style="width:100%;display:block">
-				</div>
-			</div>
+			</a>
 		</div>
 	</div>
+	<div class="weui-panel" v-if="school.contenttype==2">{{school.content}}</div>
+</div>
 
+<div id="wechat" class='weui-popup__container'>
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+		<div class="toolbar">
+			<div class="toolbar-inner">
+				<a href="javascript:;" class="picker-button close-popup">关闭</a>
+	            <h1 class="title">长按识别二维码</h1>
+			</div>
+		</div>
+		<div class="modal-content" style="text-align:center;margin-top:50px;">
+	          <img :src="live.wechat.qrcode_url" width="200" height="200"/>
+		</div>
+	</div>
+</div>
+
+<!-- 悬浮发布 -->
+<div class="ui-button-float" id="publishTopic">
+	<img src="/guanke/images/icons/pen.png" />
 </div>
 <div class="weui-footer weui-footer_fixed-bottom">
-	<button href="javascript:;" class="weui-btn weui-btn_primary" style="border-radius: 0">{$detail.apply.name}</button>
+	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即申请</button>
+	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
+	<button class="weui-btn weui-btn_primary" v-on:click="getLive" style="border-radius: 0" v-if="isshowqrcode">关注公众号</button>
 </div>
-{/block} {block name="script"}
+{/block} 
+{block name="script"}
 <script type="text/javascript">
-		var data = {
-			a : 1
-		};
+		var live_id = {$live_id};
 		var vm = new Vue({
-			data : data
+			el:'#app',
+			data : {
+				live:{
+					school:{'banner':''},
+					teacher:{},
+					camera:{'url':''},
+					member:{'url':''}
+				},
+				school:{
+					content:'',
+					contenturl:'',
+					contenttype:'',
+				},
+				wechat:{
+					qrcode_url:''
+				},
+				isshowfavor:false,
+				isshowveryfy:false,
+				isshowqrcode:false,
+			},
+			created:function(){
+				this.getLive();
+				
+			},
+			methods:{
+				getLive:function(e){
+					let _this = this;
+					$.get('detaildata.html',{live_id:live_id},function(res){
+						_this.live = res.data;
+						_this.getSchool(_this.live.school_id);
+						if(res.code==1){
+							//$("#video").prop("src",_this.live.member.url);
+							$("#video").load();
+						}else{
+							_this.isshowfavor=false;
+							_this.isshowveryfy=false;
+							_this.isshowqrcode=false;
+							if(res.error=="unsubscribe"){
+								_this.isshowqrcode = true;
+								$.noti({
+						            title: "本监控需要关注公众号才可观看",
+						            text: "关注公众号",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
+						            data: {
+						              message: "您还为关注"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
+								$("#wechat").popup();
+								return;
+							}
+							if(res.error=="unfavor"){
+								_this.isshowfavor = true;
+						        $.noti({
+						            title: "本监控需要申请才可以观看",
+						            text: "点击下方按钮立即报名吧",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
+						            data: {
+						              message: "点击立即报名吧"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
+								return;
+							}
+							if(res.error=="unveryfy"){
+								$.noti({
+						            title: "本监控需要管理员审核才可以观看",
+						            text: "请耐心等待，或电话联系我们  {$school.phone}",
+						            media: "<img src='{$school.logo}' width='30' height='30' />",
+						            data: {
+						              message: "审核中"
+						            },
+						            time: 5000,
+						            onClick: function(data) {
+						              $.alert(data.message);
+						            }
+						          });
+								_this.isshowveryfy = true;
+								return;
+							}
+							$.alert(res.msg, "错误");
+						}
+						
+						
+					})
+				},
+				getSchool:function(school_id){
+					let _this = this;
+					$.get('/guanke/mobile.school/detaildata.html',{school_id:school_id},function(res){
+						console.log(res.data);
+						if(res.code==1){
+							_this.school = res.data;
+						}else{
+							 $.alert("加载失败，请重新打开页面", "网速不给力");
+						}
+					})
+				},
+				doFavor:function(e){
+					let _this = this;
+					$.get('favor.html',{live_id:live_id,membervisibility:_this.live.membervisibility,camera_id:_this.live.camera_id},function(res){
+						console.log(res);
+						if(res.code==1){
+							$.alert(res.msg, "友情提示");
+							_this.isshowfavor = false;
+							_this.isshowveryfy = false;
+							_this.live.member.url = res.url;
+							//$("#video").prop("src",res.url);
+							$("#video").load();
+						}else{
+							if(res.error=='unveryfy'){
+								$.alert(res.msg, "友情提示");
+								_this.isshowfavor = false;
+								_this.isshowveryfy = true;
+								return;
+							}
+							$.alert("加载失败，请重新打开页面", "网速不给力");
+						}
+					})
+				}
+			}
 		})
 
 		var screenW;
 		var flag = false;
-		window.document.title = '{$course.name}';
+// 		window.document.title = '{$school.name}';
 
-		total = document.documentElement.clientHeight;
-		document.body.style.height = total + "px";
-		var video = document.getElementById('video');
-		video.oncanplay = function() {
-			flag = true;
-		}
-		var playVideo = setInterval(function() {
-			if (flag) {
-				clearInterval(playVideo);
-			} else {
-				video.load();
-			}
-		}, 20000);
+// 		total = document.documentElement.clientHeight;
+// 		document.body.style.height = total + "px";
+// 		var video = document.getElementById('video');
+// 		video.oncanplay = function() {
+// 			flag = true;
+// 		}
+// 		var playVideo = setInterval(function() {
+// 			if (flag) {
+// 				clearInterval(playVideo);
+// 			} else {
+// 				video.load();
+// 			}
+// 		}, 20000);
 
-		$(document).on("click", "#publishTopic", function() {
-			$("#video").hide();
-			$.prompt({
-				text : "",
-				title : "请留下您的宝贵意见",
-				onOK : function(text) {
-					$.alert("您的留言是:" + text, "提交成功");
-					$("#video").show();
-				},
-				onCancel : function() {
-					console.log("取消了");
-					$("#video").show();
-				},
-				input : ''
-			});
-		});
-		
-        $.noti({
-            title: "学校有话说",
-            text: "{$detail.apply.content}",
-            media: "<img src='{$detail.school.logo}' />",
-            data: {
-              message: "点击最下面的按钮才可以哦"
-            },
-            time: 5000,
-            onClick: function(data) {
-              $.alert(data.message);
-            }
-          });
-	</script>
+</script>
+
+
 {/block}

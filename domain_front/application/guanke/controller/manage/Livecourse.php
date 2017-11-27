@@ -18,7 +18,6 @@ use app\manage\controller\ManageController;
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\validate\LivecourseValid;
 use app\guanke\service\GuankeManageSvc;
-use app\zhibo\model\ZhiboCamera;
 use think\Db;
 use app\guanke\model\GuankeLivecoursemember;
 
