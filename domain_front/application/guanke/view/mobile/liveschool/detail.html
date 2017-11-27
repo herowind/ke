@@ -29,9 +29,11 @@
 			</a>
 		</div>
 	</div>
-	<article class="weui-article" v-if="school.contenttype==2">
-	<div v-html="school.content"></div>
-	</article>
+	<div class="school-tab-content">
+		<article class="weui-article" v-if="school.contenttype==2">
+		<div v-html="school.content"></div>
+		</article>
+	</div>
 
 </div>
 

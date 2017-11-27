@@ -42,9 +42,11 @@
 			</a>
 		</div>
 	</div>
-	<article class="weui-article" v-if="course.contenttype==2">
-		<div v-html="course.content"></div>
-	</article>
+	<div class="school-tab-content">
+		<article class="weui-article" v-if="course.contenttype==2">
+			<div v-html="course.content"></div>
+		</article>
+	</div>
 </div>
 
 <div id="wechat" class='weui-popup__container'>
