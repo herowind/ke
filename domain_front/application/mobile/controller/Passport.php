@@ -68,7 +68,7 @@ class Passport extends MobileController {
 			}
 		}
 		//用户存在，判断是否将详细信息写入数据库（由关注到未关注）
-		if(empty($detail['nickname'] && $memberDetail['nickname'])){
+		if(empty($detail['nickname']) && $memberDetail['nickname']){
 			$detail->nickname = $memberDetail['nickname'];
 			$detail->gender = $memberDetail['sex'];
 			$detail->avatar = $memberDetail['headimgurl'];
