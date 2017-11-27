@@ -63,7 +63,7 @@ class WechatSetting extends CommonMod
 					break;
 			}
 			//qrcode 要去掉结尾的/0
-			$atthinfo['qrcode_url'] = substr($atthinfo['qrcode_url'],0,-2).'/640';
+			$atthinfo['qrcode_url'] = substr($atthinfo['qrcode_url'],0,-2).'/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1';
 		}else{
 			return [];
 		}
