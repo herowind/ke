@@ -20,6 +20,7 @@ use app\guanke\model\GuankeTeacher;
 use app\guanke\model\GuankeSlide;
 use app\wechat\model\WechatSetting;
 use function GuzzleHttp\json_decode;
+use app\guanke\model\GuankeContentpage;
 
 class Home extends SchoolController {
 	public function initialize() {
@@ -34,10 +35,18 @@ class Home extends SchoolController {
 		$liveschools = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$teachers = GuankeTeacher::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$slide = GuankeSlide::where('cid',$this->getCid())->where('channel','school')->where('channelid',$this->getSchoolId())->select();
+		if($this->school->contentpageid){
+			$school_content = GuankeContentpage::where('id',$this->school->contentpageid)->value('content');
+		}else{
+			$school_content = '';
+		}
+		
 		$this->assign('livecourses',$livecourses);
 		$this->assign('liveschools',$liveschools);
 		$this->assign('teachers',$teachers);
+		$this->assign('school_content',$school_content);
 		$this->assign('slide',$slide);
+		
 		return $this->fetch();
 	}
 	

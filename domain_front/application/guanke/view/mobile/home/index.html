@@ -49,7 +49,7 @@
 			<image src="/guanke/images/icons/menu_teacher.png" />
 			<div>教师团队</div>
 		</div>
-		<div class="school-tab" data-content="#content_school">
+		<div class="school-tab" data-content="#content_school" data-contenturl="{$school.contenturl}" data-contenttype="{$school.contenttype}">
 			<image src="/guanke/images/icons/menu_school.png" />
 			<div>学校简介</div>
 		</div>
@@ -136,9 +136,13 @@ $(function(){
 		$(".school-tab-content").addClass("ui-hide");
 		let id = $(this).data('content');
 		$(id).removeClass("ui-hide");
+		if(id == '#content_school'){
+			if($(this).data('contenttype')==1 && $(this).data('contenturl')!=''){
+				document.location.href=$(this).data('contenturl');
+			}
+		}
 	})
 })
-
 
 </script>
 {/block}
