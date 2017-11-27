@@ -29,7 +29,9 @@
 			</a>
 		</div>
 	</div>
-	<div class="weui-panel" v-if="school.contenttype==2">{{{school.content}}}</div>
+	<div class="weui-panel" v-if="school.contenttype==2">
+		<div v-html="school.content"></div>
+	</div>
 </div>
 
 <div id="wechat" class='weui-popup__container'>
