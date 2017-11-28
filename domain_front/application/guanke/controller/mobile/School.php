@@ -36,7 +36,7 @@ class School extends SchoolController {
 	 */
 	public function detail(){
 		$detail = $this->school;
-		if($detail->contenttype == 2){
+		if($detail->contentpageid){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
 			$detail->content = '';

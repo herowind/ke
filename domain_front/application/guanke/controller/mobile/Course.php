@@ -35,8 +35,8 @@ class Course extends SchoolController {
 	 * 课程详细页面
 	 */
 	public function detail(){
-	$detail = GuankeCourse::get($this->request->param('course_id'));
-		if($detail->contenttype == 2){
+		$detail = GuankeCourse::get($this->request->param('course_id'));
+		if($detail->contentpageid){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
 			$detail->content = '';
@@ -49,7 +49,7 @@ class Course extends SchoolController {
 	 */
 	public function detaildata(){
 		$detail = GuankeCourse::get($this->request->param('course_id'));
-		if($detail->contenttype == 2){
+		if($detail->contentpageid){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
 			$detail->content = '';
