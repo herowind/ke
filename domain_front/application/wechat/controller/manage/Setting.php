@@ -41,7 +41,7 @@ class Setting extends WechatController
     	$detail = WechatSetting::get($this->getCid());
     	$content = file_get_contents($detail['authorizer_info']['qrcode_url']);
     	$filename = "/qrcode/{$detail['authorizer_info']['user_name']}.png";
-    	$flag = FncFile::fileDownload($detail['authorizer_info']['qrcode_url'], $filename);
+    	$flag = FncFile::fileDownload($detail['authorizer_info']['qrcode_url'], APP_UPLOAD_PATH.$filename);
     	if($flag){
     		$detail->qrcode_url = APP_UPLOAD_SITE.$filename;
     		$detail->save();
