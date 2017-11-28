@@ -135,7 +135,7 @@
 						_this.live = res.data;
 						_this.getCourse(_this.live.course_id);
 						$.hideLoading();
-						$(".school-bd").removeClass('ui-hid');
+						$(".school-bd").removeClass('ui-hide');
 						if(_this.live.process.status=='finish'){
 							_this.isfinish = true;
 							return;
