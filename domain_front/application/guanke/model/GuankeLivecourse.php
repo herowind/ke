@@ -82,14 +82,14 @@ class GuankeLivecourse extends CommonMod
     	if($startdiff < 0){
     		//尚未开始
     		if(abs($startday) == 0){
-    			$rtnData = ['status'=>'ready','time'=>"今天 ".date('H:s 即将开始',$starttimer),'button'=>'报名中'];
+    			$rtnData = ['status'=>'ready','time'=>"今天 ".date('H:s 即将开始',$starttimer),'button'=>'报名中','starttime'=>$starttimer];
     			return $rtnData;
     		}
     		if(abs($startday) == 1){
-    			$rtnData = ['status'=>'ready','time'=>"明天 ".date('H:s 准备开始',$starttimer),'button'=>'报名中'];
+    			$rtnData = ['status'=>'ready','time'=>"明天 ".date('H:s 准备开始',$starttimer),'button'=>'报名中','starttime'=>$starttimer];
     			return $rtnData;
     		}
-    		$rtnData = ['status'=>'ready','time'=>date('m-d H:i 尚未开始',$starttimer),'button'=>'报名中'];
+    		$rtnData = ['status'=>'ready','time'=>date('m-d H:i 尚未开始',$starttimer),'button'=>'报名中','starttime'=>$starttimer];
     		return $rtnData;
     	}else{
     		//如果已经开始了，判断是否结束
@@ -97,10 +97,10 @@ class GuankeLivecourse extends CommonMod
     		$endday = floor($enddiff / 86400);
     		$endfree = $enddiff % 86400;
     		if($enddiff < 0){
-    			$rtnData = ['status'=>'start','time'=>'直播开始啦','button'=>'直播中'];
+    			$rtnData = ['status'=>'start','time'=>'直播开始啦','button'=>'直播中','starttime'=>$starttimer];
     			return $rtnData;
     		}else{
-    			$rtnData = ['status'=>'finish','time'=>date('m-d H:i',$endtimer),'button'=>'已结束'];
+    			$rtnData = ['status'=>'finish','time'=>date('m-d H:i',$endtimer),'button'=>'已结束','starttime'=>$starttimer];
     			return $rtnData;
     		}
     	}

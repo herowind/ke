@@ -7,6 +7,27 @@
 .weui-tab {
 	border-top: #999;
 }
+.starter{
+	position:absolute;
+	width:100%;
+	height:100px;
+	top:0;
+	left:0;
+}
+.starter-template {
+	  padding: 40px 15px;
+	  text-align: center;
+	  position:relative;
+	}
+.panel {
+	  width: 400px;
+	  margin-left: auto;
+	  margin-right: auto;
+	}
+	#btn-reset {
+	  margin-right: 10px;
+	}
+
 </style>
 {/block} 
 {block name="body"}
@@ -14,6 +35,16 @@
 	<div class="course-camera">
 		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
 	</div>
+	<div class="starter">
+		<div class="starter-template" >
+			<div class="panel panel-default">
+			  <div class="panel-body">
+				<div class="lead" id="ready"></div>
+			  </div>
+			</div>
+		</div>
+	</div>
+
 </div>
 <div class="school-bd">
 	<div class="weui-panel weui-panel_access" v-if="live.teacher_id>0">
@@ -70,6 +101,7 @@
 	<img src="/guanke/images/icons/pen.png" />
 </div>
 <div class="weui-footer weui-footer_fixed-bottom">
+	<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0" v-if="isfinish">已结束</button>
 	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
 	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
 	<button class="weui-btn weui-btn_primary" v-on:click="getLive" style="border-radius: 0" v-if="isshowqrcode">关注公众号</button>
@@ -98,6 +130,8 @@
 				isshowfavor:false,
 				isshowveryfy:false,
 				isshowqrcode:false,
+				isready:false,
+				isfinish:false
 			},
 			created:function(){
 				this.getLive();
@@ -109,8 +143,17 @@
 					$.get('detaildata.html',{live_id:live_id},function(res){
 						_this.live = res.data;
 						_this.getCourse(_this.live.course_id);
+						if(_this.live.process.status=='finish'){
+							_this.isfinish = true;
+							return;
+						}
+						if(_this.live.process.status=='ready'){
+							_this.isready = true;
+							$("#ready").countdown(_this.live.process.starttime, function(event) {
+								$(this).html(event.strftime('%D days %H:%M:%S'));
+						  	});
+						}
 						if(res.code==1){
-							//$("#video").prop("src",_this.live.member.url);
 							$("#video").load();
 						}else{
 							_this.isshowfavor=false;
@@ -191,7 +234,6 @@
 							_this.isshowfavor = false;
 							_this.isshowveryfy = false;
 							_this.live.member.url = res.url;
-							//$("#video").prop("src",res.url);
 							$("#video").load();
 						}else{
 							if(res.error=='unveryfy'){
@@ -211,19 +253,12 @@
 		var flag = false;
 // 		window.document.title = '{$course.name}';
 
-// 		total = document.documentElement.clientHeight;
-// 		document.body.style.height = total + "px";
-// 		var video = document.getElementById('video');
-// 		video.oncanplay = function() {
-// 			flag = true;
-// 		}
-// 		var playVideo = setInterval(function() {
-// 			if (flag) {
-// 				clearInterval(playVideo);
-// 			} else {
-// 				video.load();
-// 			}
-// 		}, 20000);
+		var $clock = $('#clock');
+
+	  	$clock.countdown(get15dayFromNow(), function(event) {
+			$(this).html(event.strftime('%D days %H:%M:%S'));
+	  	});
+
 
 </script>
 
