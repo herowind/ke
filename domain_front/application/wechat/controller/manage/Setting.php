@@ -15,6 +15,7 @@
 namespace app\wechat\controller\manage;
 
 use app\wechat\model\WechatSetting;
+use com\utils\FncFile;
 
 class Setting extends WechatController
 {
@@ -40,11 +41,16 @@ class Setting extends WechatController
     	$detail = WechatSetting::get($this->getCid());
     	$content = file_get_contents($detail['authorizer_info']['qrcode_url']);
     	$filename = "/qrcode/{$detail['authorizer_info']['user_name']}.png";
-    	file_put_contents(APP_UPLOAD_PATH.$filename, $content);
-    	$detail->qrcode_url = APP_UPLOAD_SITE.$filename;
-    	$detail->save();
-    	$this->assign('detail',$detail);
-    	return $this->fetch('index');
+    	$flag = FncFile::fileDownload($detail['authorizer_info']['qrcode_url'], $filename);
+    	if($flag){
+    		$detail->qrcode_url = APP_UPLOAD_SITE.$filename;
+    		$detail->save();
+    		$this->assign('detail',$detail);
+    		return $this->fetch('index');
+    	}else{
+    		$this->error('更新失败');
+    	}
+    	
     }
     
     public function historyurl(){

@@ -30,4 +30,34 @@ class FncFile{
 		curl_close($cp);
 		fclose($fp);
 	}
+	/**
+	 * 远程文件下载
+	 * @param unknown $remote
+	 * @param unknown $local
+	 */
+	public static function fileDownload($remote,$local){
+		$content = file_get_contents($remote);
+		$flag = self::checkPath(dirname($local));
+		if($flag){
+			file_put_contents($local, $content);	
+		}
+		return $flag;
+	}
+	
+	/**
+	 * 检查目录是否可写
+	 * @param  string   $path    目录
+	 * @return boolean
+	 */
+	public static function checkPath($path)
+	{
+		if (is_dir($path)) {
+			return true;
+		}
+		if (mkdir($path, 0755, true)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

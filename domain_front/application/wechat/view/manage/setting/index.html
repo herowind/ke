@@ -20,7 +20,7 @@
 				<th class=" w10 ">类型</th>
 				<th class=" w10 ">认账状态</th>
 				<th class=" w10">绑定日期</th>
-				<th class=" w20 text-center">操作</th>
+				<th class=" w10 text-center">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,14 +35,15 @@
 				<td>{$detail.authorizer_info.verify_type_info}</td>
 				<td>{$detail.create_time}</td>
 				<td class="text-center">
-				<a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.cid}" data-info="删除后，您还需要到您的公众号后台进行解绑？" title="删除"><i class="fa fa-trash"></i> 删除绑定</a>&nbsp;
-				<a class="text-mix btn btn-xs btn-default" href="qrcodeurl.html" title="更新"><i class="fa fa-qrcode"></i> 更新二维码</a>&nbsp;
-				<a class="text-mix btn btn-xs btn-default" href="javascript:void(0)" onclick="popModal('/guanke/wechat.setting/historyurl.html')"><i class="fa fa-link"></i> 关注链接</a>&nbsp;
-				
+					<a class="text-mix confirm-rst-url-btn btn  btn-default" href="remove.html?id={$item.cid}" data-info="删除后，您还需要到您的公众号后台进行解绑？" title="删除"><i class="fa fa-trash"></i> 删除绑定</a>&nbsp;
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<div class="non-info show">
+		<a class="text-main btn btn-default" href="qrcodeurl.html" title="更新"><i class="fa fa-qrcode"></i> 更新二维码</a>&nbsp;
+		<a class="text-main btn btn-default" href="javascript:void(0)" onclick="popModal('/guanke/wechat.setting/historyurl.html')"><i class="fa fa-link"></i> 关注链接</a>&nbsp;
+	</div>
 	{/notempty}
 	{empty name="detail"}
 	<div class="page-content">
