@@ -218,26 +218,26 @@
 				},
 				doSubscribe:function(e){
 					let _this = this;
-					let msg = '立即关注公众号';
 					if(_this.isshowqrcode){
-						msg = '您尚未关注公众号，无法播放';
+						$.modal({
+				          title: "友情提示",
+				          text: '您尚未关注公众号，无法播放',
+				          buttons: [
+							{ text: "取消", className: "default"},
+				            { text: "立即关注", 
+				              onClick: function(){
+				            	//if('{$wechat.history_url}'!=''){
+				            	//	document.location.href = '{$wechat.history_url|raw}';
+				            	//}else{
+				            		$("#wechat").popup();
+				            	//}
+				              }
+				            }
+				          ]
+				        });
+					}else{
+						$("#wechat").popup();
 					}
-					$.modal({
-			          title: "友情提示",
-			          text: msg,
-			          buttons: [
-						{ text: "取消", className: "default"},
-			            { text: "一键关注", 
-			              onClick: function(){
-			            	if('{$wechat.history_url}'!=''){
-			            		document.location.href = '{$wechat.history_url}';
-			            	}else{
-			            		$("#wechat").popup();
-			            	}
-			              }
-			            }
-			          ]
-			        });
 				}
 			}
 		})
