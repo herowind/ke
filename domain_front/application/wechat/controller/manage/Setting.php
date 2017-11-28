@@ -36,6 +36,30 @@ class Setting extends WechatController
         return $this->fetch();
     }
     
+    public function qrcodeurl(){
+    	$detail = WechatSetting::get($this->getCid());
+    	$content = file_get_contents($detail['authorizer_info']['qrcode_url']);
+    	$filename = "/qrcode/{$detail['authorizer_info']['user_name']}.png";
+    	file_put_contents(APP_UPLOAD_PATH.$filename, $content);
+    	$detail->qrcode_url = APP_UPLOAD_SITE.$filename;
+    	$detail->save();
+    	$this->assign('detail',$detail);
+    	return $this->fetch('index');
+    }
+    
+    public function historyurl(){
+    	$history_url = WechatSetting::where('cid',$this->getCid())->value('history_url');
+    	if(empty($this->request->param('history_url'))){
+    		exit($this->fetch());
+    	}else{
+    		$detail = WechatSetting::where('cid',$this->getCid())->find($this->getCid());
+    		$detail->history_url = $this->request->param('history_url');
+    		$detail->save();
+    		return ['code'=>1,'msg'=>'操作成功'];
+    	}
+    }
+    
+    
     public function save(){
     	/**
     	 * "authorization_info": {

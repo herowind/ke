@@ -28,15 +28,17 @@
 				<td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
 				<td>{$detail.name}</td>
 				<td><img src="{$detail.authorizer_info.head_img}" width="60" height="60"></td>
-				<td><img src="{$detail.authorizer_info.qrcode_url}" width="60" height="60"></td>
+				<td><img src="{$detail.qrcode_url}" width="60" height="60"></td>
 				<td>{$detail.authorizer_info.alias}</td>
 				<td>{$detail.authorizer_info.user_name}</td>
 				<td>{$detail.authorizer_info.service_type_info}</td>
 				<td>{$detail.authorizer_info.verify_type_info}</td>
 				<td>{$detail.create_time}</td>
 				<td class="text-center">
-				<a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.cid}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除绑定</a>&nbsp;
-
+				<a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?id={$item.cid}" data-info="删除后，您还需要到您的公众号后台进行解绑？" title="删除"><i class="fa fa-trash"></i> 删除绑定</a>&nbsp;
+				<a class="text-mix btn btn-xs btn-default" href="qrcodeurl.html" title="更新"><i class="fa fa-qrcode"></i> 更新二维码</a>&nbsp;
+				<a class="text-mix btn btn-xs btn-default" href="javascript:void(0)" onclick="popModal('/guanke/wechat.setting/historyurl.html')"><i class="fa fa-link"></i> 关注链接</a>&nbsp;
+				
 				</td>
 			</tr>
 		</tbody>
