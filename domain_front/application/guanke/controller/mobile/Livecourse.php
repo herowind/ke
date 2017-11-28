@@ -38,7 +38,9 @@ class Livecourse extends SchoolController {
 	public function detail(){
 		$live_id = $this->request->param('live_id');
 		$this->initMember();
+		$wechat = $this->getQrcode();
 		$this->assign('live_id',$live_id);
+		$this->assign('wechat',$wechat);
 		return $this->fetch ();
 	}
 	
@@ -57,23 +59,7 @@ class Livecourse extends SchoolController {
 		$detail = GuankeLivecourse::find($live_id);
 		$detail->append(['process'])->toArray();
 		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
-		$detail->wechat = (object)[
-				'qrcode_url' => $this->authorizer_info['qrcode_url'],
-				'head_img' => $this->authorizer_info['head_img'],
-				'nick_name' => $this->authorizer_info['nick_name'],
-				'signature' => $this->authorizer_info['signature']
-		];
-		//①判断是否强制关注公众号
-		if($detail->issubscribe == 1){
-			//验证是否关注,没有关注弹出二维码
-			$user = $this->officialAccount->user->get($this->getOpenid());
-			$detail->member->issubscribe = $user['subscribe'];
-			if($detail->member->issubscribe !=1){
-				return ['code'=>0,'msg'=>'请先关注公众平台','error'=>'unsubscribe','data'=>$detail];
-			}
-		}
-		
-		//②判断是否需要报名
+		//①判断是否需要报名
 		if($detail->membervisibility != 1){
 			$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
 			if(empty($courseMember)){
@@ -86,6 +72,16 @@ class Livecourse extends SchoolController {
 				if($detail->member->isveryfy !=1){
 					return ['code'=>0,'msg'=>'已报名成功,审核中请稍等','error'=>'unveryfy','data'=>$detail];
 				}
+			}
+		}
+		
+		//②判断是否强制关注公众号
+		if($detail->issubscribe == 1){
+			//验证是否关注,没有关注弹出二维码
+			$user = $this->officialAccount->user->get($this->getOpenid());
+			$detail->member->issubscribe = $user['subscribe'];
+			if($detail->member->issubscribe !=1){
+				return ['code'=>0,'msg'=>'您尚未关注公众平台，无法播放','error'=>'unsubscribe','data'=>$detail];
 			}
 		}
 		

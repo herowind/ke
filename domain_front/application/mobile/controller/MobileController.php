@@ -18,7 +18,6 @@ use EasyWeChat\Factory;
 use app\mobile\service\MobileLoginSvc;
 use app\wechat\model\WechatSetting;
 use app\common\controller\MobileBaseController;
-use function GuzzleHttp\json_decode;
 
 class MobileController extends MobileBaseController{
 	protected $pageTitle = '官网';
@@ -26,7 +25,7 @@ class MobileController extends MobileBaseController{
 	protected $theme = 'default';//暂时未用
 	//init之后才可以调用$officialAccount
 	protected $officialAccount;
-	protected $authorizer_info;
+	protected $wechat;
 	
 	/**
 	 * 描述：全局初始化
@@ -86,18 +85,21 @@ class MobileController extends MobileBaseController{
 	    	}
 	    }
 	}
+	/**
+	 * 获得微信关注链接
+	 */
+	protected function getQrcode(){
+		return WechatSetting::field('qrcode_url,history_url')->find($this->getCid());
+	}
 	
 	/**
 	 * 初始化微信
 	 */
 	protected function initOfficialAccount(){
 		$openPlatform = Factory::openPlatform(config('wechat.component'));
-		$wechat = WechatSetting::field('cid,appid,authorizer_refresh_token,authorizer_info')->find($this->getCid());
-		if($wechat){
-			$this->officialAccount = $openPlatform->officialAccount($wechat->appid, $wechat->authorizer_refresh_token);
-			$this->authorizer_info = $wechat->authorizer_info;
-		}else{
-			$this->officialAccount = null;
+		$this->wechat = WechatSetting::field('cid,appid,qrcode_url,history_url,authorizer_refresh_token,authorizer_info')->find($this->getCid());
+		if($this->wechat){
+			$this->officialAccount = $openPlatform->officialAccount($this->wechat->appid, $this->wechat->authorizer_refresh_token);
 		}
 	}
 
