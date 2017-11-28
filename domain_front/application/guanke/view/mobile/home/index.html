@@ -119,20 +119,6 @@
 		</div>
 	</div>
 	<div class="school-tab-content ui-hide" id="content_school">
-		<div class="weui-panel weui-panel_access">
-			<div class="weui-panel__bd">
-				<a href="javascript:void(0)" class="weui-media-box weui-media-box_appmsg" id="schoolpage" data-contenturl="{$school.contenturl}" data-contenttype="{$school.contenttype}">
-					<div class="weui-media-box__hd">
-						<img class="weui-media-box__thumb"
-							src="{$school.logo}"
-							alt="">
-					</div>
-					<div class="weui-media-box__bd">
-						<p class="weui-media-box__desc">{$school.intro}</p>
-					</div>
-				</a>
-			</div>
-		</div>
 		<article class="weui-article">
 			{$school_content|raw}
 		</article>
@@ -151,12 +137,6 @@ $(function(){
 		$(".school-tab-content").addClass("ui-hide");
 		let id = $(this).data('content');
 		$(id).removeClass("ui-hide");
-	})
-	
-	$("#schoolpage").on("click",function(){
-		if($(this).data('contenttype')==1 && $(this).data('contenturl')!=''){
-			document.location.href=$(this).data('contenturl');
-		}
 	})
 })
 
