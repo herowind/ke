@@ -99,7 +99,6 @@
 	<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0" v-if="isfinish">已结束</button>
 	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
 	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
-	<button class="weui-btn weui-btn_primary" v-on:click="getLive" style="border-radius: 0" v-if="isshowqrcode">关注公众号</button>
 </div>
 {/block} 
 {block name="script"}
@@ -141,8 +140,8 @@
 						}
 						if(_this.live.process.status=='ready'){
 							_this.isready = true;
-							$("#ready").countdown(_this.live.process.starttime, function(event) {
-								$(this).html(event.strftime('%D days %H:%M:%S'));
+							$("#ready").countdown(_this.live.starttime, function(event) {
+								$(this).html(event.strftime('%D 天 %H : %M : %S'));
 						  	});
 						}
 						if(res.code==1){
