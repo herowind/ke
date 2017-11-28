@@ -56,6 +56,7 @@ class Setting extends WechatController
     public function historyurl(){
     	$history_url = WechatSetting::where('cid',$this->getCid())->value('history_url');
     	if(empty($this->request->param('history_url'))){
+    		$this->assign('history_url',$history_url);
     		exit($this->fetch());
     	}else{
     		$detail = WechatSetting::where('cid',$this->getCid())->find($this->getCid());
