@@ -31,12 +31,12 @@
 	<div class="course-camera">
 		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
 	</div>
-	<div class="starter" v-if="isready">
+	<div class="starter" v-show="isready">
 		<div class="starter-template" >
 			<div class="panel panel-default">
 			  <div class="panel-body">
 			  	<div class="lead">即将开始</div>
-				<div class="lead" :id="readycount"></div>
+				<div class="lead" id="readycount"></div>
 			  </div>
 			</div>
 		</div>
@@ -116,14 +116,13 @@
 				course:{
 					content:'',
 					contenturl:'',
-					contenttype:'',
+					contenttype:''
 				},
 				isshowfavor:false,
 				isshowveryfy:false,
 				isshowqrcode:false,
 				isready:false,
-				isfinish:false,
-				readycount:'readycount'
+				isfinish:false
 			},
 			created:function(){
 				$.showLoading();
