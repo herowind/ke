@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
 	<form class="form-inline form-edit border-none" id="formEdit"
-		method="post" action="/guanke/wechat.setting/historyurl" autocomplete="off">
+		method="post" action="/wechat/setting/historyurl" autocomplete="off">
 		<div class="form-unit-style" data-title="输入项信息">
 			<div class="form-group clearfix">
 				<div class="label-zoon"></div>
@@ -24,7 +24,7 @@
 <script type="text/javascript">
 $(function(){   
     $("#searchBtn").on("click",function(){
-    	$.get("/guanke/wechat.setting/historyurl.html",$("#formEdit").serialize()).success(function(data){
+    	$.get("/wechat/setting/historyurl.html",$("#formEdit").serialize()).success(function(data){
             if(data.code==0){
             	showMsg(data.msg,'error');
             }else if(data.code==1){
