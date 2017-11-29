@@ -84,8 +84,13 @@ class Livecourse extends SchoolController {
 				return ['code'=>0,'msg'=>'您尚未关注公众平台，无法播放','error'=>'unsubscribe','data'=>$detail];
 			}
 		}
+		//③判断是否到时间
+		if(in_array($detail['process']['status'], ['ready','finish'])){
+			$detail->member->url = '';
+		}else{
+			$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
+		}
 		
-		$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
 		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
 	}
 	
