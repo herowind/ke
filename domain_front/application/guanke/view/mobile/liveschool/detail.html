@@ -156,6 +156,12 @@
 								_this.doSubscribe();
 								return;
 							}
+							
+							if(res.error=="unsubscribe"){
+								$.alert(res.msg, "友情提示");
+								return;
+							}
+							
 							$.alert(res.msg, "错误");
 						}
 						
