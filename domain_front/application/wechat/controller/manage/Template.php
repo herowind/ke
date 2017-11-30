@@ -36,6 +36,37 @@ class Template extends WechatController
         return $this->fetch();
     }
     
+    /**
+     * 添加模板
+     */
+    public function add()
+    {
+    	if($this->request->isPost()){
+    		$data = $this->officialAccount->template_message->addTemplate($this->request->param('short_id'));
+    		if($data['errmsg'] == 'ok'){
+    			$this->success('添加成功');
+    		}else{
+    			$this->error("添加失败【{$data['errmsg']}】");
+    		}
+    	}else{
+    		exit($this->fetch()) ;
+    	}
+    	
+    }
+    
+    /**
+     * 删除模板
+     */
+    public function remove()
+    {
+    		$data = $this->officialAccount->template_message->deletePrivateTemplate($this->request->param('template_id'));
+    		if($data['errmsg'] == 'ok'){
+    			$this->success('添加成功');
+    		}else{
+    			$this->error("添加失败【{$data['errmsg']}】");
+    		}
+    }
+    
     public function sendmessage(){
     	$this->officialAccount->template_message->send([
     			'touser' => 'owmnbv2-oSO0rt_ShDIqtqu8FfPg',
