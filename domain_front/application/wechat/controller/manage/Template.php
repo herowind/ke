@@ -35,6 +35,18 @@ class Template extends WechatController
     	$this->assign('data',$data);
         return $this->fetch();
     }
+    
+    public function sendmessage(){
+    	$this->officialAccount->template_message->send([
+    			'touser' => 'owmnbv2-oSO0rt_ShDIqtqu8FfPg',
+    			'template_id' => 'c83B6OsNi0_mXw1d4evm5v-6fv9E5Z8BdqpiL1a59mU',
+    			'url' => 'http://ke.qyhzlm.com/guanke/mobile.home/index.html?school_id=5',
+    			'data' => [
+    					'学校' => '小智跆拳道',
+    					'课程' => '跆拳道基本入门',
+    			],
+    	]);
+    }
  
 	
 }
