@@ -61,9 +61,9 @@ class Template extends WechatController
     {
     		$data = $this->officialAccount->template_message->deletePrivateTemplate($this->request->param('template_id'));
     		if($data['errmsg'] == 'ok'){
-    			$this->success('添加成功');
+    			$this->success('删除成功');
     		}else{
-    			$this->error("添加失败【{$data['errmsg']}】");
+    			$this->error("删除失败【{$data['errmsg']}】");
     		}
     }
     
