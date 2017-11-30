@@ -63,6 +63,12 @@ return [
 												'c' => 'manage.member',
 												'a' => 'index' 
 										],
+										[
+												'name' => '模板消息',
+												'm' => 'wechat',
+												'c' => 'manage.template',
+												'a' => 'index'
+										],
 										[ 
 												'name' => '绑定公众号',
 												'm' => 'wechat',
