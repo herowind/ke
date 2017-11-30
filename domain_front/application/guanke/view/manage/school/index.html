@@ -43,7 +43,6 @@
 						<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isdisplay']}" data-url="statusChange.html" data-id="{$item.id}" data-field="isdisplay"  data-status0="隐藏" data-status0-css="btn-none" data-status1="显示" data-status1-css="btn-success"  title="点击是否显示"></button>
 					</td>
                     <td class="text-center">
-                        
 						<div class="btn-group btn-group-xs">
 						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i> 更多操作</button>
 						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -61,8 +60,8 @@
 						  </ul>
 						</div>
 						<a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
-						<a class="text-main btn btn-xs btn-default" href="contentedit.html?school_id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 图文详情</a>
-						<a class="text-main btn btn-xs btn-default" href="slide.html?school_id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 幻灯片</a>
+						<a class="text-main btn btn-xs btn-default" href="contentedit.html?school_id={$item.id}"   title="图文"><i class="fa fa-html5"></i> 图文详情</a>
+						<a class="text-main btn btn-xs btn-default" href="slide.html?school_id={$item.id}"   title="幻灯片"><i class="fa fa-tags"></i> 幻灯片</a>
                     </td>
                 </tr>
                 {/volist}

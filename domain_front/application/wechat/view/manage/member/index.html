@@ -20,14 +20,14 @@
                 <tr>
                     <th class=" w5 text-center"><input type="checkbox" /></th>
                     <th class=" w5 ">序号</th>
-                    <th class=" w10 text-center">头像</th>
+                    <th class=" w5	 text-center">头像</th>
                     <th class=" w10 ">姓名</th>
                     <th class=" w10 ">手机</th>
-                    <th class=" w10 ">openid</th>
-                    <th class=" w20 ">城市</th>
-                    <th class=" w10 ">排序</th>
-                    <th class=" w10 ">显示</th>
-                    <th class=" w10 text-center">操作</th>                 
+                    <th class=" w20 ">openid</th>
+                    <th class=" w15 ">城市</th>
+                    <th class=" w5 ">排序</th>
+                    <th class=" w5 ">显示</th>
+                    <th class=" w20 text-center">操作</th>                 
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,7 @@
                     <td>{$item.nickname}</td>
                     <td>{$item.mobile}</td>
                     <td>{$item.openid}</td>
-                    <td>{$item.city}</td>
+                    <td>{$item.province}-{$item.city}</td>
                     <td>	                    
                     	<input id="sort{$item.id}" value="{$item.sort}" class="list_order form-control input-xs" data-id="{$item.id}" data-old="{$item.sort}" data-url="sortChange.html"/>
 					</td>

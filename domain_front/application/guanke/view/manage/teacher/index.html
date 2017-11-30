@@ -18,23 +18,21 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th class=" w5 text-center"><input type="checkbox" /></th>
-                    <th class=" w5 ">序号</th>
-                    <th class=" w10 text-center">头像</th>
+                    <th class=" w5 text-center">序号</th>
+                    <th class=" w5 text-center">头像</th>
                     <th class=" w10 ">姓名</th>
                     <th class=" w10 ">手机</th>
-                    <th class=" w10 ">头衔</th>
-                    <th class=" w20 ">技能</th>
-                    <th class=" w10 ">排序</th>
-                    <th class=" w10 ">显示</th>
-                    <th class=" w10 text-center">操作</th>                 
+                    <th class=" w15 ">头衔</th>
+                    <th class=" w15 ">技能</th>
+                    <th class=" w5 ">排序</th>
+                    <th class=" w5 ">显示</th>
+                    <th class=" w20 text-center">操作</th>                 
                 </tr>
             </thead>
             <tbody>
                 {volist name="pageData" id="item"}
                 <tr >
-                    <td class="text-center"><input class="margin-top-20" type="checkbox" /></td>
-                    <td>{$i}</td>
+                    <td class="text-center">{$i}</td>
                     <td class="text-center"><img src="{$item.avatar}" width="40" height="40"/></td>
                     <td>{$item.name}</td>
                     <td>{$item.mobile}</td>
