@@ -32,7 +32,7 @@
                     <td>{$item.template_id}</td>
                     <td>{$item.primary_industry}</td>
                     <td>{$item.deputy_industry}</td>
-                    <td>{$item.content|str_replace='n','<br>'}<br>{$item.example}</td>
+                    <td>{$item.content|str_replace='\\n','<br>'|raw}<br>{$item.example}</td>
                     <td class="text-center">
                         <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="remove.html?template_id={$item.template_id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
                         <a class="text-main btn btn-xs btn-default" href="detail?template_id={$item.template_id}"   title="详情"><i class="fa fa-leaf"></i> 详情</a>
