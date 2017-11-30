@@ -32,7 +32,6 @@ class Template extends WechatController
     public function index()
     {
     	$data = $this->officialAccount->template_message->getPrivateTemplates();
-    	dump($data);
     	$this->assign('data',$data);
         return $this->fetch();
     }
