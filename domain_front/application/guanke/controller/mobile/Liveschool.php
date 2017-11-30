@@ -90,6 +90,16 @@ class Liveschool extends SchoolController {
 			}
 		}
 		
+		//③时间判断
+		if(!empty($detail->timesection)){
+			$currentTime = date('H:i');
+			$currentWeek = date('w');
+			$timesction = $detail->timesection[$currentWeek];
+			if($currentTime < $timesction['o'] || $currentTime > $timesction['c'] || $timesction['is'] != 1){
+				return ['code'=>0,'msg'=>'未到观看时间，详情中有观看时间表','error'=>'untime','data'=>$detail];
+			}
+		}
+		
 		$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
 		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
 	}

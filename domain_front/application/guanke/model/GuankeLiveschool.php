@@ -55,4 +55,19 @@ class GuankeLiveschool extends CommonMod
         }
         return [];
     }
+    
+    public function setTimesectionAttr($value){
+    	if(is_array($value)){
+    		return json_encode($value,JSON_UNESCAPED_UNICODE);
+    	}else{
+    		return $value;
+    	}
+    }
+    
+    public function getTimesectionAttr($value){
+    	if(!empty($value)){
+    		return json_decode($value,true);
+    	}
+    	return [];
+    }
 }

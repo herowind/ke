@@ -76,6 +76,15 @@ class Liveschool extends ManageController
                 if($params['camera_id']){
                     $params['camera'] = GuankeManageSvc::getCameraJson($params['camera_id']);
                 }
+                $params['timesection'] = config('data.timesection');
+                if(!empty($params['opentime'])){
+                	foreach ($params['timesection'] as $key=>$val){
+                		if($params['opentime'][$key] >= $params['closetime'][$key]){
+                			$this->error($val[w].'的时间设置错误，开启时间不能大于关闭时间');
+                		}
+                		$params['timesection'][$key] = ['o'=>$params['opentime'][$key],'c'=>$params['closetime'][$key],'w'=>$val[w],'is'=>$params['isopening'][$key]??0];
+                	}
+                }
                 // 验证通过
                 if ($params['id']) {
                     // 更新操作
@@ -100,11 +109,15 @@ class Liveschool extends ManageController
         } else {
             if ($params['id']) {
                 $detail = GuankeLiveschool::manage()->find($params['id']);
+                if(empty($detail['timesection'])){
+                	$detail['timesection'] = config('data.timesection');
+                }
                 $this->assign('detail', $detail);
             } else {
                 $detail = [
                     'school_id' => $params['school_id'],
                     'isdisplay' => 1,
+                	'timesection'=>config('data.timesection'),
                 ];
                 $this->assign('detail', $detail);
             }
@@ -199,4 +212,5 @@ class Liveschool extends ManageController
 			$this->error('操作失败','',$detail->$field);
 		}
 	}
+	
 }

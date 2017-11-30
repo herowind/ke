@@ -142,6 +142,10 @@ body{font-family: 'Lantinghei SC','microsoft yahei', Tahoma, Helvetica, SimSun, 
     width:145px;
 }
 
+.form-group .input-zoon .width-clock{
+    width:110px;
+}
+
 
 
 .form-unit-style .content-left-zoon{width:23%;font-size:14px;line-height: 35px;}

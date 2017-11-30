@@ -82,6 +82,31 @@
 	            
 	        </div>
 	        
+	        <div id="zhibo" class="form-unit-style" data-title="时间设置">
+	            <h5 class="real-name-head margin-large-top text-main-deep">开启时间段设置<span class="margin-left">建议设置：工作时间或者有课时间，默认允许观看时间08:00-18:00</span></h5>
+	            {volist name="$detail.timesection" id="item"}
+	            <div class="form-group clearfix">
+	                <div class="label-zoon">{$item.w}</div>
+	                <div class="input-zoon">
+	                	<div class="input-group width-md" >
+	                        <input type="text" class="form-control width-clock datetimepicker text-mix"  name="opentime[]" value="{$item.o}" placeholder="开启时间">
+	                        <span class="input-group-addon icontime">
+	                            <i class="fa fa-clock-o"></i>
+	                        </span>
+	                   </div>
+	                   <div class="input-group width-md" >
+	                        <input type="text" class="form-control width-clock datetimepicker"  name="closetime[]" value="{$item.c}" placeholder="关闭时间">
+	                        <span class="input-group-addon icontime">
+	                            <i class="fa fa-clock-o"></i>
+	                        </span>
+	                    </div>
+	                    <input type="hidden" class="isopening" name="isopening[]" value="{$item.is}">
+	                    <input class="form-control isopening_check" name="isopening_check[]" data-on-color="success" data-on-text="允许观看" data-off-color="danger" data-off-text="全天关闭" data-size="small" value="1" {$item.is==1?'checked':''}  type="checkbox" />
+	                </div>
+	            </div>
+	            {/volist}
+	        </div>	        
+	        
 
 	        <div class="form-unit-style margin-large-top" data-title="提交">
 	            <div class="form-group clearfix">
@@ -102,42 +127,17 @@
 <script>
 var $page = {};
 $(function(){
-	//课程类型初始化
-	$("#type").val("{$detail.type|default='1'}");
-	if($("#type").val()==2){
-		$("#zhibo").removeClass('hidden');
-	}
-	$("#type").on("change",function(){
-		if($("#type").val() == 2){
-			$("#zhibo").removeClass('hidden');
-		}else{
-			$("#zhibo").addClass('hidden');
-		}
-		
-	})
-	//费用类型初始化
-	$("#feetype").val("{$detail.feetype|default='1'}");
-	if($("#feetype").val()==2){
-		$("#inputfee").removeClass('hidden');
-	}
-	$("#feetype").on("change",function(){
-		if($("#feetype").val() == 2){
-			$("#inputfee").removeClass('hidden');
-		}else{
-			$("#inputfee").addClass('hidden');
-		}
-		
-	})
 	
 	//开始时间初始化
     $('.datetimepicker').datetimepicker({
-        format: 'Y-m-d H:i',
+        format: 'H:i',
         timepicker:true,
+        datepicker:false,
         step:30,
         lang:"ch"
     });
-    $("#icon_starttime").on("click",function(){
-        $('#starttime').datetimepicker('show');
+    $(".icontime").on("click",function(){
+        $(this).prev().datetimepicker('show');
     })	
 
     //是否显示初始化
@@ -151,14 +151,26 @@ $(function(){
     }) 
     
     //是否开启初始化
-    $("input[name='isopen_check']").bootstrapSwitch();
-    $('input[name="isopen_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
+    $("input[name='issubscribe_check']").bootstrapSwitch();
+    $('input[name="issubscribe_check"]').on('switchChange.bootstrapSwitch', function(event, state) {
         if(state){
-            $("input[name='isopen']").val(1);
+            $("input[name='issubscribe']").val(1);
         }else{
-            $("input[name='isopen']").val(0);
+            $("input[name='issubscribe']").val(0);
         }
-    })     
+    })  
+    
+    
+    $(".isopening_check").bootstrapSwitch();
+    $('.isopening_check').on('switchChange.bootstrapSwitch', function(event, state) {
+        if(state){
+        	$(this).parents('.input-zoon').children('.isopening').val(1);
+        }else{
+        	$(this).parents('.input-zoon').children('.isopening').val(0);
+        }
+    }) 
+    
+   
     
     //提交表单
 	$("#saveBtn").on("click",function(){

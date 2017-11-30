@@ -45,6 +45,19 @@
 			</a>
 		</div>
 	</div>
+	
+	<div class="school-tab-content">
+	<div class="weui-cells__title"><b>监控开放时间表</b></div>
+	<div class="weui-cells">
+		<div class="weui-cell" v-for="item in live.timesection">
+			<div class="weui-cell__bd">
+			  <p>{{item.w}}</p>
+			</div>
+			<div class="weui-cell__ft" v-if="item.is==1">{{item.o}}-{{item.c}}</div>
+			<div class="weui-cell__ft" v-else>暂不开放</div>
+		</div>
+	</div>
+	</div>
 	<div class="school-tab-content">
 		<article class="weui-article" v-if="school.contenttype==2">
 		<div v-html="school.content"></div>
@@ -87,7 +100,8 @@
 					school:{'banner':''},
 					teacher:{},
 					camera:{'url':''},
-					member:{'url':''}
+					member:{'url':''},
+					timesection:[],
 				},
 				school:{
 					content:'',
