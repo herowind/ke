@@ -64,7 +64,13 @@ return [
 												'a' => 'index' 
 										],
 										[
-												'name' => '模板消息',
+												'name' => '群发通知',
+												'm' => 'wechat',
+												'c' => 'manage.template',
+												'a' => 'usertemplate'
+										],
+										[
+												'name' => '公众号模板',
 												'm' => 'wechat',
 												'c' => 'manage.template',
 												'a' => 'index'

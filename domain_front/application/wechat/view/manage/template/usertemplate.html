@@ -1,0 +1,52 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">我的群发消息模板
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="index">
+		    <button type="button" class="btn btn-sm  btn-success  link-btn" style="margin-bottom:10px;" data-url="usertemplateadd.html" ><i class="fa fa-plus"></i> 一键添加模板</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center">序号</th>
+                    <th class=" w20 ">模板代码</th>
+                    <th class=" w10 ">模板标题</th>
+                    <th class=" w30 ">模板ID</th>
+                    <th class=" w35 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="list" id="item"}
+                <tr >
+                    <td>{$i}</td>
+                    <td>{$item.short_id}</td>
+                    <td>{$item.title}</td>
+                    <td>{$item.template_id}</td>
+                    <td class="text-center">
+                        <a class="text-mix confirm-rst-url-btn btn btn-xs btn-default" href="usertemplateremove.html?template_id={$item.template_id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a>&nbsp;
+	                </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        {empty name="list"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+    </div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+</script>
+{/block}
