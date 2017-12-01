@@ -3,43 +3,173 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <title>企业互助联盟管理平台</title>
-    <meta name="keywords" content="企业互助联盟管理平台" />
-    <meta name="description" content="企业互助联盟管理平台" />
-    <link href="/site/css/layout.css" rel="stylesheet" type="text/css">
-    <link href="/site/css/login.css" rel="stylesheet" type="text/css">
+    <title>学校后台管理-登录</title>
+    <meta name="keywords" content="学校后台管理" />
+    <meta name="description" content="学校后台管理" />
+<style>
+
+/* 控制样式 */
+.f-trans{transition:all 0.3s linear;-webkit-transition:all 0.3s linear;-moz-transition:all 0.3s linear;-o-transition:all 0.3s linear;}
+
+body{
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	background-color: #fff;
+}
+
+.bc1{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc1.jpg");
+}
+
+.bc2{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc2.jpg");
+}
+.bc3{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc3.jpg");
+}
+.bc4{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc4.jpg");
+}
+.bc5{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc5.jpg");
+}
+.bc6{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc6.jpg");
+}
+.bc7{
+	background-image: url("http://ke-1253654449.file.myqcloud.com/bc7.jpg");
+}
+
+.login-pannel{
+	width:500px;
+	height:360px;
+	
+	position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 11;
+	margin: -180px 0 0 -250px;
+	border-radius:5px;
+}
+.login-box{
+	position:relative;
+	width:100%;
+}
+.box-header{
+	height:60px;
+	background:rgba(0,0,0,0.5);
+	color:#fff;
+	font-size:20px;
+	line-height:60px;
+	text-align:center;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	border-bottom:1px solid #999;
+}
+
+.box-body{
+	position:relative;
+	padding:40px 0;
+	width:100%;
+	background:rgba(0,0,0,0.5);
+	text-align:center;
+}
+.box-input{
+	position:relative;
+	width:100%;
+	line-height:40px;
+	text-align:center;
+}
+.box-input input{
+	position:relative;
+	width:200px;
+	height:44px;
+	margin-bottom:15px;
+	border:0;
+	font-size:16px;
+	color:#fff;
+	padding:0 45px;
+	background:rgba(255,255,255,0.5);
+	border-style: solid;
+	border-width: 0;
+	border-radius:3px;
+}
+.box-input input::-webkit-input-placeholder{
+    font-size:16px;  
+    color: #eee;
+} 
+
+.box-input img{
+	position:absolute;
+	left:120px;
+	width:20px;
+	height:20px;
+	top:11px;
+	opacity:0.7;
+	filter:alpha(opacity=70);
+}
+
+@-webkit-keyframes bluePulse {
+	from { background-color: #007d9a; -webkit-box-shadow: 0 0 9px #333; }
+	50% { background-color: #2daebf; -webkit-box-shadow: 0 0 18px #2daebf; }
+	to { background-color: #007d9a; -webkit-box-shadow: 0 0 9px #333; }
+}
+
+.blue.button { 
+	-webkit-animation-name: bluePulse; 
+	-webkit-animation-duration: 3s; 
+	-webkit-animation-iteration-count: infinite;
+}
+
+button,.button {
+	width:290px;
+	border-style: solid;
+	border-width: 0;
+	cursor: pointer;
+	font-family:"Microsoft YaHei","微软雅黑",tahoma,arial,simsun,"宋体";
+	line-height: 45px;
+	position: relative;
+	text-decoration: none;
+	text-align: center;
+	display: inline-block;
+	font-size: 1em;
+	background-color: #007d9a;
+	border-color: #007d9a;
+	color: white;
+	border-radius:3px;
+	margin-top:15px;
+	letter-spacing:5px;
+	transition: background-color 300ms ease-out;
+}
+
+
+
+</style>
 </head>
-<body class="login-bg">
-    <div class="main ">
-        <!--登录-->
-        <div class="login-dom login-max">
-            <div class="logo text-center">
-                <a href="#"><img src="__IMG__/logo.png" width="180px" height="180px"></a>
-            </div>
-            <div class="login container " id="login">
-                <p class="text-big text-center logo-color">同一个账号，连接一切</p>
-                <p class=" text-center margin-small-top logo-color text-small">控制台 | 云平台 | 论坛 | 云市场</p>
-                <form class="login-form" id="login-form" action="/manage/passport/dologin.html" method="post" autocomplete="off">
-                    <div class="login-box border text-small" id="box">
-                        <div class="name border-bottom">
-                            <input type="text" id="username" name="username" nullmsg="请填写帐号信息" placeholder="账号" >
-                        </div>
-                        <div class="pwd">
-                            <input type="password" id="password" name="password" nullmsg="请填写帐号密码" placeholder="密码" >
-                        </div>
-                    </div>
-                    <input type="hidden" name="formhash" value="5abb5d21"/>
-                    <input type="submit" class="btn text-center login-btn" value="立即登录">
-                </form>
-                <div class="forget">
-                    <a href="repassword.html" class="forget-pwd text-small fl">忘记登录密码？</a><a href="register.html" class="forget-new text-small fr" id="forget-new">创建一个新账号</a>
-                </div>
-            </div>
-        </div>
-        <div class="popupDom">
-            <div class="popup text-default"></div>
-        </div>
-    </div>
+<body>
+	<div class="login-pannel f-trans">
+		<div class="login-box">
+			<div class="box-header">
+				学校后台管理系统
+			</div>
+			<div class="box-body">
+				<form class="login-form" id="login-form" action="/manage/passport/dologin.html" method="post" autocomplete="off">
+					<div class="box-input login-username">
+						<input type="text" id="username" name="username" nullmsg="请填写帐号信息" placeholder="登录账号" >
+						<img src="/site/images/icons/user.png">
+					</div>
+		            <div class="box-input login-password">
+						<input type="password" id="password" name="password" nullmsg="请填写帐号信息" placeholder="登录密码" >
+						<img src="/site/images/icons/pass.png">
+					</div>
+					<input type="hidden" name="formhash" value="5abb5d21"/>
+					<button type="submit" class="blue button">立即登录</button>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 <script src="/lib/utils/jquery.min-2.2.1.js"></script>
 <script src="/lib/utils/jquery.form.js"></script>
@@ -49,6 +179,8 @@
 <script type="text/javascript">
 //登入
 $(function(){
+	var bc = GetRandomNum(1,7);
+	$("body").addClass('bc'+bc);
     $('#login-form').ajaxForm({
         beforeSubmit: logcheckForm,
         success: logcomplete,
@@ -81,5 +213,11 @@ $(function(){
     }
     return false;
 });
+
+function GetRandomNum(Min,Max){   
+	var Range = Max - Min;   
+	var Rand = Math.random();   
+	return(Min + Math.round(Rand * Range));   
+}   
 </script>
 </html>
