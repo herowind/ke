@@ -95,7 +95,7 @@ class Template extends WechatController
     public function usertemplateadd(){
     	//需要添加的模板
     	$list = Db::view('WechatTemplate', 'short_id,title,primary_industry,deputy_industry,content,example')
-		    ->view('WechatUsertemplate', 'template_id,cid', 'WechatTemplate.short_id=WechatUsertemplate.short_id where WechatUsertemplate.cid='.$this->getCid(), 'LEFT')
+		    ->view('WechatUsertemplate', 'template_id,cid', 'WechatTemplate.short_id=WechatUsertemplate.short_id and WechatUsertemplate.cid='.$this->getCid(), 'LEFT')
 		    ->where('template_id', 'null')
 		    ->select();
     	$error = '';
