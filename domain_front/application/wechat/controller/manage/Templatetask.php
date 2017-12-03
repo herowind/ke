@@ -64,7 +64,9 @@ class Templatetask extends WechatController
     		$data['touser'] = $params['touser']?:0;
     		$data['issend'] = 0;
     		$data['ispublish'] = 1;
-    		$data['totime'] = $params['totime']?$params['totime']:time();
+    		$data['totime'] = $params['totime']?strtotime($params['totime']):time();
+    		$detail['appid'] = $this->wechat->appid;
+    		$detail['authorizer_refresh_token'] = $this->wechat->authorizer_refresh_token;
     		if($params['id']){
     			$detail = WechatUsertemplatetask::manage()->where('issend','0')->find($params['id']);
     			if($detail){
@@ -85,8 +87,6 @@ class Templatetask extends WechatController
     		}else{
     			
     			$template = WechatTemplate::field('title,form')->where('short_id',$params['short_id'])->find();
-    			$detail['appid'] = $this->wechat->appid;
-    			$detail['authorizer_refresh_token'] = $this->wechat->authorizer_refresh_token;
     			$detail['template_id'] = $params['template_id'];
     			$detail['short_id'] = $params['short_id'];
     			$detail['title'] = $template['title'];
