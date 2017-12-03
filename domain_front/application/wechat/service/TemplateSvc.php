@@ -27,7 +27,7 @@ class TemplateSvc
 			//锁定
 			$flag = Db::table('app_wechat_usertemplatetask')->where('issend',0)->where('id',$task['id'])->setField('issend', 1);
 			if($flag == 1){
-				switch($task['togroup']){
+				switch($task['totype']){
 					case 'group':
 						self::groupSend($openPlatform, $task);
 						break;

@@ -18,5 +18,5 @@ use app\manage\model\CommonMod;
 
 class WechatUsertemplate extends CommonMod
 {
-    protected $pk = 'short_id';
+    protected $pk = 'template_id';
 }
