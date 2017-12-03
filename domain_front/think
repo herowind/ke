@@ -11,6 +11,7 @@
 // +----------------------------------------------------------------------
 
 namespace think;
+require __DIR__ . '/public/site_prod.php';
 require __DIR__ . '/../easywechat/vendor/autoload.php';
 // 加载基础文件
 require __DIR__ . '/../framework/base.php';
