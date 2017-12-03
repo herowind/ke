@@ -62,6 +62,7 @@ class Templatetask extends WechatController
     		$data['form'] = json_encode($form,JSON_UNESCAPED_UNICODE);
     		$data['totype'] = $params['totype']?:'group';
     		$data['touser'] = $params['touser']?:0;
+    		$data['tourl'] = $params['tourl'];
     		$data['issend'] = 0;
     		$data['ispublish'] = 1;
     		$data['totime'] = $params['totime']?strtotime($params['totime']):time();
