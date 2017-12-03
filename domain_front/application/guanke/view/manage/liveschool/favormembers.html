@@ -46,7 +46,7 @@
 		                    <td class="text-center">{$item.province}</td>
 		                    <td class="text-center">{$item.city}</td>
 							<td class="text-center">
-								<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isveryfy']}" data-url="/guanke/manage.liveschool/memberStatusChange.html?liveschool_id={$item.liveschool_id}" data-id="{$item.member_id}" data-field="isveryfy"  data-status0="未审核" data-status0-css="btn-none" data-status1="已审核" data-status1-css="btn-success"  title="点击是否审核"></button>
+								<button type="button" class="btn btn-xs status-btn" data-init-val="{$item['isveryfy']}" data-url="/guanke/manage.liveschool/memberStatusChange.html?live_id={$item.live_id}" data-id="{$item.member_id}" data-field="isveryfy"  data-status0="未审核" data-status0-css="btn-none" data-status1="已审核" data-status1-css="btn-success"  title="点击是否审核"></button>
 							</td>
 		                </tr>
 		                {/volist}

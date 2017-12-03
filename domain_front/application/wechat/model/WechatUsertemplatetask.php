@@ -10,23 +10,33 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 观课数据字典设置
+// | 公众号模板模型
 // +----------------------------------------------------------------------
-return [
-	'template'=>[
-		'tasktype' =>[
-			'group' => '发送到群组',
-			'openid' => '发送到个人',
-			'model' => '定向发送',
-		],
-		'tasksendflag' =>[
-				'0' => '待发送',
-				'1' => '正在发送',
-				'2' => '发送完毕',
-		],
-		'taskpublishflag' =>[
-				'0' => '未发布',
-				'1' => '已发布',
-		],
-	]
-];
+namespace app\wechat\model;
+
+use app\manage\model\CommonMod;
+
+class WechatUsertemplatetask extends CommonMod
+{
+	public function getTotypetextAttr($value,$data){
+		$arr = config('data.template.tasktype');
+		return $arr[$data['totype']];
+	}
+	
+	public function getIssendtextAttr($value,$data){
+		$arr = config('data.template.tasksendflag');
+		return $arr[$data['issend']];
+	}
+	
+	public function getIspublishtextAttr($value,$data){
+		$arr = config('data.template.taskpublishflag');
+		return $arr[$data['ispublish']];
+	}
+	
+	public function getFormAttr($value){
+		if($value){
+			return json_decode($value,value);
+		}
+		return [];
+	}
+}

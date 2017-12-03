@@ -18,6 +18,7 @@ use app\wechat\model\WechatSetting;
 use app\wechat\model\WechatUsertemplate;
 use app\wechat\model\WechatTemplate;
 use think\Db;
+use app\wechat\model\WechatUsertemplatetask;
 
 class Template extends WechatController
 {
@@ -72,17 +73,6 @@ class Template extends WechatController
     	}
     }
     
-    public function sendmessage(){
-    	$this->officialAccount->template_message->send([
-    			'touser' => 'owmnbv2-oSO0rt_ShDIqtqu8FfPg',
-    			'template_id' => 'c83B6OsNi0_mXw1d4evm5v-6fv9E5Z8BdqpiL1a59mU',
-    			'url' => 'http://ke.qyhzlm.com/guanke/mobile.home/index.html?school_id=5',
-    			'data' => [
-    					'学校' => '小智跆拳道',
-    					'课程' => '跆拳道基本入门',
-    			],
-    	]);
-    }
     /**
      * 用户模板
      */
@@ -128,6 +118,27 @@ class Template extends WechatController
     		$this->error("删除失败【{$data['errmsg']}】");
     	}
     }
- 
-	
+    
+    public function usertemplatechoose(){
+    	//需要添加的模板
+    	$addlist = Db::view('WechatTemplate', 'short_id,title,primary_industry,deputy_industry,content,example')
+    	->view('WechatUsertemplate', 'template_id,cid', 'WechatTemplate.short_id=WechatUsertemplate.short_id and WechatUsertemplate.cid='.$this->getCid(), 'LEFT')
+    	->where('template_id', 'null')
+    	->select();
+    	foreach ($addlist as $val){
+    		$rtnData = $this->officialAccount->template_message->addTemplate($val['short_id']);
+    		if($rtnData['errmsg'] == 'ok'){
+    			$data['template_id'] = $rtnData['template_id'];
+    			$data['short_id'] = $val['short_id'];
+    			$data['title'] = $val['title'];
+    			$data['cid'] = $this->getCid();
+    			WechatUsertemplate::create($data);
+    		}
+    	}
+    	$list = WechatUsertemplate::manage()->select();
+    	$this->assign('list',$list);
+    	exit($this->fetch());
+    	
+    }
+   
 }

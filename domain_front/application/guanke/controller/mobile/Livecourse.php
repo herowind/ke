@@ -61,7 +61,7 @@ class Livecourse extends SchoolController {
 		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
 		//①判断是否需要报名
 		if($detail->membervisibility != 1){
-			$courseMember = GuankeLivecoursemember::where('livecourse_id',$detail->id)->where('member_id',$this->getMid())->find();
+			$courseMember = GuankeLivecoursemember::where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
 			if(empty($courseMember)){
 				//需报名
 				$detail->member->isfavor = 0;
@@ -104,13 +104,16 @@ class Livecourse extends SchoolController {
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLivecourse::find($live_id);
 		//验证是否报过名
-		$courseMember = GuankeLivecoursemember::where('livecourse_id',$live_id)->where('member_id',$this->getMid())->find();
+		$courseMember = GuankeLivecoursemember::where('live_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($courseMember)){
 			//未报过名，进行报名
 			$data = [
-					'livecourse_id' => $live_id,
+					'live_id' => $live_id,
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
+					'openid'=>$this->getOpenid(),
+					'nickname'=>$this->member->nickname,
+					'mobile'=>$this->member->mobile,
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];

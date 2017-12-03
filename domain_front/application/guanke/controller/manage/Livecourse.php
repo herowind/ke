@@ -189,7 +189,7 @@ class Livecourse extends ManageController
 		if(empty($id)){
 			$this->error('请先完善直播基本信息','edit');
 		}
-		$pageData = Db::view('GuankeLivecoursemember', 'livecourse_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLivecoursemember.member_id = UserMember.id and GuankeLivecoursemember.livecourse_id ={$id}")->paginate(20);
+		$pageData = Db::view('GuankeLivecoursemember', 'live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLivecoursemember.member_id = UserMember.id and GuankeLivecoursemember.live_id ={$id}")->paginate(20);
 		$detail = GuankeLivecourse::manage()->find($id);
 		$this->assign('pageData',$pageData);
 		$this->assign('detail',$detail);
@@ -202,9 +202,9 @@ class Livecourse extends ManageController
 	public function memberStatusChange()
 	{
 		$member_id = $this->request->param('id');
-		$livecourse_id = $this->request->param('livecourse_id');
+		$live_id = $this->request->param('live_id');
 		$field = $this->request->param('field');
-		$detail = GuankeLivecoursemember::manage()->where('member_id',$member_id)->where('livecourse_id',$livecourse_id)->find();
+		$detail = GuankeLivecoursemember::manage()->where('member_id',$member_id)->where('live_id',$live_id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;

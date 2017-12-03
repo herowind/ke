@@ -1,0 +1,127 @@
+{extend name="manage@template/iframe"/}
+{block name="style"}
+{/block}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">群发内容编辑
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+ 
+    <div class="page-content">
+	    <form class="form-inline form-edit ajaxForm" id="formEdit" style="margin-top:-1px;" enctype="multipart/form-data" method="post" action="edit" autocomplete="off">
+	        <input type="hidden"  name="id" value="{$detail.id}">
+	        <input type="hidden"  name="template_id" value="{$detail.template_id}">
+	        <input type="hidden"  name="short_id" value="{$detail.short_id}">
+	        <div class="form-unit-style" data-title="发送信息">
+				<h5 class="real-name-head margin-large-top text-main-deep">发送内容<span class="margin-left"></span>
+					<span class="margin-left">警告：请勿发送硬广告内容，腾讯会封停账号</span>
+				</h5>
+				{volist name="detail.form" id="item"}
+					{switch item.i }
+					    {case text }
+				            <div class="form-group clearfix">
+				                <div class="label-zoon required">{$item.t}</div>
+				                <div class="input-zoon">
+									<input type="text" class="form-control width-main"  name="form_{$item.k}" value="{$item.v}" placeholder="">
+				                </div>
+				            </div>					    	
+					    {/case}
+					    {case textarea}
+					    	<div class="form-group clearfix">
+				                <div class="label-zoon required">{$item.t}</div>
+				                <div class="input-zoon">
+									<textarea class="form-control width-main"  name="form_{$item.k}" placeholder="">{$item.v}</textarea>
+				                </div>
+				            </div>
+					    {/case}
+					    {case datetime}
+					    	<div class="form-group clearfix">
+				                <div class="label-zoon required">{$item.t}</div>
+				                <div class="input-zoon">
+					                <div class="input-group width-main" >
+				                        <input type="text" class="form-control datetimepicker"  name="form_{$item.k}" value="{$item.v}" placeholder="">
+				                        <span class="input-group-addon icondatetimepicker">
+				                            <i class="fa fa-calendar"></i>
+				                        </span>
+				                    </div> 
+			                    </div>
+				            </div>
+					    {/case}
+					    {case hidden }
+							<input type="hidden"  name="{$item.k}" value="form_{$item.v}" placeholder="">				    	
+					    {/case}
+					    {default /}
+					    
+					{/switch}
+				{/volist}
+				<div class="form-group clearfix">
+	                <div class="label-zoon">链接地址</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main"  name="tourl" value="{$detail.tourl}" placeholder="">
+	                </div>
+	            </div>	
+	        </div>
+	        
+	        <div id="zhibo" class="form-unit-style" data-title="信息">
+	            <h5 class="real-name-head margin-large-top text-main-deep">基础设置<span class="margin-left"></span></h5>
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">标题</div>
+	                <div class="input-zoon">
+						<input type="text" class="form-control width-main"  name="title" value="{$detail.title}" placeholder="">
+						标题不是发送内容，是方便记忆使用，例如：开课通知（双十一课程优惠通知）
+	                </div>
+	            </div>
+	            
+	            <div class="form-group clearfix">
+	                <div class="label-zoon required">发送时间</div>
+	                <div class="input-zoon">
+		                <div class="input-group width-main" >
+	                        <input type="text" class="form-control datetimepicker"  name="totime" value="{$detail.totime|date='Y-m-d H:i'}" placeholder="">
+	                        <span class="input-group-addon icondatetimepicker">
+	                            <i class="fa fa-calendar"></i>
+	                        </span>
+							
+	                    </div>
+	                    <p>不填写则立即执行发送动作</p> 
+                    </div>
+	            </div>
+	        </div>
+
+	        <div class="form-unit-style margin-large-top" data-title="提交">
+	            <div class="form-group clearfix">
+	                <div class="label-zoon"></div>
+	                <div class="input-zoon">
+	                    <button type="button" class="btn btn-info" id="saveBtn">立即保存</button>
+	                    <button type="button" class="btn btn-default margin-left-15 linkto-btn" data-url="index.html">返回上页</button>
+	                </div>
+	            </div>
+	        </div>
+	    </form>
+	</div>
+
+
+</div>
+{/block}
+{block name="script"}
+<script>
+$(function(){
+	$('.datetimepicker').datetimepicker({
+        format: 'Y-m-d H:i',
+        timepicker:true,
+        step:30,
+        lang:"ch"
+    });
+	$(".icondatetimepicker").on("click",function(){
+        $(this).prev().datetimepicker('show');
+    })
+    
+	$("#saveBtn").on("click",function(){
+		$('.ajaxForm').submit();
+        return false;
+    })
+})
+</script>
+{/block}

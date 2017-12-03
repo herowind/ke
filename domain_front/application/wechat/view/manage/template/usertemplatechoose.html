@@ -1,0 +1,46 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal">
+		<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+	</button>
+	<h4 class="modal-title">选择群发的通知模板</h4>
+</div>
+<div class="modal-body">
+		<table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center">序号</th>
+                    <th class=" w70 ">模板名称</th>
+                    <th class=" w15 ">模板代码</th>
+                    <th class=" w10 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="list" id="item"}
+                <tr >
+                    <td>{$i}</td>
+                    <td>{$item.title}</td>
+                    <td>{$item.short_id}</td>
+                    <td class="text-center">
+                    	<a class="text-main btn btn-xs btn-default chooseBtn" href="/wechat/manage.templatetask/edit.html?short_id={$item.short_id}&template_id={$item.template_id}" target="workspace" onclick="popModalHide();"  title="编辑"><i class="fa fa-pencil"></i> 选择</a>
+	                </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+</div>
+
+<script type="text/javascript">
+
+
+function createTeacher(member_id){
+	$.get("/wechat/manage.templatetask/edit.html",{member_id:member_id}).success(function(data){
+        if(data.code==0){
+        	showMsg(data.msg,'error');
+        }else if(data.code==1){
+        	showMsg(data.msg,'success');
+        	popModalHide();
+        	refreshFrame();
+        }
+    });
+}
+</script>

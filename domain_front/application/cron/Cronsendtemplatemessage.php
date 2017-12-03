@@ -10,23 +10,25 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 观课数据字典设置
+// | 发送模板通知
 // +----------------------------------------------------------------------
-return [
-	'template'=>[
-		'tasktype' =>[
-			'group' => '发送到群组',
-			'openid' => '发送到个人',
-			'model' => '定向发送',
-		],
-		'tasksendflag' =>[
-				'0' => '待发送',
-				'1' => '正在发送',
-				'2' => '发送完毕',
-		],
-		'taskpublishflag' =>[
-				'0' => '未发布',
-				'1' => '已发布',
-		],
-	]
-];
+namespace app\cron;
+
+use think\console\Command;
+use think\console\Input;
+use think\console\Output;
+use app\wechat\service\TemplateSvc;
+
+class Cronsendtemplatemessage extends Command
+{
+	protected function configure()
+	{
+		$this->setName('Cronsendtemplatemessage')->setDescription('send template message ');
+	}
+	protected function execute(Input $input, Output $output)
+	{
+		$output->writeln("Start...".date('Y-m-d H:i:s'));
+		TemplateSvc::execTask();
+		$output->writeln("Finish...".date('Y-m-d H:i:s'));
+	}
+}

@@ -19,4 +19,11 @@ use app\manage\model\CommonMod;
 class WechatTemplate extends CommonMod
 {
     protected $pk = 'short_id';
+    
+    protected function getFormAttr($value){
+    	if(!empty($value)){
+    		return json_decode($value,true);
+    	}
+    	return [];
+    }
 }

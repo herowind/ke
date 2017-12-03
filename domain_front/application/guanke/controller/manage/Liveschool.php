@@ -183,7 +183,7 @@ class Liveschool extends ManageController
 		if(empty($id)){
 			$this->error('请先完善监控基本信息','edit');
 		}
-		$pageData = Db::view('GuankeLiveschoolmember', 'liveschool_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLiveschoolmember.member_id = UserMember.id and GuankeLiveschoolmember.liveschool_id ={$id}")->paginate(20);
+		$pageData = Db::view('GuankeLiveschoolmember', 'live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLiveschoolmember.member_id = UserMember.id and GuankeLiveschoolmember.live_id ={$id}")->paginate(20);
 		$detail = GuankeLiveschool::manage()->find($id);
 		$this->assign('pageData',$pageData);
 		$this->assign('detail',$detail);
@@ -196,9 +196,9 @@ class Liveschool extends ManageController
 	public function memberStatusChange()
 	{
 		$member_id = $this->request->param('id');
-		$liveschool_id = $this->request->param('liveschool_id');
+		$live_id = $this->request->param('live_id');
 		$field = $this->request->param('field');
-		$detail = GuankeLiveschoolmember::manage()->where('member_id',$member_id)->where('liveschool_id',$liveschool_id)->find();
+		$detail = GuankeLiveschoolmember::manage()->where('member_id',$member_id)->where('live_id',$live_id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;

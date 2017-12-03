@@ -66,6 +66,12 @@ return [
 										[
 												'name' => '群发通知',
 												'm' => 'wechat',
+												'c' => 'manage.templatetask',
+												'a' => 'index'
+										],
+										[
+												'name' => '我的模板',
+												'm' => 'wechat',
 												'c' => 'manage.template',
 												'a' => 'usertemplate'
 										],

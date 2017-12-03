@@ -66,7 +66,7 @@ class Liveschool extends SchoolController {
 		
 		//①判断是否需要报名
 		if($detail->membervisibility != 1){
-			$schoolMember = GuankeLiveschoolmember::where('liveschool_id',$detail->id)->where('member_id',$this->getMid())->find();
+			$schoolMember = GuankeLiveschoolmember::where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
 			if(empty($schoolMember)){
 				//需报名
 				$detail->member->isfavor = 0;
@@ -119,13 +119,16 @@ class Liveschool extends SchoolController {
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLiveschool::find($live_id);
 		//验证是否报过名
-		$schoolMember = GuankeLiveschoolmember::where('liveschool_id',$live_id)->where('member_id',$this->getMid())->find();
+		$schoolMember = GuankeLiveschoolmember::where('live_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($schoolMember)){
 			//未报过名，进行报名
 			$data = [
-					'liveschool_id' => $live_id,
+					'live_id' => $live_id,
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
+					'openid'=>$this->getOpenid(),
+					'nickname'=>$this->member->nickname,
+					'mobile'=>$this->member->mobile,
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
