@@ -114,12 +114,12 @@
 		<div class="ui-cards" v-if="courseList.length>0">
 			<div class="ui-cards-hd">推荐课程</div>
 			<div class="ui-cards-bd">
-				<div class="ui-card" v-for="item in courseList">
+				<a class="ui-card" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
 					<div class="ui-card-box">
 						<img class="ui-card-box_pic" :src="item.banner">
 						<span class="ui-card-box_name">{{item.name}}</span>
 					</div>
-				</div>
+				</a>
 			</div>
 		</div>
 	</div>
