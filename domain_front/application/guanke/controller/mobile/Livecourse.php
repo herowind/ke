@@ -137,11 +137,6 @@ class Livecourse extends SchoolController {
 	    						
 	    				],
 	    			]);
-					$this->officialAccount->server->push(function ($message) {
-						return "您好！欢迎关注我!";
-					});
-					
-					$response = $this->officialAccount->server->serve();
 				}
 				
 			}
