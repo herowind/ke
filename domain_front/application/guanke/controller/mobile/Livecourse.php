@@ -128,7 +128,7 @@ class Livecourse extends SchoolController {
 					$this->officialAccount->template_message->send([
 	    				'touser' => $this->getOpenid(),
 	    				'template_id' => $template['template_id'],
-	    				'url' => APP_SITE."/guanke/mobile.livecoure/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
+	    				'url' => APP_SITE."/guanke/mobile.livecourse/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
 	    				'data' => [
 	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
 	    						'courseName' => $detail->name,
