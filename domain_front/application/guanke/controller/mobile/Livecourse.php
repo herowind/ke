@@ -17,6 +17,8 @@ namespace app\guanke\controller\mobile;
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLivecoursemember;
 use app\zhibo\model\ZhiboCamera;
+use app\wechat\model\WechatUsertemplate;
+use app\wechat\model\WechatTemplate;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -117,7 +119,28 @@ class Livecourse extends SchoolController {
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
-			$courseMember = GuankeLivecoursemember::create($data);			
+			$courseMember = GuankeLivecoursemember::create($data);	
+			if($courseMember){
+				$template = WechatUsertemplate::where('cid',$this->getCid())->where('short_id','TM00080')->find();
+				if($template){
+					//设置模板
+					$this->initOfficialAccount();
+					$this->officialAccount->template_message->send([
+	    				'touser' => $this->getOpenid(),
+	    				'template_id' => $template['template_id'],
+	    				'url' => APP_SITE."/guanke/mobile.livecoure/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
+	    				'data' => [
+	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
+	    						'courseName' => $detail->name,
+	    						'date' => $detail->starttime,
+	    						'remark' => ['value'=>'了解详情，请点击查看☞','color'=>'#ff3333'],
+	    						
+	    				],
+	    			]);
+				}
+				
+			}
+			
 		}
 		//判断是否审核通过
 		if($courseMember->isveryfy==1){

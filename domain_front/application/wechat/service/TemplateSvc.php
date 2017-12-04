@@ -27,15 +27,16 @@ class TemplateSvc
 			//锁定
 			$flag = Db::table('app_wechat_usertemplatetask')->where('issend',0)->where('id',$task['id'])->setField('issend', 1);
 			if($flag == 1){
+				$officialAccount = $openPlatform->officialAccount($task['appid'], $task['authorizer_refresh_token']);
 				switch($task['totype']){
 					case 'group':
-						self::groupSend($openPlatform, $task);
+						self::groupSend($officialAccount, $task);
 						break;
 					case 'openid':
-						self::openidSend($openPlatform, $task);
+						self::openidSend($officialAccount, $task);
 						break;
 					case 'model':
-						self::modelSend($openPlatform, $task);
+						self::modelSend($officialAccount, $task);
 						break;
 				}
 				//完成
@@ -48,9 +49,8 @@ class TemplateSvc
 	 * @param unknown $openPlatForm
 	 * @param unknown $task
 	 */
-    public static function groupSend($openPlatform,$task)
+    public static function groupSend($officialAccount,$task)
     {
-    	$officialAccount = $openPlatform->officialAccount($task['appid'], $task['authorizer_refresh_token']);
     	//准备数据
     	$msgData = [];
     	$form = json_decode($task['form'],true);
@@ -109,8 +109,7 @@ class TemplateSvc
      * @param unknown $openPlatForm
      * @param unknown $task openid,openid,openid
      */
-    public static function openidSend($openPlatform,$task){
-    	$officialAccount = $openPlatform->officialAccount($task['appid'], $task['authorizer_refresh_token']);
+    public static function openidSend($officialAccount,$task){
     	//准备数据
     	$msgData = [];
     	$form = json_decode($task['form'],true);
@@ -134,8 +133,7 @@ class TemplateSvc
      * @param unknown $openPlatForm
      * @param unknown $task  modelname|field|value  该modelname必须有openid字段
      */
-    public static function modelSend($openPlatform,$task){
-    	$officialAccount = $openPlatform->officialAccount($task['appid'], $task['authorizer_refresh_token']);
+    public static function modelSend($officialAccount,$task){
     	//准备数据
     	$msgData = [];
     	$form = json_decode($task['form'],true);
