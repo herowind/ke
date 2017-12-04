@@ -131,8 +131,8 @@ class Livecourse extends SchoolController {
 	    				'url' => APP_SITE."/guanke/mobile.livecourse/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
 	    				'data' => [
 	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
-	    						'courseName' => $detail->name,
-	    						'date' => $detail->starttime,
+	    						'courseName' => ['value'=>'●'.$detail->name,'color'=>'#0033cc'],
+	    						'date' => ['value'=>$detail->starttime,'color'=>'#0033cc'] ,
 	    						'remark' => ['value'=>'了解详情，请点击查看☞','color'=>'#ff3333'],
 	    						
 	    				],
