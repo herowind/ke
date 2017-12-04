@@ -18,7 +18,7 @@ use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLivecoursemember;
 use app\zhibo\model\ZhiboCamera;
 use app\wechat\model\WechatUsertemplate;
-use app\wechat\model\WechatTemplate;
+use app\guanke\model\GuankeCourse;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -51,7 +51,20 @@ class Livecourse extends SchoolController {
 	 */
 	public function listdata(){
 		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$list->append(['process'])->toArray();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
+	}
+	
+	/**
+	 * 直播课程+普通课程列表数据
+	 */
+	public function alllistdata(){
+		$livecourseList = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$livecourseList->append(['process'])->toArray();
+		
+		$courseList = GuankeCourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		
+		return ['code'=>1,'msg'=>'查询成功','data'=>['livecourseList'=>$livecourseList,'courseList'=>$courseList]];
 	}
 	
 	public function detaildata(){

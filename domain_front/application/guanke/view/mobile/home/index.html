@@ -1,4 +1,50 @@
-{extend name="mobile@template/common"/} {block name="body"}
+{extend name="mobile@template/common"/} 
+{block name="style"}
+<style>
+.ui-cards-hd{
+	border-left:3px solid orange;
+	line-height:32px;
+	padding-left:10px;
+	margin-left:10px;
+	margin-top:15px;
+}
+.ui-cards-bd{
+	display:flex;
+	flex-wrap:wrap;
+	width:100%;
+	justify-content:flex-start;
+	padding:10px 10px;
+	box-sizing:border-box;
+	
+}
+.ui-cards .ui-card{
+	width:50%;
+	padding:10px;
+	box-sizing:border-box;	
+}
+
+.ui-card-box{
+	border-radius:5px;
+	box-sizing:border-box;
+	text-align:center;
+	-webkit-box-shadow: #666 0px 0px 8px;
+	-moz-box-shadow: #666 0px 0px 8	px;
+}
+
+.ui-card-box_pic{
+	width:100%;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+}
+.ui-card-box_name{
+	display:block;
+	line-height:35px;
+	text-align:left;
+	padding-left:10px;
+}
+</style>
+{/block}
+{block name="body"}
 <!--div class="school-hd">
 	<div class="school-background">
 		<img src="/guanke/images/school_banner3.jpg"/>
@@ -35,90 +81,82 @@
 	</div>
 	<div class="swiper-pagination"></div>
 </div>
-<div class="school-bd">
+<div class="school-bd ui-hide">
 	<!-- 菜单 -->
 	<div class="school-tabs">
-		<div class="school-tab active" data-content="#content_course">
-			<image src="/guanke/images/icons/menu_course.png" />
-			<div>精彩课程</div>
-		</div>
-		<div class="school-tab" data-content="#content_camera">
-			<image src="/guanke/images/icons/menu_camera.png" />
-			<div>视频监控</div>
-		</div>
-		<div class="school-tab" data-content="#content_teacher">
-			<image src="/guanke/images/icons/menu_teacher.png" />
-			<div>教师团队</div>
-		</div>
-		<div class="school-tab" data-content="#content_school">
-			<image src="/guanke/images/icons/menu_school.png" />
-			<div>学校简介</div>
+		<div class="school-tab" v-for="(item, index) in tabs" :class="{active:index == activeTab}" @click="tab(index)">
+			<image :src="item.icon"/>
+			<div>{{item.name}}</div>
 		</div>
 	</div>
 	<div class="ui-line"></div>
-
-	<!-- 商友圈 -->
-	<div class="school-tab-content" id="content_course">
-		{volist name="livecourses" id="item"} 
-		<a class="ui-item" href="/guanke/mobile.livecourse/detail.html?live_id={$item.id}&school_id={$school.id}" style="border-bottom: 1px solid #efefef">
+	
+	<div class="school-tab-content" v-show="tabs[activeTab].id == 'livecourse' ">
+		<a class="ui-item" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id" style="border-bottom: 1px solid #efefef">
 			<div class="ui-item-box">
 				<div class="item-sec1">
-					<img src="{$item.course.banner}" /> <span class="live">直播课程</span>
+					<img :src="item.course.banner" /> <span class="live">直播课程</span>
 				</div>
 				<div class="item-sec2">
-					<div class="sec2-hd">{$item.name}</div>
+					<div class="sec2-hd">{{item.name}}</div>
 					<div class="sec2-bd">
-						<div class="sec2-bd__tags">{$item.course.name}</div>
-						<div class="sec2-bd__btn {$item.process.status}">{$item.process.button}</div>
+						<div class="sec2-bd__tags">{{item.course.name}}</div>
+						<div class="sec2-bd__btn" :class="item.process.status">{{item.process.button}}</div>
 					</div>
 					<div class="sec2-ft">
-						<img class="sec2-ft__icon swing animated infinite " src="/guanke/images/icons/time_alert.png" /> <label>{$item.process.time}</label>
+						<img class="sec2-ft__icon swing animated infinite " src="/guanke/images/icons/time_alert.png" /> <label>{{item.process.time}}</label>
 					</div>
 				</div>
 			</div>
-		</a> 
-		{/volist}
-	</div>
-
-	<div class="school-tab-content ui-hide" id="content_camera">
-		<div class="weui-panel weui-panel_access">
-			<div class="weui-panel__bd">
-				{volist name="liveschools" id="item"} 
-				<a href="/guanke/mobile.liveschool/detail.html?live_id={$item.id}&school_id={$school.id}" class="weui-media-box weui-media-box_appmsg">
-					<div class="weui-media-box__hd">
-						<img class="weui-media-box__thumb"
-							src="{$item.school.logo}"
-							alt="">
+		</a>
+		<div class="ui-line"></div>
+		
+		<div class="ui-cards" v-if="courseList.length>0">
+			<div class="ui-cards-hd">推荐课程</div>
+			<div class="ui-cards-bd">
+				<div class="ui-card" v-for="item in courseList">
+					<div class="ui-card-box">
+						<img class="ui-card-box_pic" :src="item.banner">
+						<span class="ui-card-box_name">{{item.name}}</span>
 					</div>
-					<div class="weui-media-box__bd">
-						<h4 class="weui-media-box__title">{$item.name}</h4>
-						<p class="weui-media-box__desc">{$item.intro}</p>
-					</div>
-				</a>
-				{/volist}
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="school-tab-content ui-hide" id="content_teacher">
+	
+	<div class="school-tab-content" v-show="tabs[activeTab].id == 'liveschool' ">
 		<div class="weui-panel weui-panel_access">
 			<div class="weui-panel__bd">
-				{volist name="teachers" id="item"} 
-				<a href="/guanke/mobile.teacher/detail.html?teacher_id={$item.id}&school_id={$school.id}"  class="weui-media-box weui-media-box_appmsg">
+				<a v-for="item in liveschoolList"  :href="'/guanke/mobile.liveschool/detail.html?school_id={$school.id}&live_id='+item.id" class="weui-media-box weui-media-box_appmsg">
 					<div class="weui-media-box__hd">
-						<img class="weui-media-box__thumb"
-							src="{$item.avatar}"
-							alt="">
+						<img class="weui-media-box__thumb" :src="item.school.logo">
 					</div>
 					<div class="weui-media-box__bd">
-						<h4 class="weui-media-box__title">{$item.name}，{$item.capital}</h4>
-						<p class="weui-media-box__desc">{$item.intro}</p>
+						<h4 class="weui-media-box__title">{{item.name}}</h4>
+						<p class="weui-media-box__desc">{{item.intro}}</p>
 					</div>
 				</a>
-				{/volist}
 			</div>
 		</div>
 	</div>
-	<div class="school-tab-content ui-hide" id="content_school">
+	
+	<div class="school-tab-content" v-show="tabs[activeTab].id == 'teacher' ">
+		<div class="weui-panel weui-panel_access">
+			<div class="weui-panel__bd">
+				<a v-for="item in teacherList"  :href="'/guanke/mobile.teacher/detail.html?school_id={$school.id}&teacher_id='+item.id"  class="weui-media-box weui-media-box_appmsg">
+					<div class="weui-media-box__hd">
+						<img class="weui-media-box__thumb" :src="item.avatar" >
+					</div>
+					<div class="weui-media-box__bd">
+						<h4 class="weui-media-box__title">{{item.name}}，{{item.capital}}</h4>
+						<p class="weui-media-box__desc">{{item.intro}}</p>
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="school-tab-content" v-show="tabs[activeTab].id == 'school' ">
 		<article class="weui-article">
 			{$school_content|raw}
 		</article>
@@ -126,18 +164,102 @@
 </div>
 {/block} {block name="script"}
 <script>
+var school_id = '{$school.id}';
+var vm = new Vue({
+	el:'#app',
+	data : {
+		livecourseList:[],
+		liveschoolList:[],
+		teacherList:[],
+		schoolList:[],
+		courseList:[],
+		tabs:[
+			{id:'livecourse',name:'精彩课程',icon:'/guanke/images/icons/menu_course.png'},
+			{id:'liveschool',name:'视频监控',icon:'/guanke/images/icons/menu_camera.png'},
+			{id:'teacher',name:'教师团队',icon:'/guanke/images/icons/menu_teacher.png'},
+			{id:'school',name:'学校简介',icon:'/guanke/images/icons/menu_school.png'},
+		],
+		activeTab: 0
+	},
+	created:function(){
+		this.tab(this.activeTab);
+	},
+	methods:{
+		tab:function(index){
+			this.activeTab = index;
+			switch(this.tabs[this.activeTab].id){
+				case 'livecourse':
+					if(this.livecourseList.length==0){
+						this.getLivecourseList();
+					}
+					break;
+					
+				case 'liveschool':
+					if(this.liveschoolList.length==0){
+						this.getLiveschoolList();
+					}
+					break;
+					
+				case 'teacher':
+					if(this.teacherList.length==0){
+						this.getTeacherList();
+					}
+					break;
+					
+				case 'school':
+					if(this.schoolList.length==0){
+						this.getSchoolList();
+					}
+					break;					
+			}
+		},
+		
+		getLivecourseList:function(e){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.livecourse/alllistdata.html',{school_id:school_id},function(res){
+				console.log(res.data);
+				_this.livecourseList = res.data.livecourseList;
+				_this.courseList = res.data.courseList;
+				$.hideLoading();
+				$(".school-bd").removeClass("ui-hide");
+			})
+		},
+		
+		getLiveschoolList:function(e){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.liveschool/listdata.html',{school_id:school_id},function(res){
+				_this.liveschoolList = res.data;
+				$.hideLoading();
+			})
+		},
+		
+		getTeacherList:function(e){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.teacher/listdata.html',{school_id:school_id},function(res){
+				_this.teacherList = res.data;
+				$.hideLoading();
+			})
+		},
+		
+		getSchoolList:function(e){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.school/listdata.html',{school_id:school_id},function(res){
+				_this.teacherList = res.data;
+				$.hideLoading();
+			})
+		}
+	}
+})
+
+
 $(function(){
     $(".swiper-container").swiper({
         autoplay: 3000
       });	
-	
-	$(".school-tab").on("click",function(){
-		$(".school-tab").removeClass('active');
-		$(this).addClass('active');
-		$(".school-tab-content").addClass("ui-hide");
-		let id = $(this).data('content');
-		$(id).removeClass("ui-hide");
-	})
 })
 
 </script>

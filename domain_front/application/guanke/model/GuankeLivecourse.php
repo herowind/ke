@@ -27,22 +27,7 @@ class GuankeLivecourse extends CommonMod
     	$starttimer = strtotime($data['starttime']);
     	$endtimer = strtotime($data['endtime']);
     	return $this->formatStartTime($starttimer,$endtimer);
-    }
-    
-    public function getApplyAttr($value,$data){
-    	
-    	switch($data['membervisibility']){
-    		case 2:
-    			return ['name'=>'立即报名','content'=>$data['intro']?$data['intro']:'本课程报名即可观看'];
-    			break;
-    		case 3:
-    			return ['name'=>'立即报名','content'=>$data['intro']?$data['intro']:'本课程报名审核通过后即可观看'];
-    			break;
-    		default:
-    			return ['name'=>'立即报名','content'=>'如有疑问请拨打客服电话'];
-    	}
-    }
-    
+    }    
     
     public function getEndtimetextAttr($value){
     	$time = strtotime($value);
