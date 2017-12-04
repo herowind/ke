@@ -65,17 +65,16 @@
 }
 .ui-card-box_hd .live{
 	position:absolute;
-	color:rgba(0,194,116,1);
-	background:rgba(0,0,0 ,0.5);
-	width:80px;
-	font-size:15px;
+	color:#f76260;
+	background: rgba(255,255,255,0.5);
+	width:60px;
+	font-size:13px;
 	padding-right:10px;
 	font-weight:bold;
 	border-top-right-radius:20px;
 	border-bottom-right-radius:20px;
 	line-height:40px;
-
-	top:10px;
+	top:5px;
 	left:0;
 }
 
@@ -97,12 +96,12 @@
 	color:#fff;
 	text-align: center;
 	position:relative;
-	background:rgba(0,0,0,0.8);
+	background:rgba(0,0,0,0.5);
 }
 
 .ui-card-box_hd .time-template span{
 	display:block;
-	margin-top:-8px;
+	margin-top:-18px;
 }
 
 .ui-card-box_hd .time-template .time-alert{
@@ -112,10 +111,13 @@
 	-webkit-filter: brightness(9);
 	filter: brightness(9);
 }
+.ui-card-box_bd{
+	text-align:center;
+}
 
-.ui-card-box_bd .sec2-bd__btn {
+.ui-card-box_bd .status-bd__btn {
   border: 1px solid #f76260;
-  border-top-right-radius: 5px;
+  border-radius: 5px;
   text-align:center;
   line-height:20px;
   height:20px;
@@ -124,21 +126,31 @@
   color: #f76260;
   font-size: 12px;
   font-weight:800;  
-  margin-bottom:10px;
-	margin-right:10px;
-	z-index:100;
 }
 
-.ui-card-box_bd .sec2-bd__btn.ready {
+.ui-card-box_hd .live.ready {
   border: 1px solid rgba(0,194,116,1);
   color:rgba(0,194,116,1);
-  background: #fff;
+  background: rgba(255,255,255,0.5)
 }
 
-.ui-card-box_bd .sec2-bd__btn.finish {
+.ui-card-box_hd .live.finish {
   border: 1px solid #ccc;
   color:#ccc;
-  background: #fff;
+  background: rgba(255,255,255,0.5)
+}
+
+.coursename{
+	font-size:13px;
+	color:#f76260;
+}
+
+.ui-card-box_hd .time-template span.ready{
+	color:rgba(0,194,116,1);
+}
+
+.ui-card-box_hd .time-template span.finish{
+	color:#ccc;
 }
 </style>
 {/block}
@@ -196,12 +208,12 @@
 					<div class="ui-card-box">
 						<div class="ui-card-box_hd">
 							<img class="ui-card-box_pic" :src="item.course.banner">
-							<span class="live">直播课程</span>
+							<span class="live" :class="item.process.status">{{item.process.button}}</span>
 							<div class="time">
 								<div class="time-template">
 									<img class="time-alert swing animated infinite " src="/guanke/images/icons/time_alert.png" /> 
 									<span>{{item.process.time}}</span>
-									<span style="font-size:13px;color:red;display:block;margin-top:5px;">{{item.course.name}}</span>
+									<span class="coursename" :class="item.process.status" style="margin-top:5px;">{{item.course.name}}</span>
 								</div>
 							
 							</div>
@@ -209,10 +221,6 @@
 						
 						<div class="ui-card-box_bd">
 							<div class="sec2-hd">{{item.name}}</div>
-							<div class="sec2-bd">
-								<div class="sec2-bd__tags">{{item.course.name}}</div>
-								<div class="sec2-bd__btn"  :class="item.process.status">{{item.process.button}}</div>
-							</div>
 						</div>
 					</div>
 				</a>
