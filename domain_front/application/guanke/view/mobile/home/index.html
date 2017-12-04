@@ -2,7 +2,7 @@
 {block name="style"}
 <style>
 .ui-cards{
-	background:-webkit-gradient(linear, 50% 0, 50% 100%, from(#bc8878), to(#1c2032));
+	
 	padding-top:15px;
 	min-height:600px;
 }
@@ -23,8 +23,14 @@
 	box-sizing:border-box;
 	
 }
-.ui-cards .ui-card{
+.ui-cards .ui-card50{
 	width:50%;
+	padding:5px;
+	box-sizing:border-box;	
+}
+
+.ui-cards .ui-card100{
+	width:100%;
 	padding:5px;
 	box-sizing:border-box;	
 }
@@ -51,6 +57,88 @@
 	font-size:14px;
 	font-weight:bold;
 	color:#666;
+}
+
+
+.ui-card-box_hd{
+	position:relative;
+}
+.ui-card-box_hd .live{
+	position:absolute;
+	color:rgba(0,194,116,1);
+	background:rgba(0,0,0 ,0.5);
+	width:80px;
+	font-size:15px;
+	padding-right:10px;
+	font-weight:bold;
+	border-top-right-radius:20px;
+	border-bottom-right-radius:20px;
+	line-height:40px;
+
+	top:30px;
+	left:0;
+}
+
+
+.ui-card-box_hd .time{
+	position:absolute;
+	width:100%;
+	height:100px;
+	top:50px;
+	left:0;
+}
+.ui-card-box_hd .time-template{
+	width:220px;
+	height:80px;
+	border-radius:5px;
+	border-top:5px solid green;
+	margin:auto;
+	font-size:16px;
+	color:#fff;
+	text-align: center;
+	position:relative;
+	background:rgba(0,0,0,0.8);
+}
+
+.ui-card-box_hd .time-template span{
+	display:block;
+	margin-top:-8px;
+}
+
+.ui-card-box_hd .time-template .time-alert{
+	display:block;
+  	width: 24px;
+  	height: 24px;
+	-webkit-filter: brightness(9);
+	filter: brightness(9);
+}
+
+.ui-card-box_bd .sec2-bd__btn {
+  border: 1px solid #f76260;
+  border-top-right-radius: 5px;
+  text-align:center;
+  line-height:20px;
+  height:20px;
+  width:55px; 
+  background: #fff;
+  color: #f76260;
+  font-size: 12px;
+  font-weight:800;  
+  margin-bottom:10px;
+	margin-right:10px;
+	z-index:100;
+}
+
+.ui-card-box_bd .sec2-bd__btn.ready {
+  border: 1px solid rgba(0,194,116,1);
+  color:rgba(0,194,116,1);
+  background: #fff;
+}
+
+.ui-card-box_bd .sec2-bd__btn.finish {
+  border: 1px solid #ccc;
+  color:#ccc;
+  background: #fff;
 }
 </style>
 {/block}
@@ -101,29 +189,40 @@
 	</div>
 	<div class="ui-line"></div>
 	
-	<div class="school-tab-content" v-show="tabs[activeTab].id == 'livecourse' ">
-		<a class="ui-item" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id" style="border-bottom: 1px solid #efefef">
-			<div class="ui-item-box">
-				<div class="item-sec1">
-					<img :src="item.course.banner" /> <span class="live">直播课程</span>
-				</div>
-				<div class="item-sec2">
-					<div class="sec2-hd">{{item.name}}</div>
-					<div class="sec2-bd">
-						<div class="sec2-bd__tags">{{item.course.name}}</div>
-						<div class="sec2-bd__btn" :class="item.process.status">{{item.process.button}}</div>
-					</div>
-					<div class="sec2-ft">
-						<img class="sec2-ft__icon swing animated infinite " src="/guanke/images/icons/time_alert.png" /> <label>{{item.process.time}}</label>
-					</div>
-				</div>
-			</div>
-		</a>
-		
+	<div class="school-tab-content" v-show="tabs[activeTab].id == 'livecourse' ">	
 		<div class="ui-cards" v-if="courseList.length>0">
+			<div class="ui-cards-bd">
+				<a class="ui-card100" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id" style="border-bottom: 1px solid #efefef">
+					<div class="ui-card-box">
+						<div class="ui-card-box_hd">
+							<img class="ui-card-box_pic" :src="item.course.banner">
+							<span class="live">直播课程</span>
+							<div class="time">
+								<div class="time-template">
+									<img class="time-alert swing animated infinite " src="/guanke/images/icons/time_alert.png" /> 
+									<span>{{item.process.time}}</span>
+									<span style="font-size:13px;color:red;display:block;margin-top:5px;">{{item.course.name}}</span>
+								</div>
+							
+							</div>
+						</div>
+						
+						<div class="ui-card-box_bd">
+							<div class="sec2-hd">{{item.name}}</div>
+							<div class="sec2-bd">
+								<div class="sec2-bd__tags">{{item.course.name}}</div>
+								<div class="sec2-bd__btn"  :class="item.process.status">{{item.process.button}}</div>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="ui-cards" v-if="courseList.length>0" style="background:-webkit-gradient(linear, 50% 0, 50% 100%, from(#bc8878), to(#1c2032));">
 			<div class="ui-cards-hd">推荐课程</div>
 			<div class="ui-cards-bd">
-				<a class="ui-card" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
+				<a class="ui-card50" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
 					<div class="ui-card-box">
 						<img class="ui-card-box_pic" :src="item.banner">
 						<span class="ui-card-box_name">{{item.name}}</span>
