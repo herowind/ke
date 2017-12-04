@@ -133,7 +133,7 @@ class Livecourse extends SchoolController {
 	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
 	    						'courseName' => ['value'=>'●'.$detail->name,'color'=>'#0033cc'],
 	    						'date' => ['value'=>$detail->starttime,'color'=>'#0033cc'] ,
-	    						'remark' => ['value'=>'\n课程很精彩，请点击查看详情☞','color'=>'#ff3333'],
+	    						'remark' => ['value'=>'课程很精彩，请点击查看详情☞','color'=>'#ff3333'],
 	    						
 	    				],
 	    			]);
