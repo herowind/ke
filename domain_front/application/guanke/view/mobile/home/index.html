@@ -4,7 +4,7 @@
 .ui-cards{
 	
 	padding-top:15px;
-	min-height:600px;
+	
 }
 .ui-cards-hd{
 	border-left:3px solid orange;
@@ -75,7 +75,7 @@
 	border-bottom-right-radius:20px;
 	line-height:40px;
 
-	top:30px;
+	top:10px;
 	left:0;
 }
 
@@ -84,16 +84,16 @@
 	position:absolute;
 	width:100%;
 	height:100px;
-	top:50px;
+	top:30px;
 	left:0;
 }
 .ui-card-box_hd .time-template{
-	width:220px;
-	height:80px;
+	width:180px;
+	height:60px;
 	border-radius:5px;
 	border-top:5px solid green;
 	margin:auto;
-	font-size:16px;
+	font-size:14px;
 	color:#fff;
 	text-align: center;
 	position:relative;
@@ -219,7 +219,7 @@
 			</div>
 		</div>
 		
-		<div class="ui-cards" v-if="courseList.length>0" style="background:-webkit-gradient(linear, 50% 0, 50% 100%, from(#bc8878), to(#1c2032));">
+		<div class="ui-cards" v-if="courseList.length>0" style="min-height:400px;background:-webkit-gradient(linear, 50% 0, 50% 100%, from(#bc8878), to(#1c2032));">
 			<div class="ui-cards-hd">推荐课程</div>
 			<div class="ui-cards-bd">
 				<a class="ui-card50" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
