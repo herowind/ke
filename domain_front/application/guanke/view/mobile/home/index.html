@@ -1,12 +1,17 @@
 {extend name="mobile@template/common"/} 
 {block name="style"}
 <style>
+.ui-cards{
+	background:-webkit-gradient(linear, 50% 0, 50% 100%, from(#bc8878), to(#1c2032));
+	padding-top:15px;
+}
 .ui-cards-hd{
 	border-left:3px solid orange;
-	line-height:32px;
+	line-height:28px;
 	padding-left:10px;
 	margin-left:10px;
-	margin-top:15px;
+	color:#fff;
+	font-weight:bold;
 }
 .ui-cards-bd{
 	display:flex;
@@ -19,11 +24,12 @@
 }
 .ui-cards .ui-card{
 	width:50%;
-	padding:10px;
+	padding:5px;
 	box-sizing:border-box;	
 }
 
 .ui-card-box{
+	background:#fff;
 	border-radius:5px;
 	box-sizing:border-box;
 	text-align:center;
@@ -41,6 +47,7 @@
 	line-height:35px;
 	text-align:left;
 	padding-left:10px;
+	color:#666;
 }
 </style>
 {/block}
@@ -109,7 +116,6 @@
 				</div>
 			</div>
 		</a>
-		<div class="ui-line"></div>
 		
 		<div class="ui-cards" v-if="courseList.length>0">
 			<div class="ui-cards-hd">推荐课程</div>
