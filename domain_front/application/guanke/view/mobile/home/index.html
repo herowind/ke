@@ -2,9 +2,7 @@
 {block name="style"}
 <style>
 .ui-cards{
-	
 	padding-top:15px;
-	
 }
 .ui-cards-hd{
 	border-left:3px solid orange;
@@ -73,7 +71,7 @@
 	font-weight:bold;
 	border-top-right-radius:20px;
 	border-bottom-right-radius:20px;
-	line-height:40px;
+	line-height:30px;
 	top:5px;
 	left:0;
 }
@@ -202,7 +200,7 @@
 	<div class="ui-line"></div>
 	
 	<div class="school-tab-content" v-show="tabs[activeTab].id == 'livecourse' ">	
-		<div class="ui-cards" v-if="courseList.length>0">
+		<div class="ui-cards" style="padding-top:5px;" v-if="courseList.length>0">
 			<div class="ui-cards-bd">
 				<a class="ui-card100" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id" style="border-bottom: 1px solid #efefef">
 					<div class="ui-card-box">
@@ -220,7 +218,7 @@
 						</div>
 						
 						<div class="ui-card-box_bd">
-							<div class="sec2-hd">{{item.name}}</div>
+							<div class="sec2-hd" style="margin-bottom:10px">{{item.name}}</div>
 						</div>
 					</div>
 				</a>
