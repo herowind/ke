@@ -206,7 +206,7 @@
 	<div class="school-tab-content" v-show="tabs[activeTab].id == 'livecourse' ">	
 		<div class="ui-cards" style="padding-top:0px;" v-if="courseList.length>0">
 			<div class="ui-cards-bd">
-				<a class="ui-card100" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id" style="border-bottom: 1px solid #efefef">
+				<a class="ui-card100" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id">
 					<div class="ui-card-box">
 						<div class="ui-card-box_hd">
 							<img class="ui-card-box_pic" :src="item.course.banner">
