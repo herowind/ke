@@ -48,7 +48,7 @@ class Teacher extends SchoolController {
 	 * 教师详细ajax
 	 */
 	public function detaildata(){
-		$detail = GuankeTeacher::get($this->request->param('course_id'));
+		$detail = GuankeTeacher::get($this->request->param('teacher_id'));
 		if($detail->contentpageid){
 			$detail->content = GuankeContentpage::where('id',$detail->contentpageid)->value('content'); 
 		}else{
