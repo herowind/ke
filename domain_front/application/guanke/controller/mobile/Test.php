@@ -170,6 +170,7 @@ class Test extends SchoolController {
 	 * 开始播放
 	 */
 	public function startplay(){
+		$this->initMember();
 		//验证是否付费
 		$detail = UserTrade::where('member_id',$this->getMid())->where('validdate',date('Y-m-d'))->find();
 		$live = GuankeLivecourse::filed('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
@@ -191,7 +192,7 @@ class Test extends SchoolController {
 				User::where('id',$this->getCid())->update(['amount' => ['exp',"amount-{$price}"]]);
 			}
 		}
-		return ['code'=>1,'msg'=>'操作成功']
+		return ['code'=>1,'msg'=>'操作成功'];
 	}
 
 }
