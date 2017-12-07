@@ -39,7 +39,7 @@ class Test extends SchoolController {
 	 */
 	public function detail(){
 		$live_id = $this->request->param('live_id');
-		$this->initMemberTest();
+		$this->initMember();
 		$wechat = $this->getQrcode();
 		$this->assign('live_id',$live_id);
 		$this->assign('wechat',$wechat);
@@ -69,7 +69,7 @@ class Test extends SchoolController {
 	
 	public function detaildata(){
 		$live_id = $this->request->param('live_id');
-		$this->initMemberTest();
+		$this->initMember();
 		$this->initOfficialAccount();
 		$detail = GuankeLivecourse::find($live_id);
 		$detail->append(['process'])->toArray();
@@ -114,7 +114,7 @@ class Test extends SchoolController {
 	 */
 	public function favor(){
 		//验证登录
-		$this->initMemberTest();
+		$this->initMember();
 		//获取直播详情
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLivecourse::find($live_id);
@@ -133,26 +133,26 @@ class Test extends SchoolController {
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
 			$courseMember = GuankeLivecoursemember::create($data);	
-// 			if($courseMember){
-// 				$template = WechatUsertemplate::where('cid',$this->getCid())->where('short_id','TM00080')->find();
-// 				if($template){
-// 					//设置模板
-// 					$this->initOfficialAccount();
-// 					$this->officialAccount->template_message->send([
-// 	    				'touser' => $this->getOpenid(),
-// 	    				'template_id' => $template['template_id'],
-// 	    				'url' => APP_SITE."/guanke/mobile.livecourse/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
-// 	    				'data' => [
-// 	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
-// 	    						'courseName' => ['value'=>'●'.$detail->name,'color'=>'#0033cc'],
-// 	    						'date' => ['value'=>$detail->starttime,'color'=>'#0033cc'] ,
-// 	    						'remark' => ['value'=>'课程很精彩，请点击查看详情☞','color'=>'#ff3333'],
+			if($courseMember){
+				$template = WechatUsertemplate::where('cid',$this->getCid())->where('short_id','TM00080')->find();
+				if($template){
+					//设置模板
+					$this->initOfficialAccount();
+					$this->officialAccount->template_message->send([
+	    				'touser' => $this->getOpenid(),
+	    				'template_id' => $template['template_id'],
+	    				'url' => APP_SITE."/guanke/mobile.livecourse/detail.html?school_id={$this->getSchoolId()}&live_id={$live_id}",
+	    				'data' => [
+	    						'userName' => ['value'=>$this->member->nickname?:'课官','color'=>'#0033cc'] ,
+	    						'courseName' => ['value'=>'●'.$detail->name,'color'=>'#0033cc'],
+	    						'date' => ['value'=>$detail->starttime,'color'=>'#0033cc'] ,
+	    						'remark' => ['value'=>'课程很精彩，请点击查看详情☞','color'=>'#ff3333'],
 	    						
-// 	    				],
-// 	    			]);
-// 				}
+	    				],
+	    			]);
+				}
 				
-// 			}
+			}
 			
 		}
 		//判断是否审核通过
