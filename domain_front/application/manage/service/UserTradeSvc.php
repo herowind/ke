@@ -49,7 +49,7 @@ class UserTradeSvc
     		$detail = UserTrade::create($data);
     		if($detail){
     			//操作成功，主账户扣费
-    			$flag = User::where('id',$this->getCid())->update(['amount' => ['exp',"amount-{$price}"]]);
+    			$flag = User::where('id',$cid)->update(['amount' => ['exp',"amount-{$price}"]]);
     			//暂时不对扣款失败作后续操作（非必要验证）
     		}
     	} 
