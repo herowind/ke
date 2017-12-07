@@ -19,6 +19,11 @@ return [
         'login' => '/manage/passport/login',
         'logout' => '/manage/passport/logout',
         'home' => '/manage/index/index'
-    ]
+    ],
+	'zhiboprice' =>[
+		'live' => 10
+	]
+		
+	
 ]
 ;
