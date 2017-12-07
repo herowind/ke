@@ -19,6 +19,8 @@ use app\guanke\model\GuankeLivecoursemember;
 use app\zhibo\model\ZhiboCamera;
 use app\wechat\model\WechatUsertemplate;
 use app\guanke\model\GuankeCourse;
+use app\manage\model\UserTrade;
+use app\manage\model\User;
 
 class Test extends SchoolController {
 	public function initialize() {
@@ -162,6 +164,34 @@ class Test extends SchoolController {
 		}else{
 			return ['code'=>0,'msg'=>'已报名成功,审核中请稍等','error'=>'unveryfy'];
 		}
+	}
+	
+	/**
+	 * 开始播放
+	 */
+	public function startplay(){
+		//验证是否付费
+		$detail = UserTrade::where('member_id',$this->getMid())->where('validdate',date('Y-m-d'))->find();
+		$live = GuankeLivecourse::filed('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
+		if(empty($detail)){
+			$price = config('manage.zhiboprice.live');
+			//执行扣费
+			$data = [
+					'cid' => $this->getCid(),
+					'member_id' => $this->getMid(),
+					'goodstype' => 'livecourse',
+					'goodsinfo' => json_encode($live,JSON_UNESCAPED_UNICODE),
+					'type'		=> '1',
+					'price'		=> $price,
+					'validdate'	=> date('Y-m-d'),	
+			];
+			$detail = UserTrade::create($data);
+			if($detail){
+				//操作成功，主账户扣费
+				User::where('id',$this->getCid())->update(['amount' => ['exp',"amount-{$price}"]]);
+			}
+		}
+		return ['code'=>1,'msg'=>'操作成功']
 	}
 
 }

@@ -29,7 +29,7 @@
 {block name="body"}
 <div class="course-hd">
 	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
 	</div>
 	<div class="starter" v-show="isready">
 		<div class="starter-template" >
@@ -246,7 +246,13 @@
 		var screenW;
 		var flag = false;
 // 		window.document.title = '{$course.name}';
-
+function startplay(){
+	$.get('/guanke/mobile.test/startplay.html',{live_id:live_id},function(res){
+		if(res.code!=1){
+			 $.alert("加载失败，请重新打开页面", "网速不给力");
+		}
+	})
+}
 </script>
 
 
