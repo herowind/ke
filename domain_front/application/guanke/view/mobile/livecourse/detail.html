@@ -29,7 +29,7 @@
 {block name="body"}
 <div class="course-hd">
 	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
 	</div>
 	<div class="starter" v-show="isready">
 		<div class="starter-template" >
