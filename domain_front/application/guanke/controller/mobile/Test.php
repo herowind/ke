@@ -173,7 +173,7 @@ class Test extends SchoolController {
 		$this->initMember();
 		//验证是否付费
 		$detail = UserTrade::where('member_id',$this->getMid())->where('validdate',date('Y-m-d'))->find();
-		$live = GuankeLivecourse::filed('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
+		$live = GuankeLivecourse::field('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
 		if(empty($detail)){
 			$price = config('manage.zhiboprice.live');
 			//执行扣费
