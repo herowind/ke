@@ -62,7 +62,7 @@ class MobileController extends MobileBaseController{
 	}
 	
 	protected function initMemberTest(){
-		$this->member = (object)['id'=>14];
+		$this->member = (object)['id'=>16];
 	}
 	
 	/**
