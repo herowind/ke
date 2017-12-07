@@ -228,24 +228,13 @@
 			}
 		})
 
-		var screenW;
-		var flag = false;
-// 		window.document.title = '{$school.name}';
-
-// 		total = document.documentElement.clientHeight;
-// 		document.body.style.height = total + "px";
-// 		var video = document.getElementById('video');
-// 		video.oncanplay = function() {
-// 			flag = true;
-// 		}
-// 		var playVideo = setInterval(function() {
-// 			if (flag) {
-// 				clearInterval(playVideo);
-// 			} else {
-// 				video.load();
-// 			}
-// 		}, 20000);
-
+		function startplay(){
+			$.get('/guanke/mobile.liveschool/startplay.html',{live_id:live_id},function(res){
+				if(res.code!=1){
+					 $.alert("加载失败，请重新打开页面", "网速不给力");
+				}
+			})
+		}
 </script>
 
 

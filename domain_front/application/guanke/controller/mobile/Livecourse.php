@@ -19,6 +19,7 @@ use app\guanke\model\GuankeLivecoursemember;
 use app\zhibo\model\ZhiboCamera;
 use app\wechat\model\WechatUsertemplate;
 use app\guanke\model\GuankeCourse;
+use app\manage\service\UserTradeSvc;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -162,6 +163,17 @@ class Livecourse extends SchoolController {
 		}else{
 			return ['code'=>0,'msg'=>'已报名成功,审核中请稍等','error'=>'unveryfy'];
 		}
+	}
+	
+	/**
+	 * 开始播放
+	 */
+	public function startplay(){
+		$this->initMember();
+		$goods = GuankeLivecourse::field('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
+		$goods['type'] = 'livecourse';
+		$rtnData = UserTradeSvc::memberPayDaikou($this->getCid(),$this->getMid(), $goods);
+		return $rtnData;
 	}
 
 }

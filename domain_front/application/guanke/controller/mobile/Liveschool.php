@@ -17,6 +17,7 @@ namespace app\guanke\controller\mobile;
 use app\guanke\model\GuankeLiveschool;
 use app\guanke\model\GuankeLiveschoolmember;
 use app\zhibo\model\ZhiboCamera;
+use app\manage\service\UserTradeSvc;
 
 class Liveschool extends SchoolController {
 	public function initialize() {
@@ -142,6 +143,17 @@ class Liveschool extends SchoolController {
 		}else{
 			return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy'];
 		}
+	}
+	
+	/**
+	 * 开始播放
+	 */
+	public function startplay(){
+		$this->initMember();
+		$goods = GuankeLiveschool::field('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
+		$goods['type'] = 'livecourse';
+		$rtnData = UserTradeSvc::memberPayDaikou($this->getCid(),$this->getMid(), $goods);
+		return $rtnData;
 	}
 
 }
