@@ -56,12 +56,12 @@
                 {/volist}
             </tbody>
         </table>
-        {empty name="school_id"}
+        {notempty name="school_id"}
         <div class="non-info show">
         	<span style="display:block;font-size:14px;margin-bottom:10px;">扫一扫申请成为老师(可将二维码发送给老师)</span>
             <span style="display:block" id="bindteacher"></span>
         </div>
-        {/empty}
+        {/notempty}
         <div class="show-page padding-big-right">
 	        <div class="page">{$pageData->render()|raw}</div>
 	    </div>
