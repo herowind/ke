@@ -93,7 +93,7 @@ class Teacher extends SchoolController {
 			}
 		}
 		$this->assign('member',$memberDetail);
-		$this->fetch();
+		return $this->fetch();
 	}
 	
 	
