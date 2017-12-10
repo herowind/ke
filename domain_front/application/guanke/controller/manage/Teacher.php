@@ -144,7 +144,7 @@ class Teacher extends ManageController{
 	 */
 	public function remove() {
 	    $params = $this->request->param();
-	    $flag = GuankeTeacher::manage()->delete($params['id'],true);
+	    $flag = GuankeTeacher::manage()->where('id',$params['id'])->delete(true);
 	    if($flag==1){
 	        return $this->success('删除成功');
 	    }else{
