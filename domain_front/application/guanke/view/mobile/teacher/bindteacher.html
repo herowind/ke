@@ -1,0 +1,185 @@
+{extend name="template/common"/} 
+{block name="style"}
+<style>
+.container {
+  height: 100%;
+  padding-bottom: 0;
+  z-index: 10;
+  background: transparent;
+  position: relative;
+}
+.cover{
+  height:2px;
+  background: #000;
+}
+
+.slogan{
+  color:#d9d9d9;
+  font-size:15px;
+  padding-top: 150px;
+  z-index: 20;
+  text-align: center;
+}
+
+.weui-btn {
+  margin: auto;
+  width:70%;
+  border: 1px solid #0f0;
+  color: #3f6;
+  background: transparent;
+  box-shadow: 0px 0px 15px #0a0;
+  height: 50px;
+  padding: 2px;
+  font-size: 18px;
+}
+
+.login-bg {
+  background: #000;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.no-pass .input-group-mobile,.no-pass .input-group-code{
+  position: relative;
+}
+
+.no-pass .input-group-mobile .select-countrycode{
+    position: absolute;
+    top: 0;
+    height: 44px;
+    padding: 0 15px 0 5px;
+    width: 66px;
+    line-height: 44px;
+    color: #333;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.no-pass .input-group-mobile .select-countrycode:before{
+	position: absolute;
+	top: 17px;
+	right: 8px;
+	content: '';
+	width: 6px;
+	height: 6px;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg)
+}
+
+.no-pass .input-group-mobile .select-countrycode:after {
+	position: absolute;
+	right: 0;
+	top: 8px;
+	bottom: 8px;
+	border-right: 1px solid #e8e8e8;
+	content: ''
+}
+
+.no-pass .input-mobile, .no-pass .input-code{
+	width: 100%;
+	height: 44px;
+	color: #333;
+	line-height: 17px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	margin-bottom: 10px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.no-pass .input-mobile{
+    padding: 12px 30px 12px 65px;
+    line-height: 17px;
+}
+
+.no-pass .input-code{
+    padding: 12px 135px 12px 10px;
+    line-height: 17px;
+}
+
+.no-pass .input-mobile.pdl-countrycode{
+ padding-left:76px;
+}
+
+.no-pass .input-group-code .fetch-code{
+	width: 102px;
+	padding: 11px 0 10px;
+	color: #fff;
+	text-align: center;
+	position: absolute;
+	right: 0;
+	top: 0;
+	border-radius: 0 4px 4px 0;
+  background-color: #bbb;
+  height:44px;
+  box-sizing: border-box;
+}
+
+.no-pass .input-group-code .fetch-code.active{
+  background-color: #E31D1A;
+
+}
+
+.no-pass .input-group-code .fetch-code:before {
+	position: absolute;
+	content: '';
+	top: 8px;
+	bottom: 8px;
+	left: 0;
+}
+
+.no-pass .input-group-code .fetch-code.disabled{
+	color: #fff
+}
+
+.btn-group .weui-btn{
+  margin-top:20px;
+  border-radius:4px;
+  height:44px;
+  font-size:15px;
+  background: #E31D1A;
+  padding-top:3px;
+  color:#fff;
+}
+
+.btn-group .weui-btn.active {
+  background: #E31D1A;
+}
+
+</style>
+{/block}
+{block name="body"}
+
+  <image class="login-bg" src="http://alliance-1253654449.cosbj.myqcloud.com/login_bg2.jpg" ></image>
+  <div class="container">
+    <div class="cover"></div>
+    <div class="slogan">{:cookie('school.name')}</div>
+      <form action="dobindteacher.html">
+        <div class="no-pass">
+          <div class="input-group-mobile">
+            <div class="select-countrycode">+86</div>
+            <input type="tel" class="input-mobile pdl-countrycode" name="mobile" placeholder="手机号"/>
+          </div>
+          <!--  div class="input-group-code">
+            <input type="text" class="input-code" name="code" placeholder="请输入验证码"/>
+            <div class="fetch-code active">获取验证码</div>
+            <div class="fetch-code disabled hide">60s后重发</div>
+          </div -->
+          <div class="btn-group">
+            <button class="weui-btn" loading="{{submitStatus}}" formType="submit">申请成为老师</button>
+          </div>
+        </div>
+      </form>
+  </div>
+
+{/block} 
+{block name="script"}
+<script>
+</script>
+{/block}
