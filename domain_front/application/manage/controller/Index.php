@@ -15,6 +15,10 @@
 namespace app\manage\controller;
 
 use app\common\service\UploadSvc;
+use app\manage\model\User;
+use app\wechat\model\WechatSetting;
+use app\manage\model\UserMember;
+use app\manage\model\UserTrade;
 
 class Index extends ManageController{
 	
@@ -28,6 +32,18 @@ class Index extends ManageController{
 	public function index() {
 		$menu = $this->getMenu();
 		$this->assign('menu',$menu);
+		return $this->fetch();
+	}
+	
+	public function welcome(){
+		//账户信息
+		$cid = $this->getCid();
+		$account['amount'] = User::where('id',$cid)->value('amount');
+		$account['wechat'] = WechatSetting::manage()->value('name');
+		$account['members']= UserMember::manage()->count();
+		//支出，已支付，类型：直播
+		$account['consume']= UserTrade::manage()->where('type',1)->where('ispay',1)->where('goodstype','in',[2,3,4])->sum('price');
+		$this->assign('account',$account);
 		return $this->fetch();
 	}
 	

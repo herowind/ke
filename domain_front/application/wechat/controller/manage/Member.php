@@ -41,6 +41,11 @@ class Member extends ManageController
         $this->assign('pageData', $pageData);
         return $this->fetch();
     }
+    
+    public function newmemberlist(){
+    	$newmemberlist = UserMember::manage()->order('id desc')->limit(20)->select();
+		return ['code'=>1,'msg'=>'查询成功','data'=>$newmemberlist];
+    }
 
     /**
      * 编辑课程

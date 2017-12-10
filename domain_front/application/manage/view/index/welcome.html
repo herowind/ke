@@ -1,314 +1,462 @@
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="__PUBLIC__/static/css/index.css" rel="stylesheet" type="text/css">
-    <link href="__PUBLIC__/static/css/perfect-scrollbar.min.css" rel="stylesheet" type="text/css">
-    <link href="__PUBLIC__/static/css/purebox.css" rel="stylesheet" type="text/css">
-    <link href="__PUBLIC__/static/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/static/js/jquery-ui/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.cookie.js"></script>
-    <style>
-        .contentWarp_item .section_select .item_comment{
-            padding: 83px 0 31px 38px;
-        }
-        .contentWarp_item .section_select .item {
-            padding: 83px 0 38px 38px;
-        }
-        .contentWarp_item .section_order_select li{
-            width: 23%;
-        }
-    </style>
-</head>
-<body class="iframe_body">
-<div class="warpper">
-    <div class="title">管理中心</div>
-    <div class="content start_content">
-        <div class="contentWarp">
-            <div class="contentWarp_item clearfix">
-                <div class="section_select">
-                    <div class="item item_price">
-                        <i class="icon"><img src="__PUBLIC__/static/images/1.png" width="71" height="74"></i>
-                        <div class="desc">
-                            <div class="tit">{$count.new_order}</div>
-                            <span>今日订单总数</span>
-                        </div>
-                    </div>
-                    <div class="item item_order">
-                        <i class="icon"><img src="__PUBLIC__/static/images/2.png"></i>
-                        <div class="desc">
-                            <div class="tit">{$count.new_users}</div>
-                            <span>今日会员总数</span>
-                        </div>
-                        <i class="icon"></i>
-                    </div>
-                    <div class="item item_comment">
-                        <i class="icon"><img src="__PUBLIC__/static/images/3.png" width="90" height="86"></i>
-                        <div class="desc">
-                            <div class="tit">{$count.comment}</div>
-                            <span>今日待审评论数</span>
-                        </div>
-                    </div>
-                    <div class="item item_flow">
-                        <i class="icon"><img src="__PUBLIC__/static/images/4.png" width="86"></i>
-                        <div class="desc">
-                            <div class="tit">{$count.today_login}</div>
-                            <span>今日访问量</span>
-                        </div>
-                        <i class="icon"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="contentWarp_item clearfix">
-                <div class="section_order_select">
-                    <ul>
-                        <li>
-                            <a style="cursor: default;">
-                                <i class="ice ice_w"></i>
-                                <div class="t">待处理订单</div>
-                                <span class="number">{$count.handle_order}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a style="cursor: default;">
-                                <i class="ice ice_y"></i>
-                                <div class="t">商品数量</div>
-                                <span class="number">{$count.goods}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a style="cursor: default;">
-                                <i class="ice ice_f"></i>
-                                <div class="t">文章数量</div>
-                                <span class="number">{$count.article}</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a style="cursor: default;">
-                                <i class="ice ice_n"></i>
-                                <div class="t">会员总数</div>
-                                <span class="number">{$count.users}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="clear"></div>
-                <div class="section section_order_count">
-                    <div class="sc_title" style="padding: 26px 0 14px;border-bottom: 1px solid #e4eaec;">
-                        <i class="sc_icon"></i>
-                        <h3>版本信息</h3>
-                    </div>
-                    <div class="sc_warp" style="padding-bottom: 30px;">
-                        <table cellpadding="0" cellspacing="0" class="system_table">
-                            <tbody><tr>
-                                <td class="gray_bg">程序版本:</td>
-                                <td>TPshop {$sys_info.version}</td>
-                                <td class="gray_bg">更新时间:</td>
-                                <td>2017-01-01</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">程序开发:</td>
-                                <td>深圳搜豹网络有限公司</td>
-                                <td class="gray_bg">版权所有:</td>
-                                <td>深圳搜豹网络有限公司</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">官方授权:</td>
-                                <td><a href="http://www.tp-shop.cn/" target="_blank">商业授权</a></td>
-                                <td class="gray_bg">官方论坛:</td>
-                                <td><a href="http://www.tp-shop.cn/articleList_cat_id_31.html" target="_blank">TPshop交流论坛</a></td>
-                            </tr>
-                            </tbody></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="contentWarp">
-            <div class="section system_section" style="float: none;width: inherit;">
-                <div class="system_section_con">
-                    <div class="sc_title" style="padding: 26px 0 14px;border-bottom: 1px solid #e4eaec;">
-                        <i class="sc_icon"></i>
-                        <h3>系统信息</h3>
-                        <!--<span class="stop stop_jia" id="system_section" title="展开详情"></span>-->
-                    </div>
-                    <div class="sc_warp" id="system_warp" style="display: block;padding-bottom: 30px;">
-                        <table cellpadding="0" cellspacing="0" class="system_table">
-                            <tbody><tr>
-                                <td class="gray_bg">服务器操作系统:</td>
-                                <td>{$sys_info.os}</td>
-                                <td class="gray_bg">服务器域名/IP:</td>
-                                <td>{$sys_info.domain} [ {$sys_info.ip} ]</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">服务器环境:</td>
-                                <td>{$sys_info.web_server}</td>
-                                <td class="gray_bg">PHP 版本:</td>
-                                <td>{$sys_info.phpv}</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">Mysql 版本:</td>
-                                <td>{$sys_info.mysql_version}</td>
-                                <td class="gray_bg">GD 版本:</td>
-                                <td>{$sys_info.gdinfo}</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">文件上传限制:</td>
-                                <td>{$sys_info.fileupload}</td>
-                                <td class="gray_bg">最大占用内存:</td>
-                                <td>{$sys_info.memory_limit}</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">最大执行时间:</td>
-                                <td>{$sys_info.max_ex_time}</td>
-                                <td class="gray_bg">安全模式:</td>
-                                <td>{$sys_info.safe_mode}</td>
-                            </tr>
-                            <tr>
-                                <td class="gray_bg">Zlib支持:</td>
-                                <td>{$sys_info.zlib}</td>
-                                <td class="gray_bg">Curl支持:</td>
-                                <td>{$sys_info.curl}</td>
-                            </tr>
-                            </tbody></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{extend name="manage@template/iframe"/} 
+{block name="style"}
+<style>
+.home-v2{
+	background: #eaedf1;
+	min-height:900px;
+	box-size:border-box;
+}
+
+.home-v2 a {
+    color: #00C1DE;
+}
+
+.home-section-wrap {
+	margin: 16px 8px;
+}
+.home-section-wrap .nav-tabs {
+    border: none;
+}
+.home-section-wrap .nav {
+    width: 100%;
+    background: #f5f5f6;
+    height: 45px;
+    border-bottom: 1px solid #eaeaea;
+}
+.home-section-wrap .tab-content {
+    background: #fff;
+}
+.home-box-shadow {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.home-section-consume {
+	height: 280px;
+}
+.home-section-consume .consume-summary {
+	width: 50%;
+	padding: 32px 8px 32px 16px;
+}
+.home-section-consume .consume-title {
+	font-size: 14px;
+	line-height: 40px;
+	height: 40px;
+	text-align: center;
+	color: #666;
+}
+.home-section-consume .consume-summary .summary-part-left{
+	width: 50%;
+	padding-right: 4px;
+}
+.home-section-consume .consume-summary .summary-part-right {
+    width: 50%;
+    padding-left: 4px;
+}
+.home-section-consume .consume-summary .summary-balance {
+	height: 100px;
+	background: #F5F5F6;
+}
+.home-section-consume .consume-summary .summary-balance .balance-title {
+    color: #666;
+    padding: 12px 0 0 20px;
+}
+.home-section-consume .consume-summary .summary-balance .balance-number {
+    font-size: 26px;
+    color: #9B9EA0;
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 300;
+}
+.home-section-consume .consume-summary .summary-recharge {
+    display: block;
+    height: 40px;
+    width: 100%;
+    background: #00C1DE;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.home-section-consume .consume-summary .summary-part-right {
+    width: 50%;
+    padding-left: 4px;
+}
+
+.home-section-consume .consume-summary .summary-coupon-card, .home-section-consume .consume-summary .summary-stored-card {
+    margin-bottom: 10px;
+}
+.home-section-consume .consume-summary .summary-coupon {
+    display: block;
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    text-align: left;
+}
+
+.home-section-consume .consume-summary .summary-coupon a {
+    padding-left: 20px;
+    color: #666;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+
+.home-v2 .home-block-hover {
+    background: #F5F5F6;
+    border: 1px solid #F5F5F6;
+    -o-transition: all 0.15s, 0.15s;
+    -moz-transition: all 0.15s, 0.15s;
+    -webkit-transition: all 0.15s, 0.15s;
+}
+
+.home-section-consume .consume-monthly {
+    width: 50%;
+    padding: 32px 16px 32px 8px;
+}
+
+.home-section-consume .consume-monthly .monthly-zero {
+    background: #F5F5F6;
+}
+
+.home-section-consume .consume-monthly .monthly-zero .zero-body {
+    height: 100px;
+}
+
+.home-section-consume .consume-monthly .monthly-zero .zero-title {
+    color: #666;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 16px;
+}
+.home-section-consume .consume-monthly .monthly-zero .zero-number {
+    font-size: 26px;
+    color: #9B9EA0;
+    text-align: center;
+    font-weight: 300;
+}
+
+.home-section-consume .consume-monthly .monthly-zero .zero-foot {
+    height: 40px;
+    background-color: #EBECEC;
+    line-height: 40px;
+    text-align: center;
+}
+
+.home-v2 .home-section-security {
+    height: 180px;
+    overflow: hidden;
+}
+.home-v2 .section-container {
+    padding: 16px 16px;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+.home-v2 .home-section-security .security-left {
+    width: 60%;
+    display: inline-block;
+    vertical-align: top;
+	box-size:border-box;
+}
+
+.home-v2 .home-section-security .security-right {
+    width: 39%;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+	box-size:border-box;
+}
+
+.home-v2 .home-section-security .sas-open-bg {
+    margin: 0 auto;
+    height: 120px;
+    position: relative;
+}
+
+.home-v2 .section-container .container-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.home-v2 .home-section-security .sas-open-bg p {
+    font-size: 16px;
+    text-align: center;
+	padding-right:10px;
+    color: #999999;
+}
+.home-v2 .home-section-security .sas-open-bg .sls-open-link-wrap {
+	display:inline-flex;
+	position:absolute;
+    bottom: 0px;
+    width: 100%;
+	padding-right:20px;
+	justify-content: center;
+	align-content: flex-start;
+}
+.home-v2 .home-section-security .sas-open-bg .sls-open-link {
+    border: 1px solid #00c1de;
+	margin-left:10px;
+    text-decoration: none;
+    padding: 4px 10px;
+    text-align: center;
+}
+
+
+.home-v2 .home-section-security .item-horizontal {
+    line-height: 55px;
+    position: relative;
+	width: 100%;
+    height: 55px;
+}
+
+
+.home-v2 .home-block-hover {
+    background: #F5F5F6;
+    border: 1px solid #F5F5F6;
+    -o-transition: all 0.15s, 0.15s;
+    -moz-transition: all 0.15s, 0.15s;
+    -webkit-transition: all 0.15s, 0.15s;
+}
+
+.home-v2 .home-section-security .item-horizontal .item-text {
+    display: inline-block;
+    min-width: 60px;
+    margin-left: 16px;
+}
+
+.home-v2 .home-section-security .item-horizontal .item-unit {
+    position: absolute;
+    height: 100%;
+    width: 16px;
+    top: 0;
+    right: 12px;
+}
+.home-v2 .home-section-security .item-horizontal .item-number {
+    position: absolute;
+    font-size: 18px;
+    display: block;
+    width: 30%;
+    height: 100%;
+    text-align: center;
+    top: 0;
+    right: 28px;
+}
+.home-v2 .home-section-security .item-number-grey {
+    color: #C6D0D4 !important;
+}
+.home-v2 .home-section-undo {
+    height: 180px;
+    width: 100%;
+}
+
+.home-v2 .home-section-undo .undo-item {
+    height: 38px;
+    line-height: 38px;
+    margin-bottom: 4px;
+    display: block;
+    text-decoration: none;
+}
+
+.home-v2 .home-section-undo .undo-item .item-text {
+    width: 50%;
+    padding-left: 36px;
+    color: #333;
+    display: inline-block;
+    vertical-align: top;
+}
+.home-v2 .home-section-undo .undo-item .item-number {
+    color: #00c1de;
+    font-size: 18px;
+    margin-left: 16px;
+}
+
+.row{
+	margin-right:5px;
+	margin-left:5px;
+}
+
+.col-xs-9,.col-xs-3,.col-xs-6{
+	padding-left:8px;
+	padding-right:8px;
+}
+
+.masked{
+    background-image: -webkit-linear-gradient(left, #147B96, #E6D205 25%, #147B96 50%, #E6D205 75%, #aa0000);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-background-size: 200% 100%;
+    -webkit-animation: masked-animation 4s infinite linear;
+  }
+@-webkit-keyframes masked-animation {
+     0%{ background-position: 0 0;}
+     100% { background-position: -100% 0;}
+}
+</style>
+{/block} {block name="body"}
+<div id="app" class="home-v2 hide">
+	<div class="row">
+		<div class="col-xs-9">
+			<div class="home-section-wrap clearfix" style="width:100%">
+				<div style="width:68%;min-width:450px;padding-right:15px;" class="pull-left" >
+					<div class="section-container home-section-security" >
+						<div class="security-left" >
+							<div class="container-title">学校管理</div>
+							<div  class="sas-open-bg">
+								<p><a href="/guanke/manage.school/index.html"  v-if="(school.id||0)>0"><img :src="school.banner" width=230 height=85></a><a href="/guanke/manage.school/edit.html"  v-if="(school.id||0)==0"><img :src="school_new" width=230 height=85 ></a></p>
+								<div class="sls-open-link-wrap">
+									<a class="sls-open-link" href="/guanke/manage.school/index.html">学校管理</a>
+									<a class="sls-open-link" href="/guanke/manage.course/index.html">添加课程</a>
+									<a class="sls-open-link" href="/guanke/manage.teacher/index.html">添加老师</a>
+								</div>
+							</div>
+						</div>
+		
+						<div class="security-right">
+							<div class="container-title">课程&老师</div>
+							<div class="container-body ">
+								<div class="item-horizontal" style="margin-bottom: 10px">
+									<div class="item-content home-block-hover">
+										<span class="item-text">精彩课程</span>
+					 					<span class="item-unit" >个</span>
+					 					<a href="/guanke/manage.course/index.html" class="item-number ">{{school.courses}}</a>
+					 				</div>
+						 		</div>
+						 		<div class="item-horizontal">
+									<div href="" class="item-content home-block-hover">
+										<span class="item-text">老师团队</span>
+					 					<span class="item-unit" >人</span>
+					 					<a href="/guanke/manage.teacher/index.html" class="item-number ">{{school.teachers}}</a>
+					 				</div>
+						 		</div>
+						 	</div>
+						 </div>
+					</div>
+				</div>
+				
+				<div style="width:32%" class="pull-left">
+					<div style="width:100%" >
+						<div class="section-container home-section-undo">
+							<div class="container-title"><span class="fa fa-video-camera" style="color:#147B96"></span> <span class="masked">直播管理</span></div>
+							<div class="container-body">
+								<div class="undo-item home-block-hover" >
+									<span class="item-text">课程直播</span> 
+									<a href="/guanke/manage.livecourse/index.html" class="item-number item-number-grey">{{school.livecourses}}</a>
+									<a href="/guanke/manage.livecourse/edit.html" class="item-unit pull-right" style="padding-right:10px;" >添加</a>
+								</div> 
+								<div class="undo-item home-block-hover" href="javascript:alert('尚未开通');">
+									<span class="item-text">活动直播</span> 
+									<a href="javascript:alert('尚未开通');" class="item-number item-number-grey">{{school.liveactives}}</a>
+									<a href="javascript:alert('尚未开通');" class="item-unit pull-right" style="padding-right:10px;" >添加</a>
+								</div> 
+								<div class="undo-item home-block-hover" href="/guanke/manage.liveschool/edit.html">
+									<span class="item-text">学校监控</span> 
+									<a href="/guanke/manage.liveschool/index.html" class="item-number item-number-grey">{{school.liveschools}}</a>
+									<a href="/guanke/manage.liveschool/edit.html" class="item-unit pull-right" style="padding-right:10px;" >添加</a>
+								</div> 
+							</div>
+						</div>
+					</div>
+				</div>					
+			</div>			
+			<div class="home-section-wrap clearfix" style="width:100%">
+				<div class="home-section-module home-box-shadow">
+					<ul class="nav nav-tabs">
+						<li class="" style="background: #F5F5F6;border-top:0;border-right:0;"><a href="javascript:;" style="background: #F5F5F6;font-size:14px;margin-top:3px;color:#00C1DE">我的账户</a></li>
+					</ul>		
+					<div class="tab-content">
+						<div class="home-section-consume clearfix" >
+							<div class="consume-summary pull-left clearfix">
+								<div class="consume-title">账户概览</div>
+								<div class="summary-part-left pull-left" >
+									<div class="summary-balance">
+										<div class="balance-title">账户余额（点）</div>
+										<div class="balance-number">
+											<span class="ng-binding">{$account.amount}</span>
+										</div>
+									</div>
+									<a class="summary-recharge" style="display:block"  href="javascript:alert('请联系您的客服人员')">充值</a>
+									
+								</div>
+								<div class="summary-part-right pull-left">
+									<div class="summary-coupon summary-coupon-card home-block-hover">
+										<a href="/wechat/manage.setting/index.html" class="ng-binding">微信公众号<span style="color:#00C1DE"> {$account.wechat|default='立即绑定'} </span>
+										</a>
+									</div>
+									<div class="summary-coupon summary-coupon-card home-block-hover">
+										<a href="/wechat/manage.member/index.html" class="ng-binding">活跃会员数<span style="color:#00C1DE"> {$account.members|default=0}</span> 人
+										</a>
+									</div>
+									<div class="summary-coupon summary-coupon-card home-block-hover">
+										<a href="/wechat/manage.templatetask/index.html" class="ng-binding">必须是认证的服务号<span style="color:#00C1DE"> 群发通知</span>
+										</a>
+									</div>
+								</div>
+							</div>
+							<div class="consume-monthly pull-left">
+								<div class="consume-title">近期消费</div>
+								<div class="monthly-zero">
+									<div class="zero-body">
+										<div class="zero-title">本月消费</div>
+										<div class="zero-number">{$account.consume}</div>
+									</div>
+									<div class="zero-foot">查看<a href="javascript:alert('暂无记录')"> 消费记录 </a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-3" style="padding-left:15px;margin-top:15px;">
+			<div style="width:100%" class="pull-left">
+				<div style="width:100%" >
+					<div class="section-container home-section-undo" style="height:100%">
+						<div class="container-title"><span class="fa fa-user"></span> 最新会员<a class="pull-right" href="/wechat/manage.member/index.html">全部</a></div>
+						<div class="container-body">
+							<a class="undo-item" style="border-bottom:1px dotted #ccc" :href="'/wechat/manage.member/edit.html?id='+item.id" v-for="(item,index) in newmemberlist">
+								<span class="item-text">{{index+1}}</span> 
+								<span class="item-unit item-number-grey" >{{item.nickname||'新用户'}}</span>
+							</a> 
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
 </div>
-<div id="footer" style="position: static; bottom: 0px;">
-    <p>版权所有 © 2012-2017 深圳搜豹网络科技有限公司，并保留所有权利。</p>
-</div>
-<script type="text/javascript">
-    $(function(){
-        $("*[data-toggle='tooltip']").tooltip({
-            position: {
-                my: "left top+5",
-                at: "left bottom"
-            }
-        });
-    });
+{/block} 
+{block name="script"}
+<script src="/lib/components/vue/vue.js"></script>
+<script>
+var vm = new Vue({
+	el:'#app',
+	data : {
+		school_new : '/guanke/images/school_new.jpg',
+		school:{
+			courses:0,
+			teachers:0,
+			actives:0,
+			livecourses:0,
+			liveschools:0
+		},
+		newmemberlist:[]
+	},
+	created:function(){
+		let _this = this;
+		$.get('/guanke/manage.school/stat.html',{},function(res){
+			_this.school = res.data;
+			$("#app").removeClass("hide");
+			$.get('/wechat/manage.member/newmemberlist.html',{},function(res){
+				_this.newmemberlist = res.data;
+			})
+			
+		})
+	},
+	methods:{
+		schoolnew:function(){
+			document.location.href="/guanke/manage.school/edit.html";
+		}
+	}
+});
 </script>
-<script type="text/javascript" src="__PUBLIC__/static/js/jquery.purebox.js"></script>
-<script type="text/javascript" src="__PUBLIC__/static/js/echart/echarts.min.js"></script>
-<script type="text/javascript">
-    set_statistical_chart(".section_order_count .filter_date a:first", "order", "week"); //初始设置
-    set_statistical_chart(".section_total_count .filter_date a:first", "sale", "week"); //初始设置
-    function set_statistical_chart(obj, type, date)
-    {
-        var obj = $(obj);
-        obj.addClass("active");
-        obj.siblings().removeClass("active");
-
-        $.ajax({
-            type:'get',
-            url:'index.php',
-            data:'act=set_statistical_chart&type='+type+'&date='+date,
-            dataType:'json',
-            success:function(data){
-                if(type == 'order'){
-                    var div_id = "order_main";
-                }
-                if(type == 'sale'){
-                    var div_id = "total_main";
-                }
-                var myChart = echarts.init(document.getElementById(div_id));
-                myChart.setOption(data);
-            }
-        })
-    }
-
-    var option = {
-        title : {
-            text: ''
-        },
-        tooltip : {
-            trigger: 'axis',
-            backgroundColor:"#f5fdff",
-            borderColor:"#8cdbf6",
-            borderRadius:"4",
-            borderWidth:"1",
-            padding:"10",
-            textStyle:{
-                color:"#272727",
-            },
-            axisPointer:{
-                lineStyle:{
-                    color:"#6cbd40",
-                }
-            }
-        },
-        toolbox: {
-            show : true,
-            orient:"vertical",
-            x:"right",
-            y:"60",
-            feature : {
-                magicType : {show: true, type: ['line', 'bar']},
-                saveAsImage : {show: true}
-            },
-        },
-        calculable : true,
-        xAxis : [
-            {
-                type : 'category',
-                boundaryGap : false,
-                axisLine:{
-                    lineStyle:{
-                        color:"#ccc",
-                        width:"0",
-                    }
-                },
-                data : ['07-01','07-02','07-03','07-04','07-05','07-06','07-07']
-            }
-        ],
-        yAxis : [
-            {
-                type : 'value',
-                axisLine:{
-                    lineStyle:{
-                        color:"#ccc",
-                        width:"0",
-                    }
-                },
-                axisLabel : {
-                    formatter: '{value}个',
-                }
-            }
-        ],
-        series : [
-            {
-                name:'订单个数',
-                type:'line',
-                itemStyle:{
-                    normal:{
-                        color:"#6cbd40",
-                        lineStyle:{
-                            color:"#6cbd40",
-                        }
-                    }
-                },
-                data:[0, 5, 8, 3, 10, 15, 2],
-                markPoint : {
-                    itemStyle:{
-                        normal:{
-                            color:"#6cbd40"
-                        }
-                    },
-                    data : [
-                        {type : 'max', name: '最大值'},
-                        {type : 'min', name: '最小值'}
-                    ]
-                }
-            }
-
-        ]
-    }
-//    $("#system_section").click(function(){
-//        $("#system_warp").slideDown();
-//    });
-</script>
-</body>
-
-</html>
+{/block}

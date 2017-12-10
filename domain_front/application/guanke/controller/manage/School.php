@@ -19,6 +19,10 @@ use app\guanke\model\GuankeSchool;
 use app\guanke\validate\SchoolValid;
 use app\guanke\model\GuankeSlide;
 use app\guanke\model\GuankeContentpage;
+use app\guanke\model\GuankeCourse;
+use app\guanke\model\GuankeTeacher;
+use app\guanke\model\GuankeLivecourse;
+use app\guanke\model\GuankeLiveschool;
 
 class School extends ManageController{
 	
@@ -244,6 +248,17 @@ class School extends ManageController{
 		}
 	}
 	
+	public function stat(){
+		//判断学校是否建立
+		$cid = $this->getCid();
+		$school = GuankeSchool::manage()->field('id,name,banner')->find();
+		$school['courses'] = GuankeCourse::manage()->count();
+		$school['teachers'] = GuankeTeacher::manage()->count();
+		$school['actives'] = 0;
+		$school['livecourses'] = GuankeLivecourse::manage()->count();
+		$school['liveschools'] = GuankeLiveschool::manage()->count();
+		return ['code'=>1,'msg'=>'查询成功','data'=>$school];
+	}
 
 	
 }

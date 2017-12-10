@@ -64,4 +64,22 @@ class Teacher extends SchoolController {
 		$list = GuankeTeacher::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
 	}
+	
+	public function bindteacher(){
+		session(null);
+		//判断是否绑定了公众号
+		$this->initOfficialAccount();
+		if(empty($this->wechat)){
+			$this->error('未绑定公众号，无法添加教师');
+		}
+		//判断用户是否关注公众号
+		$oauth = $this->officialAccount->oauth;
+		$member = $oauth->user()->getOriginal();
+		$memberDetail = $this->officialAccount->user->get($member['openid']);
+		if($memberDetail['subscribe'] == 1){
+			//判断是否添加过
+		}else{
+			//提示让其关注公众号
+		}
+	}
 }

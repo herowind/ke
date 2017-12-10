@@ -7,6 +7,12 @@ return [
 								'name' => '直播',
 								'icon' => '/site/images/manage/icon/camera_white.png',
 								'child' => [ 
+										[
+												'name' => '概览',
+												'm' => 'manage',
+												'c' => 'index',
+												'a' => 'welcome'
+										],
 										[ 
 												'name' => '课程直播',
 												'm' => 'guanke',
