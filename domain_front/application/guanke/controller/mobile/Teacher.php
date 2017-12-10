@@ -70,7 +70,7 @@ class Teacher extends SchoolController {
 	 * 教师绑定页面
 	 */
 	public function bindteacher(){
-		session(null);
+		//session(null);
 		//判断是否绑定了公众号
 		$this->initOfficialAccount();
 		if(empty($this->wechat)){
@@ -108,6 +108,7 @@ class Teacher extends SchoolController {
 				$this->success('您的申请正在审核中');
 			}
 		}
+		$this->initOfficialAccount();
 		$memberDetail = $this->officialAccount->user->get($this->getOpenid());
 		if($memberDetail['subscribe'] == 1){
 			//已关注，已取到详细信息
