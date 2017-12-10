@@ -135,6 +135,8 @@ class Teacher extends SchoolController {
 					'avatar' =>$memberDetail['headimgurl'],
 					'name' =>$memberDetail['nickname'],
 					'mobile' =>$mobile,
+					'isdisplay' =>0,
+					'isveryfy' =>0,
 			];
 			$teacher = GuankeTeacher::create($data);
 			$this->success('您的申请已提交','/guanke/mobile.home/index');
