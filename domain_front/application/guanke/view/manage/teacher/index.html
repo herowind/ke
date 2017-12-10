@@ -57,8 +57,8 @@
             </tbody>
         </table>
         <div class="non-info show">
-        	<span>让老师扫一扫下方二维码申请成为老师</span>
-            <span id="bindteacher"></span>
+        	<span style="display:block">让老师扫一扫下方二维码申请成为老师</span>
+            <span style="display:block" id="bindteacher"></span>
         </div>
         <div class="show-page padding-big-right">
 	        <div class="page">{$pageData->render()|raw}</div>
@@ -78,7 +78,13 @@ $(function(){
     })
     
    	$("#bindteacher").html("");
-   	$("#bindteacher").qrcode("{$Think.APP_SITE}/guanke/mobile.teacher/bindteacher.html?school_id={$school_id}");    	
+   	$("#bindteacher").qrcode(
+  			{ 
+  			    render: "table", //table方式 
+  			    width: 120, //宽度 
+  			    height:120, //高度 
+  			    text: "{$Think.APP_SITE}/guanke/mobile.teacher/bindteacher.html?school_id={$school_id}" //任意内容 
+  			});    	
 })
 
 </script>
