@@ -19,6 +19,7 @@ use app\guanke\model\GuankeTeacher;
 use app\guanke\validate\TeacherValid;
 use app\manage\model\UserMember;
 use app\guanke\model\GuankeContentpage;
+use app\guanke\model\GuankeSchool;
 
 class Teacher extends ManageController{
 	
@@ -35,9 +36,13 @@ class Teacher extends ManageController{
 	    //学校
 	    if(!empty($params['school_id'])){
 	        $where[] = ['exp',"FIND_IN_SET({$params['school_id']},school_ids)"];
+	        $school_id = $params['school_id'];
+	    }else{
+	    	$school_id = GuankeSchool::manage()->where('type',1)->value('id');
 	    }
 		$pageData = GuankeTeacher::manage()->keywords(['name|mobile',$this->request->param('keywords')])->where($where)->order('sort desc')->paginate(10);
 		$this->assign('pageData',$pageData);
+		$this->assign('school_id',$school_id);
 		return $this->fetch();
 	}
 	

@@ -56,11 +56,10 @@
                 {/volist}
             </tbody>
         </table>
-        {empty name="pageData"}
         <div class="non-info show">
-            <span>没查询到符合条件的记录</span>
+        	<span>让老师扫一扫下方二维码申请成为老师</span>
+            <span id="bindteacher"></span>
         </div>
-        {/empty}
         <div class="show-page padding-big-right">
 	        <div class="page">{$pageData->render()|raw}</div>
 	    </div>
@@ -77,6 +76,9 @@ $(function(){
 	$(".status-btn").each(function(){
         loadStatusBtn($(this));
     })
+    
+   	$("#bindteacher").html("");
+   	$("#bindteacher").qrcode("{$Think.APP_SITE}/guanke/mobile.teacher/bindteacher.html?school_id={$school_id}");    	
 })
 
 </script>
