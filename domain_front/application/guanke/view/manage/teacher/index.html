@@ -82,7 +82,7 @@ $(function(){
    	$("#bindteacher").html("");
    	$("#bindteacher").qrcode(
   			{ 
-  			    render: "table", //table方式 
+  			    render: "canvas", //table方式 
   			    width: 120, //宽度 
   			    height:120, //高度 
   			    text: "{$Think.APP_SITE}/guanke/mobile.teacher/bindteacher.html?school_id={$school_id}" //任意内容 
