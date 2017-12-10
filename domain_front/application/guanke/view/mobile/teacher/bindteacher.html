@@ -7,6 +7,8 @@
   z-index: 10;
   background: transparent;
   position: relative;
+  width:80%;
+  margin:auto;
 }
 .cover{
   height:2px;
@@ -16,7 +18,7 @@
 .slogan{
   color:#d9d9d9;
   font-size:15px;
-  padding-top: 150px;
+  padding-top: 60px;
   z-index: 20;
   text-align: center;
 }
@@ -143,7 +145,7 @@
   border-radius:4px;
   height:44px;
   font-size:15px;
-  background: #E31D1A;
+  background: #1AAD19;
   padding-top:3px;
   color:#fff;
 }
@@ -159,12 +161,12 @@
   <image class="login-bg" src="http://alliance-1253654449.cosbj.myqcloud.com/login_bg2.jpg" ></image>
   <div class="container">
     <div class="cover"></div>
-    <div class="slogan">{:cookie('school.name')}</div>
+    <div class="slogan"><img src="{$member['headimgurl']}" style="width:80px;height:80px;border-radius:5px;"><br>{$member['nickname']}</div>
       <form action="dobindteacher.html">
         <div class="no-pass">
           <div class="input-group-mobile">
             <div class="select-countrycode">+86</div>
-            <input type="tel" class="input-mobile pdl-countrycode" name="mobile" placeholder="手机号"/>
+            <input type="tel" class="input-mobile pdl-countrycode" id="mobile" name="mobile" placeholder="手机号"/>
           </div>
           <!--  div class="input-group-code">
             <input type="text" class="input-code" name="code" placeholder="请输入验证码"/>
@@ -172,7 +174,7 @@
             <div class="fetch-code disabled hide">60s后重发</div>
           </div -->
           <div class="btn-group">
-            <button class="weui-btn" loading="{{submitStatus}}" formType="submit">申请成为老师</button>
+            <button class="weui-btn"  type="button" id="applybtn">申请成为老师</button>
           </div>
         </div>
       </form>
@@ -181,5 +183,23 @@
 {/block} 
 {block name="script"}
 <script>
+$(function(){
+	$("#applybtn").on('click',function(){
+		let mobile = $("#mobile").val();
+		if(mobile == ''){
+			$.alert('手机号不正确', "错误");
+		}
+		$.post('/guanke/mobile.teacher/dobindteacher.html',{mobile:mobile},function(res){
+			if(res.code == 1){
+				$.alert(res.msg, "成功");
+				document.location.href = res.url;
+			}else{
+				$.alert(res.msg, "错误");
+				return;
+			}
+		});
+	})
+	
+})
 </script>
 {/block}

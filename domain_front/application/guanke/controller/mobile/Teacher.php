@@ -112,7 +112,7 @@ class Teacher extends SchoolController {
 		$memberDetail = $this->officialAccount->user->get($this->getOpenid());
 		if($memberDetail['subscribe'] == 1){
 			//已关注，已取到详细信息
-			$member = UserMember::where('openid',$this->getOpenid());
+			$member = UserMember::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
 			$mobile = $this->request->param('mobile');
 			if(!preg_match("/^1[2345678]{1}\d{9}$/",$mobile)){
 				$this->error('手机号码不正确');
