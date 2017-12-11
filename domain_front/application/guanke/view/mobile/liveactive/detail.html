@@ -29,7 +29,7 @@
 {block name="body"}
 <div class="course-hd">
 	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="live.banner" controls="controls" width="100%" style=""></video>
 	</div>
 	<div class="starter" v-show="isready">
 		<div class="starter-template" >
@@ -43,21 +43,9 @@
 	</div>
 </div>
 <div class="school-bd ui-hide">
-	<div class="weui-panel weui-panel_access" v-if="course.contenttype==1">
-		<div class="weui-panel__bd">
-			<a :href="course.contenturl" class="weui-media-box weui-media-box_appmsg">
-				<div class="weui-media-box__hd">
-					<img class="weui-media-box__thumb" src="{$school.logo}">
-				</div>
-				<div class="weui-media-box__bd">
-					<h4 class="weui-media-box__title">{{course.name}}</h4>
-					<p class="weui-media-box__desc">{{course.intro}}</p>
-				</div>
-			</a>
-		</div>
-	</div>
+
 	<div class="school-tab-content">
-		<article class="weui-article" v-if="course.contenttype==2">
+		<article class="weui-article" v-if="live.contenttype==2">
 			<div v-html="livecontent"></div>
 		</article>
 	</div>
