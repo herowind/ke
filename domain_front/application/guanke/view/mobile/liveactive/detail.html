@@ -1,0 +1,235 @@
+{extend name="mobile@template/common"/} {block name="style"}
+<style>
+.weui-footer_fixed-bottom {
+	bottom: 0;
+}
+
+.starter{
+	position:absolute;
+	width:100%;
+	height:100px;
+	top:20px;
+	left:0;
+}
+.starter-template {
+	width:220px;
+	border-radius:5px;
+	border-top:5px solid green;
+	margin:auto;
+	padding: 10px 15px;
+	font-size:18px;
+	color:#333;
+	text-align: center;
+	position:relative;
+	background:rgba(255,255,255,0.8);
+}
+
+</style>
+{/block} 
+{block name="body"}
+<div class="course-hd">
+	<div class="course-camera">
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
+	</div>
+	<div class="starter" v-show="isready">
+		<div class="starter-template" >
+			<div class="panel panel-default">
+			  <div class="panel-body">
+			  	<div class="lead">即将开始</div>
+				<div class="lead" id="readycount"></div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="school-bd ui-hide">
+	<div class="weui-panel weui-panel_access" v-if="course.contenttype==1">
+		<div class="weui-panel__bd">
+			<a :href="course.contenturl" class="weui-media-box weui-media-box_appmsg">
+				<div class="weui-media-box__hd">
+					<img class="weui-media-box__thumb" src="{$school.logo}">
+				</div>
+				<div class="weui-media-box__bd">
+					<h4 class="weui-media-box__title">{{course.name}}</h4>
+					<p class="weui-media-box__desc">{{course.intro}}</p>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div class="school-tab-content">
+		<article class="weui-article" v-if="course.contenttype==2">
+			<div v-html="livecontent"></div>
+		</article>
+	</div>
+	
+	<!-- 悬浮发布 -->
+	<div class="ui-button-float" id="publishTopic" v-on:click="doSubscribe" style="z-index:1">
+		<img src="/guanke/images/icons/qrcode.png" />
+	</div>
+	<div class="weui-footer weui-footer_fixed-bottom">
+		<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0" v-if="isfinish">已结束</button>
+		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
+		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
+	</div>	
+</div>
+
+<div id="wechat" class='weui-popup__container'>
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+		<div class="toolbar">
+			<div class="toolbar-inner">
+				<a href="javascript:;" class="picker-button close-popup">关闭</a>
+	            <h1 class="title">长按识别二维码</h1>
+			</div>
+		</div>
+		<div class="modal-content" style="text-align:center;margin-top:200px;">
+			<img src='{$wechat.qrcode_url}' width='200' height='200'/>
+		</div>
+	</div>
+</div>
+{/block} 
+{block name="script"}
+<script type="text/javascript">
+		var live_id = {$live_id};
+		var vm = new Vue({
+			el:'#app',
+			data : {
+				live:{
+					member:{'url':''},
+					contentpageid:0,
+				},
+				livecontent:'',
+				isshowfavor:false,
+				isshowveryfy:false,
+				isshowqrcode:false,
+				isready:false,
+				isfinish:false
+			},
+			created:function(){
+				$.showLoading();
+				this.getLive();
+			},
+			methods:{
+				getLive:function(e){
+					let _this = this;
+					$.get('detaildata.html',{live_id:live_id},function(res){
+						_this.live = res.data;
+						if(_this.live.contentpageid>0){
+							_this.getLivecontent(_this.live.contentpageid);
+						}
+						$.hideLoading();
+						$(".school-bd").removeClass('ui-hide');
+						if(_this.live.process.status=='finish'){
+							_this.isfinish = true;
+							return;
+						}
+						if(_this.live.process.status=='ready'){
+							_this.isready = true;
+							$("#readycount").countdown(_this.live.starttime, function(event) {
+								$(this).html(event.strftime('%D 天 %H : %M : %S'));
+						  	});
+						}
+						if(res.code==1){
+							$("#video").load();
+						}else{
+							_this.isshowfavor=false;
+							_this.isshowveryfy=false;
+							_this.isshowqrcode=false;
+							if(res.error=="unfavor"){
+								_this.isshowfavor = true;
+								$.modal({
+						          title: "友情提示",
+						          text: "本活动需报名才可观看",
+						          buttons: [
+									{ text: "取消", className: "default"},
+						            { text: "立即报名", 
+						              onClick: function(){
+						            	_this.doFavor();
+						              }
+						            }
+						          ]
+						        });
+								return;
+							}
+							if(res.error=="unveryfy"){
+								_this.isshowveryfy = true;
+								return;
+							}
+							
+							if(res.error=="unsubscribe"){
+								_this.isshowqrcode = true;
+								_this.doSubscribe();
+								return;
+							}
+							
+							$.alert(res.msg, "错误");
+						}
+						
+						
+					})
+				},
+				getLivecontent:function(contentpageid){
+					let _this = this;
+					$.get('/guanke/mobile.liveactive/content.html',{contentpageid:contentpageid},function(res){
+						_this.livecontent = res;
+					})
+				},
+				doFavor:function(e){
+					let _this = this;
+					$.get('favor.html',{live_id:live_id},function(res){
+						console.log(res);
+						if(res.code==1){
+							$.alert(res.msg, "友情提示");
+							_this.isshowfavor = false;
+							_this.isshowveryfy = false;
+							_this.live.member.url = res.url;
+							$("#video").load();
+						}else{
+							if(res.error=='unveryfy'){
+								$.alert(res.msg, "友情提示");
+								_this.isshowfavor = false;
+								_this.isshowveryfy = true;
+								return;
+							}
+							$.alert("加载失败，请重新打开页面", "网速不给力");
+						}
+					})
+				},
+				doSubscribe:function(e){
+					let _this = this;
+					if(_this.isshowqrcode){
+						$.modal({
+				          title: "友情提示",
+				          text: '您尚未关注公众号，无法播放',
+				          buttons: [
+							{ text: "取消", className: "default"},
+				            { text: "立即关注", 
+				              onClick: function(){
+				            	//if('{$wechat.history_url}'!=''){
+				            	//	document.location.href = '{$wechat.history_url|raw}';
+				            	//}else{
+				            		$("#wechat").popup();
+				            	//}
+				              }
+				            }
+				          ]
+				        });
+					}else{
+						$("#wechat").popup();
+						return;
+					}
+				}
+			}
+		})
+
+function startplay(){
+	$.get('/guanke/mobile.liveactive/startplay.html',{live_id:live_id},function(res){
+		if(res.code!=1){
+			 $.alert("加载失败，请重新打开页面", "网速不给力");
+		}
+	})
+}
+</script>
+
+
+{/block}
