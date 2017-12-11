@@ -37,10 +37,11 @@ class Liveactive extends ManageController
     {
         $params = $this->request->param();
         // 摄像头
+        $where = [];
         if (! empty($params['camera_id'])) {
             $where[] = ['camera_id','=',$params['camera_id']];
         }
-                
+            
         $pageData = GuankeLiveactive::manage()->keywords([
             'name',
             $this->request->param('keywords')
