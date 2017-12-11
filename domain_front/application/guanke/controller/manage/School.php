@@ -23,6 +23,7 @@ use app\guanke\model\GuankeCourse;
 use app\guanke\model\GuankeTeacher;
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeLiveschool;
+use app\guanke\model\GuankeLiveactive;
 
 class School extends ManageController{
 	
@@ -254,7 +255,7 @@ class School extends ManageController{
 		$school = GuankeSchool::manage()->field('id,name,banner')->find();
 		$school['courses'] = GuankeCourse::manage()->count();
 		$school['teachers'] = GuankeTeacher::manage()->count();
-		$school['actives'] = 0;
+		$school['liveactives'] = GuankeLiveactive::manage()->count();
 		$school['livecourses'] = GuankeLivecourse::manage()->count();
 		$school['liveschools'] = GuankeLiveschool::manage()->count();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$school];

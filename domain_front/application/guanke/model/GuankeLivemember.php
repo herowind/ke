@@ -10,16 +10,13 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 直播活动模型
+// | 直播观看者模型
 // +----------------------------------------------------------------------
 namespace app\guanke\model;
 
 use app\manage\model\CommonMod;
 
-class GuankeLiveactivity extends CommonMod
+class GuankeLivemember extends CommonMod
 {
-    public function getMembervisibilitytextAttr($value,$data){
-        $types = config('data.camera.membervisibility');
-        return $types[$data['membervisibility']];
-    }
+	    
 }

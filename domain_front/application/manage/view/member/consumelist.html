@@ -24,7 +24,7 @@
                     <th class=" w10 ">消费类目</th>
                     <th class=" w30 ">观看内容</th>
                     <th class=" w10">观看时间</th>
-                    <th class=" w10 text-center">操作</th>                 
+                    <th class=" w10 text-center">消费点数</th>                 
                 </tr>
             </thead>
             <tbody>
@@ -37,8 +37,7 @@
                     <td>{$item.goodstypetext}</td>
                     <td>{$item.goodsinfo.name}</td>
                     <td>{$item.create_time}</td>
-                    <td class="text-center">                       
-                    </td>
+                    <td class="text-center">{$item.price}</td>
                 </tr>
                 {/volist}
             </tbody>

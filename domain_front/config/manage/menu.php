@@ -20,6 +20,13 @@ return [
 												'a' => 'index' 
 										],
 										
+										[
+												'name' => '活动直播',
+												'm' => 'guanke',
+												'c' => 'manage.liveactive',
+												'a' => 'index'
+										],
+										
 										[ 
 												'name' => '学校监控',
 												'm' => 'guanke',

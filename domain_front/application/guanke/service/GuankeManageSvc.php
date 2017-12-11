@@ -41,7 +41,7 @@ class GuankeManageSvc
     
     //获取摄像头信息用于关联存储
     public static function getCameraJson($id){
-        $data = ZhiboCamera::field('name,code,url')->manage()->find($id);
+        $data = ZhiboCamera::field('name,code')->manage()->find($id);
         return json_encode($data,JSON_UNESCAPED_UNICODE);
     }
     

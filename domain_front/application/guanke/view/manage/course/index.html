@@ -39,7 +39,7 @@
                 <tr >
                     <td class="text-center">{$i}</td>
                     <td class="text-center"><img src="{$item.banner}" width="80" height="40"/></td>
-                    <td>{$item.name}</td>
+                    <td><a class="text-main" href="edit?id={$item.id}" ><i class="fa fa-pencil"></i> {$item.name}</a></td>
                     <td>{$item.typetext}</td>
                     <td>{$item.totalfee}元</td>
                     <td class="text-center">	                    
@@ -57,10 +57,13 @@
 						    <span class="sr-only">更多</span>
 						  </button>
 						  <ul class="dropdown-menu" style="z-index:888">
+						    <li><a href="edit?id={$item.id}"  ><i class="fa fa-pencil"></i> 编辑</a></li>
+						    <li role="separator" class="divider"></li>
+						    <li><a href="contentedit?live_id={$item.id}"  ><i class="fa fa-pencil"></i> 图文详情</a></li>
+						    <li role="separator" class="divider"></li>
 						    <li><a class="confirm-rst-url-btn" href="remove.html?id={$item.id}" data-info="你确定要删除吗？" title="删除"><i class="fa fa-trash"></i> 删除</a></li>
 						  </ul>
 						</div>
-                        <a class="text-main btn btn-xs btn-default" href="edit?id={$item.id}"   title="编辑"><i class="fa fa-pencil"></i> 编辑</a>
                         <a class="text-orange btn btn-xs btn-default" href="/guanke/manage.livecourse/edit?course_id={$item.id}"   title="直播"><i class="fa fa-video-camera"></i> 创建直播</a>
                     </td>
                 </tr>

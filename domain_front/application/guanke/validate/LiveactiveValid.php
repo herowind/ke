@@ -10,14 +10,14 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 课程直播表单验证器
+// | 活动直播表单验证器
 // +----------------------------------------------------------------------
 
 namespace app\guanke\validate;
 
 use think\Validate;
 
-class LivecourseValid extends Validate{
+class LiveactiveValid extends Validate{
     
     protected $rule = [
         'name'=>  ['require'],

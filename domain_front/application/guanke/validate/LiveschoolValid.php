@@ -28,6 +28,6 @@ class LiveschoolValid extends Validate{
     ];
     
     protected $scene = [
-        'edit'   =>  ['title'],
+        'edit'   =>  ['name'],
     ];
 }
