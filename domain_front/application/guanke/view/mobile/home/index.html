@@ -187,7 +187,11 @@
 		</div>
 		{volist name="slide" id="item"}
 		<div class="swiper-slide">
-			<img src="{$item.banner}" />			
+			{empty name="item.link"}
+			<img src="{$item.banner}" />
+			{else/}
+			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
+			{/empty}			
 		</div>
 		{/volist}
 	</div>
