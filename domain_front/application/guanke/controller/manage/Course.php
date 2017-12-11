@@ -201,9 +201,9 @@ class Course extends ManageController
 					$contentDetail->content =  $params['content'];
 					$contentDetail->save();
 						
-					//更新学校
-					$detail->contenttype = $params['contenttype'];
-					$detail->contenturl = $params['contenturl'];
+					//更新课程
+					$detail->contenttype = 2;
+					$detail->contenturl = '';
 					$detail->save();
 					$this->success('保存成功','index');
 				}else{

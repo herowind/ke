@@ -218,8 +218,8 @@ class School extends ManageController{
 					$contentDetail->save();
 					
 					//更新学校
-					$detail->contenttype = $params['contenttype'];
-					$detail->contenturl = $params['contenturl'];
+					$detail->contenttype = 2;
+					$detail->contenturl = '';
 					$detail->save();
 					$this->success('保存成功','index');
 				}else{
