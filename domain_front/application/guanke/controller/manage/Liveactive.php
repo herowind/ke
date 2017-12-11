@@ -21,6 +21,7 @@ use app\guanke\validate\LiveactiveValid;
 use think\Db;
 use app\guanke\model\GuankeContentpage;
 use app\guanke\model\GuankeSchool;
+use app\guanke\model\GuankeLivemember;
 
 class Liveactive extends ManageController
 {
@@ -188,7 +189,7 @@ class Liveactive extends ManageController
 	{
 		$id = $this->request->param('id');
 		$field = $this->request->param('field');
-		$detail = GuankeLiveactive::manage()->where('id',$id)->find();
+		$detail = GuankeLivemember::manage()->where('id',$id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;

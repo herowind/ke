@@ -15,9 +15,9 @@
 namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLiveschool;
-use app\guanke\model\GuankeLiveschoolmember;
 use app\zhibo\model\ZhiboCamera;
 use app\manage\service\UserTradeSvc;
+use app\guanke\model\GuankeLivemember;
 
 class Liveschool extends SchoolController {
 	public function initialize() {
@@ -67,14 +67,14 @@ class Liveschool extends SchoolController {
 		
 		//①判断是否需要报名
 		if($detail->membervisibility != 1){
-			$schoolMember = GuankeLiveschoolmember::where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
-			if(empty($schoolMember)){
+			$liveMember = GuankeLivemember::where('livetype','liveschool')->where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
+			if(empty($liveMember)){
 				//需报名
 				$detail->member->isfavor = 0;
 				return ['code'=>0,'msg'=>'您尚未报名','error'=>'unfavor','data'=>$detail];
 			}else{
-				$detail->member->isfavor = $schoolMember['isfavor'];
-				$detail->member->isveryfy = $schoolMember['isveryfy'];
+				$detail->member->isfavor = $liveMember['isfavor'];
+				$detail->member->isveryfy = $liveMember['isveryfy'];
 				if($detail->member->isveryfy !=1){
 					return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy','data'=>$detail];
 				}
@@ -120,10 +120,11 @@ class Liveschool extends SchoolController {
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLiveschool::find($live_id);
 		//验证是否报过名
-		$schoolMember = GuankeLiveschoolmember::where('live_id',$live_id)->where('member_id',$this->getMid())->find();
-		if(empty($schoolMember)){
+		$liveMember = GuankeLivemember::where('livetype','liveschool')->where('live_id',$live_id)->where('member_id',$this->getMid())->find();
+		if(empty($liveMember)){
 			//未报过名，进行报名
 			$data = [
+					'livetype'=>'liveschool',
 					'live_id' => $live_id,
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
@@ -133,11 +134,11 @@ class Liveschool extends SchoolController {
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
-			$schoolMember = GuankeLiveschoolmember::create($data);	
+			$liveMember = GuankeLivemember::create($data);	
 		}
 
 		
-		if($schoolMember->isveryfy == 1){
+		if($liveMember->isveryfy == 1){
 			$url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
 			return ['code'=>1,'msg'=>'已申请成功，可以观看了','url'=>$url];
 		}else{

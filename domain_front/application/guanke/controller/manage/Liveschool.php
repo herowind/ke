@@ -19,7 +19,7 @@ use app\guanke\model\GuankeLiveschool;
 use app\guanke\validate\LiveschoolValid;
 use app\guanke\service\GuankeManageSvc;
 use think\Db;
-use app\guanke\model\GuankeLiveschoolmember;
+use app\guanke\model\GuankeLivemember;
 
 class Liveschool extends ManageController
 {
@@ -183,7 +183,7 @@ class Liveschool extends ManageController
 		if(empty($id)){
 			$this->error('请先完善监控基本信息','edit');
 		}
-		$pageData = Db::view('GuankeLiveschoolmember', 'live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'id,mobile,openid,nickname,avatar,province,city', "GuankeLiveschoolmember.member_id = UserMember.id and GuankeLiveschoolmember.live_id ={$id}")->paginate(20);
+		$pageData = Db::view('GuankeLivemember', 'id,livetype,live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'mobile,openid,nickname,avatar,province,city', "GuankeLivemember.member_id = UserMember.id and GuankeLivemember.livetype='liveschool' and GuankeLivemember.live_id ={$id}")->paginate(20);
 		$detail = GuankeLiveschool::manage()->find($id);
 		$this->assign('pageData',$pageData);
 		$this->assign('detail',$detail);
@@ -195,10 +195,9 @@ class Liveschool extends ManageController
 	 */
 	public function memberStatusChange()
 	{
-		$member_id = $this->request->param('id');
-		$live_id = $this->request->param('live_id');
+		$id = $this->request->param('id');
 		$field = $this->request->param('field');
-		$detail = GuankeLiveschoolmember::manage()->where('member_id',$member_id)->where('live_id',$live_id)->find();
+		$detail = GuankeLivemember::manage()->where('id',$id)->find();
 	
 		if ($detail->$field === 1) {
 			$detail->$field = 0;

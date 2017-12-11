@@ -15,11 +15,11 @@
 namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLivecourse;
-use app\guanke\model\GuankeLivecoursemember;
 use app\zhibo\model\ZhiboCamera;
 use app\wechat\model\WechatUsertemplate;
 use app\guanke\model\GuankeCourse;
 use app\manage\service\UserTradeSvc;
+use app\guanke\model\GuankeLivemember;
 
 class Livecourse extends SchoolController {
 	public function initialize() {
@@ -77,14 +77,14 @@ class Livecourse extends SchoolController {
 		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
 		//①判断是否需要报名
 		if($detail->membervisibility != 1){
-			$courseMember = GuankeLivecoursemember::where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
-			if(empty($courseMember)){
+			$liveMember = GuankeLivemember::where('livetype','liveactive')->where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
+			if(empty($liveMember)){
 				//需报名
 				$detail->member->isfavor = 0;
 				return ['code'=>0,'msg'=>'您尚未报名','error'=>'unfavor','data'=>$detail];
 			}else{
-				$detail->member->isfavor = $courseMember['isfavor'];
-				$detail->member->isveryfy = $courseMember['isveryfy'];
+				$detail->member->isfavor = $liveMember['isfavor'];
+				$detail->member->isveryfy = $liveMember['isveryfy'];
 				if($detail->member->isveryfy !=1){
 					return ['code'=>0,'msg'=>'已报名成功,审核中请稍等','error'=>'unveryfy','data'=>$detail];
 				}
@@ -120,10 +120,11 @@ class Livecourse extends SchoolController {
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLivecourse::find($live_id);
 		//验证是否报过名
-		$courseMember = GuankeLivecoursemember::where('live_id',$live_id)->where('member_id',$this->getMid())->find();
-		if(empty($courseMember)){
+		$liveMember = GuankeLivemember::where('livetype','livecourse')->where('live_id',$live_id)->where('member_id',$this->getMid())->find();
+		if(empty($liveMember)){
 			//未报过名，进行报名
 			$data = [
+					'livetype'=>'livecourse',
 					'live_id' => $live_id,
 					'member_id'=>$this->getMid(),
 					'cid'=>$this->getCid(),
@@ -133,8 +134,8 @@ class Livecourse extends SchoolController {
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
-			$courseMember = GuankeLivecoursemember::create($data);	
-			if($courseMember){
+			$liveMember = GuankeLivemember::create($data);
+			if($liveMember){
 				$template = WechatUsertemplate::where('cid',$this->getCid())->where('short_id','TM00080')->find();
 				if($template){
 					//设置模板
@@ -157,7 +158,7 @@ class Livecourse extends SchoolController {
 			
 		}
 		//判断是否审核通过
-		if($courseMember->isveryfy==1){
+		if($liveMember->isveryfy==1){
 			$url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
 			return ['code'=>1,'msg'=>'已报名成功，可以观看了','url'=>$url];
 		}else{
