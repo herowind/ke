@@ -27,7 +27,7 @@ class Member extends ManageController
     }
 
     /**
-     * 公司旗下的所有课程
+     * 会员列表
      */
     public function index()
     {
@@ -48,7 +48,7 @@ class Member extends ManageController
     }
 
     /**
-     * 编辑课程
+     * 编辑会员
      */
     public function edit()
     {
@@ -104,7 +104,7 @@ class Member extends ManageController
     }
 
     /**
-     * 删除课程
+     * 删除会员
      */
     public function remove()
     {
@@ -155,5 +155,6 @@ class Member extends ManageController
 	        $this->error('操作失败','',$detail->$field);
 	    }
 	}
+	
 	
 }

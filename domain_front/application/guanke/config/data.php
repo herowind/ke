@@ -14,6 +14,11 @@
 // +----------------------------------------------------------------------
 return [
     'uploadfolder'=>'school',
+	'livetype' =>[
+		'livecourse' =>'课程直播',
+		'liveactive' =>'活动直播',
+		'liveschool' =>'学校监控',
+	],
     'school' => [
         'type' => [
             '1' => '主校',

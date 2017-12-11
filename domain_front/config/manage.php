@@ -21,8 +21,15 @@ return [
         'home' => '/manage/index/index'
     ],
 	'zhiboprice' =>[
-		'live' => 10
-	]
+		'live' => 10,
+		'type' => [
+				'charge'=>'充值',
+				'livecourse'=>'课程直播',
+				'liveschool'=>'实时监控',
+				'liveactive'=>'活动直播',
+				'usersign'=>'用户签到',
+		]
+	],
 		
 	
 ]

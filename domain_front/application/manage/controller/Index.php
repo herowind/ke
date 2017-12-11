@@ -42,7 +42,7 @@ class Index extends ManageController{
 		$account['wechat'] = WechatSetting::manage()->value('name');
 		$account['members']= UserMember::manage()->count();
 		//支出，已支付，类型：直播
-		$account['consume']= UserTrade::manage()->where('type',1)->where('ispay',1)->where('goodstype','in',[2,3,4])->sum('price');
+		$account['consume']= UserTrade::manage()->where('type',1)->where('ispay',1)->where('goodstype','in',['livecourse','liveschool','liveactive'])->sum('price');
 		$this->assign('account',$account);
 		return $this->fetch();
 	}

@@ -16,5 +16,16 @@
 namespace app\manage\model;
 
 class UserTrade extends CommonMod{
-        
+	//转换成数组
+	public function getGoodsinfoAttr($value){
+		if($value){
+			return json_decode($value,true);
+		}
+		return [];
+	}
+	
+	public function getGoodstypetextAttr($value,$data){
+		$types = config('manage.zhiboprice.type');
+		return $types[$data['goodstype']];
+	}
 }

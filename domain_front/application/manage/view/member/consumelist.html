@@ -1,0 +1,67 @@
+{extend name="manage@template/iframe"/}
+{block name="body"}
+<div class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">消费记录查询
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+		<form name="formSearch" class="form-search form-inline" method="get" action="consumelist">
+		    <input type="text" name="keywords" id="keywords" class="form-control input-sm" value="{$Think.get.keywords??''}" placeholder="关键词：用户名" />
+		    <button type="submit" class="btn btn-sm  btn-purple ">搜索</button>
+		    <button type="button" class="btn btn-sm  btn-purple linkto-btn" data-url="consumelist.html">清空条件</button>
+		</form>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class=" w5 text-center">序号</th>
+                    <th class=" w10 ">用户名</th>
+                    <th class=" w15 ">openid</th>
+                    <th class=" w10 ">手机号</th>
+                    <th class=" w10 ">消费类目</th>
+                    <th class=" w30 ">观看内容</th>
+                    <th class=" w10">观看时间</th>
+                    <th class=" w10 text-center">操作</th>                 
+                </tr>
+            </thead>
+            <tbody>
+                {volist name="pageData" id="item"}
+                <tr >
+                    <td class="text-center">{$i}</td>
+                    <td><a class="text-main" href="/wechat/manage.member/edit?id={$item.member_id}" ><i class="fa fa-pencil"></i> {$item.nickname}</a></td>
+                    <td>{$item.openid}</td>
+                    <td>{$item.mobile}</td>
+                    <td>{$item.goodstypetext}</td>
+                    <td>{$item.goodsinfo.name}</td>
+                    <td>{$item.create_time}</td>
+                    <td class="text-center">                       
+                    </td>
+                </tr>
+                {/volist}
+            </tbody>
+        </table>
+        {empty name="pageData"}
+        <div class="non-info show">
+            <span>没查询到符合条件的记录</span>
+        </div>
+        {/empty}
+        <div class="show-page padding-big-right">
+	        <div class="page">{$pageData->render()|raw}</div>
+	    </div>
+    </div>
+</div>
+{/block}
+{block name="script"}
+<script>
+$(function(){
+	$(".status-btn").each(function(){
+        loadStatusBtn($(this));
+    })
+    $('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>
+{/block}
