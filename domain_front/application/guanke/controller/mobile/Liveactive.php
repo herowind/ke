@@ -43,6 +43,7 @@ class Liveactive extends SchoolController {
 		$this->initMember();
 		$wechat = $this->getQrcode();
 		$this->assign('live_id',$live_id);
+		$this->assign('isneedmobile',$this->member->mobile?false:true);
 		$this->assign('wechat',$wechat);
 		return $this->fetch ();
 	}
@@ -121,6 +122,7 @@ class Liveactive extends SchoolController {
 		$liveMember = GuankeLivemember::where('livetype','liveactive')->where('live_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($liveMember)){
 			//未报过名，进行报名
+			$mobile = $this->request->param('mobile',$this->member->mobile);
 			$data = [
 					'livetype'=>'liveactive',
 					'live_id' => $live_id,
@@ -128,7 +130,7 @@ class Liveactive extends SchoolController {
 					'cid'=>$this->getCid(),
 					'openid'=>$this->getOpenid(),
 					'nickname'=>$this->member->nickname,
-					'mobile'=>$this->member->mobile,
+					'mobile'=>$mobile,
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];

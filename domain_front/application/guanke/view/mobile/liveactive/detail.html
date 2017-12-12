@@ -81,6 +81,7 @@ video::-webkit-media-controls {
 {block name="script"}
 <script type="text/javascript">
 		var live_id = {$live_id};
+		var isneedmobile = {$isneedmobile};
 		var vm = new Vue({
 			el:'#app',
 			data : {
@@ -127,18 +128,36 @@ video::-webkit-media-controls {
 							_this.isshowqrcode=false;
 							if(res.error=="unfavor"){
 								_this.isshowfavor = true;
-								$.modal({
-						          title: "友情提示",
-						          text: "本活动需报名才可观看",
-						          buttons: [
-									{ text: "取消", className: "default"},
-						            { text: "立即报名", 
-						              onClick: function(){
-						            	_this.doFavor();
-						              }
-						            }
-						          ]
-						        });
+								if(isneedmobile){
+									$.prompt({
+										  title: '立即报名观看',
+										  text: '请输入您的手机号',
+										  input: '',
+										  empty: false, // 是否允许为空
+										  onOK: function (input) {
+											  _this.doFavor(input);
+										  },
+										  onCancel: function () {
+										    //点击取消
+										  }
+									});									
+								}else{
+									$.modal({
+								          title: "友情提示",
+								          text: "本活动需报名才可观看",
+								          buttons: [
+											{ text: "取消", className: "default"},
+								            { text: "立即报名", 
+								              onClick: function(){
+								            	_this.doFavor('');
+								              }
+								            }
+								          ]
+								    });									
+								}
+
+								
+
 								return;
 							}
 							if(res.error=="unveryfy"){
@@ -164,10 +183,9 @@ video::-webkit-media-controls {
 						_this.livecontent = res;
 					})
 				},
-				doFavor:function(e){
+				doFavor:function(mobile){
 					let _this = this;
-					$.get('favor.html',{live_id:live_id},function(res){
-						console.log(res);
+					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
 						if(res.code==1){
 							$.alert(res.msg, "友情提示");
 							_this.isshowfavor = false;
