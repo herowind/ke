@@ -44,6 +44,7 @@ class Livecourse extends SchoolController {
 		$wechat = $this->getQrcode();
 		$this->assign('live_id',$live_id);
 		$this->assign('wechat',$wechat);
+		$this->assign('isneedmobile',$this->member->mobile?false:true);
 		return $this->fetch ();
 	}
 	
