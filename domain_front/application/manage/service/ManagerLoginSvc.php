@@ -141,5 +141,6 @@ class ManagerLoginSvc
 	 */
 	public static function doLogout(){
 		session(null);
+		cookie(null);
 	}
 }

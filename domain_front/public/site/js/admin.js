@@ -63,7 +63,7 @@
     if ($.cookie('workspaceParam') == null) {
         // 默认选择第一个菜单
         //$('.nc-module-menu').find('li:first > a').click();
-        openItem('index|manage.livecourse|guanke');
+        openItem('welcome|index|manage');
     } else {
         openItem($.cookie('workspaceParam'));
     }
