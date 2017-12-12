@@ -140,7 +140,6 @@ video::-webkit-media-controls {
 											  _this.doFavor();
 										  },
 										  onCancel: function () {
-										    alert('11');
 										  }
 									});									
 								}else{
@@ -184,6 +183,21 @@ video::-webkit-media-controls {
 				},
 				doFavor:function(){
 					let _this = this;
+					
+					if(_this.isshowfavor && isneedmobile){
+						$.prompt({
+							  title: '立即报名观看',
+							  text: '请输入您的手机号',
+							  input: '',
+							  empty: false, // 是否允许为空
+							  onOK: function (input) {
+								  mobile = input;
+							  },
+							  onCancel: function () {
+							  }
+						});									
+					}
+					
 					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
 						if(res.code==1){
 							$.alert(res.msg, "友情提示");
