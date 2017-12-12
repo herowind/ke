@@ -82,6 +82,7 @@ video::-webkit-media-controls {
 <script type="text/javascript">
 		var live_id = {$live_id};
 		var isneedmobile = {$isneedmobile};
+		var mobile = '';
 		var vm = new Vue({
 			el:'#app',
 			data : {
@@ -135,7 +136,8 @@ video::-webkit-media-controls {
 										  input: '',
 										  empty: false, // 是否允许为空
 										  onOK: function (input) {
-											  _this.doFavor(input);
+											  mobile = input;
+											  _this.doFavor();
 										  },
 										  onCancel: function () {
 										    //点击取消
@@ -149,7 +151,7 @@ video::-webkit-media-controls {
 											{ text: "取消", className: "default"},
 								            { text: "立即报名", 
 								              onClick: function(){
-								            	_this.doFavor('');
+								            	_this.doFavor();
 								              }
 								            }
 								          ]
@@ -159,13 +161,6 @@ video::-webkit-media-controls {
 							}
 							if(res.error=="unveryfy"){
 								_this.isshowveryfy = true;
-								$.modal({
-							          title: "友情提示",
-							          text: "本活动需报名才可观看",
-							          buttons: [
-										{ text: "确定", className: "default"}
-							          ]
-							    });
 								return;
 							}
 							
@@ -187,7 +182,7 @@ video::-webkit-media-controls {
 						_this.livecontent = res;
 					})
 				},
-				doFavor:function(mobile){
+				doFavor:function(){
 					let _this = this;
 					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
 						if(res.code==1){
