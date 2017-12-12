@@ -78,7 +78,7 @@ class Livecourse extends SchoolController {
 		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
 		//①判断是否需要报名
 		if($detail->membervisibility != 1){
-			$liveMember = GuankeLivemember::where('livetype','liveactive')->where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
+			$liveMember = GuankeLivemember::where('livetype','livecourse')->where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
 			if(empty($liveMember)){
 				//需报名
 				$detail->member->isfavor = 0;
