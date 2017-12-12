@@ -155,13 +155,17 @@ video::-webkit-media-controls {
 								          ]
 								    });									
 								}
-
-								
-
 								return;
 							}
 							if(res.error=="unveryfy"){
 								_this.isshowveryfy = true;
+								$.modal({
+							          title: "友情提示",
+							          text: "本活动需报名才可观看",
+							          buttons: [
+										{ text: "确定", className: "default"}
+							          ]
+							    });
 								return;
 							}
 							
