@@ -81,7 +81,7 @@
 	</div>
 	<div class="weui-footer weui-footer_fixed-bottom">
 		<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0" v-if="isfinish">已结束</button>
-		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
+		<button class="weui-btn weui-btn_primary" v-on:click="doFavorMobile" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
 		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
 	</div>	
 </div>
@@ -104,6 +104,8 @@
 {block name="script"}
 <script type="text/javascript">
 		var live_id = {$live_id};
+		var isneedmobile = {$isneedmobile};
+		var mobile = '';
 		var vm = new Vue({
 			el:'#app',
 			data : {
@@ -154,18 +156,33 @@
 							_this.isshowqrcode=false;
 							if(res.error=="unfavor"){
 								_this.isshowfavor = true;
-								$.modal({
-						          title: "友情提示",
-						          text: "本课程需报名才可观看",
-						          buttons: [
-									{ text: "取消", className: "default"},
-						            { text: "立即报名", 
-						              onClick: function(){
-						            	_this.doFavor();
-						              }
-						            }
-						          ]
-						        });
+								if(isneedmobile){
+									$.prompt({
+										  title: '立即报名观看',
+										  text: '请输入您的手机号',
+										  input: '',
+										  empty: false, // 是否允许为空
+										  onOK: function (input) {
+											  mobile = input;
+											  _this.doFavor();
+										  },
+										  onCancel: function () {
+										  }
+									});									
+								}else{
+									$.modal({
+								          title: "友情提示",
+								          text: "本课程需报名才可观看",
+								          buttons: [
+											{ text: "取消", className: "default"},
+								            { text: "立即报名", 
+								              onClick: function(){
+								            	_this.doFavor();
+								              }
+								            }
+								          ]
+								    });									
+								}
 								return;
 							}
 							if(res.error=="unveryfy"){
@@ -196,9 +213,27 @@
 						}
 					})
 				},
+				doFavorMobile:function(){
+					let _this = this;
+					if(_this.isshowfavor && isneedmobile){
+						$.prompt({
+							  title: '立即报名观看',
+							  text: '请输入您的手机号',
+							  input: '',
+							  empty: false, // 是否允许为空
+							  onOK: function (input) {
+								  mobile = input;
+								  _this.doFavor();
+							  },
+							  onCancel: function () {
+							  }
+						});									
+					}
+				},				
+				
 				doFavor:function(e){
 					let _this = this;
-					$.get('favor.html',{live_id:live_id},function(res){
+					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
 						console.log(res);
 						if(res.code==1){
 							$.alert(res.msg, "友情提示");

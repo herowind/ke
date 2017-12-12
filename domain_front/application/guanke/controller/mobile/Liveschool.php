@@ -123,6 +123,7 @@ class Liveschool extends SchoolController {
 		$liveMember = GuankeLivemember::where('livetype','liveschool')->where('live_id',$live_id)->where('member_id',$this->getMid())->find();
 		if(empty($liveMember)){
 			//未报过名，进行报名
+			$mobile = $this->request->param('mobile',$this->member->mobile);
 			$data = [
 					'livetype'=>'liveschool',
 					'live_id' => $live_id,
@@ -130,7 +131,7 @@ class Liveschool extends SchoolController {
 					'cid'=>$this->getCid(),
 					'openid'=>$this->getOpenid(),
 					'nickname'=>$this->member->nickname,
-					'mobile'=>$this->member->mobile,
+					'mobile'=>$mobile,
 					'isfavor'=>1,
 					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
 			];
