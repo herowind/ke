@@ -111,6 +111,10 @@
 				
 				doFavor:function(){
 					let _this = this;
+					if(_this.favor.text=='审核中'){
+						$.alert('请耐心等待审核');
+						return;
+					}
 					if("{:empty($detail['member']->mobile)}" == "1"){
 						$.prompt({
 							  title: '立即报名',
