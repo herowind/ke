@@ -28,7 +28,6 @@ abstract class LiveController extends SchoolController {
 	
 	public function initialize() {
 		parent::initialize ();
-		$this->initSchool();
 	}
 	
 	/**
