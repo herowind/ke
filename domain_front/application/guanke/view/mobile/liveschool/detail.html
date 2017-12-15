@@ -102,7 +102,7 @@
 							  input: '',
 							  empty: false, // 是否允许为空
 							  onOK: function (input) {
-								  $.get('favor.html',{live_id:live_id,mobile:input},function(res){
+								  $.get('favor.html',{live_id:"{$detail.id}",mobile:input},function(res){
 									  if(res['code']!=1){
 										  _this.isFavor(res);
 										  $.alert(res['msg']);
@@ -113,7 +113,7 @@
 							  }
 						});									
 					}else{
-						$.get('favor.html',{live_id:live_id},function(res){
+						$.get('favor.html',{live_id:"{$detail.id}"},function(res){
 							if(res['code']!=1){
 							 _this.isFavor(res);
 							 $.alert(res['msg']);
@@ -150,188 +150,4 @@ $(function(){
 	}
 })
 </script>
-
-<script type="text/javascript">
-		var live_id = {$live_id};
-		var isneedmobile = {$isneedmobile};
-		var mobile = '';
-		var vm = new Vue({
-			el:'#app',
-			data : {
-				live:{
-					school:{'banner':''},
-					teacher:{},
-					camera:{'url':''},
-					member:{'url':''},
-					timesection:[],
-				},
-				school:{
-					content:'',
-					contenturl:'',
-					contenttype:'',
-				},
-				isshowfavor:false,
-				isshowveryfy:false,
-				isshowqrcode:false,
-				isready:false,
-				isfinish:false
-			},
-			created:function(){
-				this.getLive();
-				
-			},
-			methods:{
-				getLive:function(e){
-					let _this = this;
-					$.get('detaildata.html',{live_id:live_id},function(res){
-						_this.live = res.data;
-						_this.getSchool(_this.live.school_id);
-						if(res.code==1){
-							$("#video").load();
-						}else{
-							_this.isshowfavor=false;
-							_this.isshowveryfy=false;
-							_this.isshowqrcode=false;
-							if(res.error=="unfavor"){
-								_this.isshowfavor = true;
-								if(isneedmobile){
-									$.prompt({
-										  title: '立即报名观看',
-										  text: '请输入您的手机号',
-										  input: '',
-										  empty: false, // 是否允许为空
-										  onOK: function (input) {
-											  mobile = input;
-											  _this.doFavor();
-										  },
-										  onCancel: function () {
-										  }
-									});									
-								}else{
-									$.modal({
-								          title: "友情提示",
-								          text: "本监控需报名才可观看",
-								          buttons: [
-											{ text: "取消", className: "default"},
-								            { text: "立即报名", 
-								              onClick: function(){
-								            	_this.doFavor();
-								              }
-								            }
-								          ]
-								    });									
-								}
-								return;
-							}
-							if(res.error=="unveryfy"){
-								_this.isshowveryfy = true;
-								return;
-							}
-							
-							if(res.error=="unsubscribe"){
-								_this.isshowqrcode = true;
-								_this.doSubscribe();
-								return;
-							}
-							
-							if(res.error=="untime"){
-								$.alert(res.msg, "友情提示");
-								return;
-							}
-							
-							$.alert(res.msg, "错误");
-						}
-						
-						
-					})
-				},
-				getSchool:function(school_id){
-					let _this = this;
-					$.get('/guanke/mobile.school/detaildata.html',{school_id:school_id},function(res){
-						console.log(res.data);
-						if(res.code==1){
-							_this.school = res.data;
-						}else{
-							 $.alert("加载失败，请重新打开页面", "网速不给力");
-						}
-					})
-				},
-				
-				doFavorMobile:function(){
-					let _this = this;
-					if(_this.isshowfavor && isneedmobile){
-						$.prompt({
-							  title: '立即报名观看',
-							  text: '请输入您的手机号',
-							  input: '',
-							  empty: false, // 是否允许为空
-							  onOK: function (input) {
-								  mobile = input;
-								  _this.doFavor();
-							  },
-							  onCancel: function () {
-							  }
-						});									
-					}
-				},
-				
-				doFavor:function(e){
-					let _this = this;
-					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
-						console.log(res);
-						if(res.code==1){
-							$.alert(res.msg, "友情提示");
-							_this.isshowfavor = false;
-							_this.isshowveryfy = false;
-							_this.live.member.url = res.url;
-							$("#video").load();
-						}else{
-							if(res.error=='unveryfy'){
-								$.alert(res.msg, "友情提示");
-								_this.isshowfavor = false;
-								_this.isshowveryfy = true;
-								return;
-							}
-							$.alert("加载失败，请重新打开页面", "网速不给力");
-						}
-					})
-				},
-				doSubscribe:function(e){
-					let _this = this;
-					if(_this.isshowqrcode){
-						$.modal({
-				          title: "友情提示",
-				          text: '您尚未关注公众号，无法播放',
-				          buttons: [
-							{ text: "取消", className: "default"},
-				            { text: "立即关注", 
-				              onClick: function(){
-				            	//if('{$wechat.history_url}'!=''){
-				            	//	document.location.href = '{$wechat.history_url|raw}';
-				            	//}else{
-				            		$("#wechat").popup();
-				            	//}
-				              }
-				            }
-				          ]
-				        });
-					}else{
-						$("#wechat").popup();
-						return;
-						
-					}
-				}
-			}
-		})
-
-		function startplay(){
-			$.get('/guanke/mobile.liveschool/startplay.html',{live_id:live_id},function(res){
-				if(res.code!=1){
-					 $.alert("加载失败，请重新打开页面", "网速不给力");
-				}
-			})
-		}
-</script>
-
-
 {/block}

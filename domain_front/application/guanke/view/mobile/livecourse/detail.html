@@ -119,7 +119,7 @@
 							  input: '',
 							  empty: false, // 是否允许为空
 							  onOK: function (input) {
-								  $.get('favor.html',{live_id:live_id,mobile:input},function(res){
+								  $.get('favor.html',{live_id:"{$detail.id}",mobile:input},function(res){
 									  if(res['code']!=1){
 										  _this.isFavor(res);
 										  $.alert(res['msg']);
@@ -130,7 +130,7 @@
 							  }
 						});									
 					}else{
-						$.get('favor.html',{live_id:live_id},function(res){
+						$.get('favor.html',{live_id:"{$detail.id}"},function(res){
 							if(res['code']!=1){
 							 _this.isFavor(res);
 							 $.alert(res['msg']);

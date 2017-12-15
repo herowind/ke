@@ -92,6 +92,12 @@ abstract class LiveController extends SchoolController {
 				//报名成功，发送报名
 				$this->favorWxnotice($live);
 			}
+			
+			if($enrollMember->isveryfy==1){
+				$rtnData = ['code'=>1,'msg'=>'已报名成功'];
+			}else{
+				$rtnData = ['code'=>0,'msg'=>'已报名成功,审核中请稍等','error'=>'unveryfy'];
+			}
 		}
 		return $rtnData;
 	}
