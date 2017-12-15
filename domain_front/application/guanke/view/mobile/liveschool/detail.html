@@ -52,7 +52,7 @@
 					url:''
 				},
 				favor:{
-					text:'立即报名',
+					text:'申请看护',
 					isshow:false
 				},
 				content:''
@@ -97,16 +97,13 @@
 					let _this = this;
 					if("{:empty($detail['member']->mobile)}" == "1"){
 						$.prompt({
-							  title: '立即报名-手机号报名',
-							  text: '注册成为会员，免费享受更多精彩直播课程',
+							  title: '申请看护',
+							  text: '本功能仅对学校家长开放，请输入手机号验证',
 							  input: '',
 							  empty: false, // 是否允许为空
 							  onOK: function (input) {
 								  $.get('favor.html',{live_id:"{$detail.id}",mobile:input},function(res){
-									  if(res['code']!=1){
-										  _this.isFavor(res);
-										  $.alert(res['msg']);
-									  }
+									  _this.isFavorSuccess(res);
 								  })
 							  },
 							  onCancel: function () {
@@ -114,26 +111,28 @@
 						});									
 					}else{
 						$.get('favor.html',{live_id:"{$detail.id}"},function(res){
-							if(res['code']!=1){
-							 _this.isFavor(res);
-							 $.alert(res['msg']);
-							}
+							_this.isFavorSuccess(res);
 					  	})
 					}
 				},
 				
-				isFavor:function(res){
+				isFavorSuccess:function(res){
 					let _this = this;
-					switch(res['error']){
-						case 'unfavor':
-							_this.favor.text = '立即报名';
-							_this.favor.isshow = true;
-							break;
-						case 'unveryfy':
-							_this.favor.text = '审核中';
-							_this.favor.isshow = true;
-							break;
+					if(res['code'] != 1){
+						switch(res['error']){
+							case 'unfavor':
+								_this.favor.text = '申请看护';
+								_this.favor.isshow = true;
+								break;
+							case 'unveryfy':
+								_this.favor.text = '审核中';
+								_this.favor.isshow = true;
+								break;
+						}
+					}else{
+						_this.favor.isshow = false;
 					}
+					$.alert(res['msg']);
 				}
 			}
 		})
