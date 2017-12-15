@@ -9,7 +9,7 @@
 {block name="body"}
 <div class="ui-video-fixed">
 	<div class="ui-video-box">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="video.url" :poster="{$detail.banner}" controls="controls" width="100%" style=""></video>
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="video.url" poster="{$detail.banner}" controls="controls" width="100%" style=""></video>
 	</div>
 	{eq name="detail.process.status" value="ready"}
 	<div class="ui-video-status">
@@ -126,6 +126,7 @@
 				},
 				
 				isFavor:function(res){
+					let _this = this;
 					switch(res['error']){
 						case 'unfavor':
 							_this.favor.text = '立即报名';
