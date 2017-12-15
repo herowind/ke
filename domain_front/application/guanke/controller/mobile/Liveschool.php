@@ -60,7 +60,7 @@ class Liveschool extends LiveController {
 	/**
 	 * 验证是否在播放时间
 	 */
-	private function checktime($live){
+	protected function checktime($live){
 		if(!empty($live->timesection)){
 			$currentTime = date('H:i');
 			$currentWeekKey = date('w');
