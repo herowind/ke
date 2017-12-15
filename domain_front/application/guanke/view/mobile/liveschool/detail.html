@@ -142,13 +142,6 @@
 $(function(){
 	//修正内容距离顶部的高度
 	$(".ui-content").css('padding-top',$(".course-hd").height());
-	
-	//显示倒计时
-	if("{$detail.process.status}" == 'ready'){
-		$("#readycount").countdown("{$detail.starttime}", function(event) {
-			$(this).html(event.strftime('%D 天 %H : %M : %S'));
-	  	});
-	}
 })
 </script>
 {/block}
