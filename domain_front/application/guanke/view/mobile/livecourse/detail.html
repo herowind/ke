@@ -1,38 +1,19 @@
-{extend name="mobile@template/common"/} {block name="style"}
+{extend name="mobile@template/common"/} 
+{block name="style"}
 <style>
 .weui-footer_fixed-bottom {
 	bottom: 0;
 }
-
-.starter{
-	position:absolute;
-	width:100%;
-	height:100px;
-	top:20px;
-	left:0;
-}
-.starter-template {
-	width:220px;
-	border-radius:5px;
-	border-top:5px solid green;
-	margin:auto;
-	padding: 10px 15px;
-	font-size:18px;
-	color:#333;
-	text-align: center;
-	position:relative;
-	background:rgba(255,255,255,0.8);
-}
-
 </style>
 {/block} 
 {block name="body"}
-<div class="course-hd">
-	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="course.banner" controls="controls" width="100%" style=""></video>
+<div class="ui-video-fixed">
+	<div class="ui-video-box">
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="video.url" :poster="{$detail.course.banner}" controls="controls" width="100%" style=""></video>
 	</div>
-	<div class="starter" v-show="isready">
-		<div class="starter-template" >
+	{eq name="detail.process.status" value="ready"}
+	<div class="ui-video-status">
+		<div class="ui-video-status_panel" >
 			<div class="panel panel-default">
 			  <div class="panel-body">
 			  	<div class="lead">即将开始</div>
@@ -41,251 +22,153 @@
 			</div>
 		</div>
 	</div>
+	{eq}
+	<div class="ui-title">{$school.name}<button class="green ui-btn ui-btn-xs focus-btn" id="publishTopic" onclick="wxqrcode()"><img src="/guanke/images/icons/qrcode.png"/>&nbsp;关注</button></div>
 </div>
-<div class="school-bd ui-hide">
-	<div class="weui-panel weui-panel_access" v-if="live.teacher_id>0">
+<div class="ui-content ui-hide">
+	{neq name="detail.teacher_id" value="0"}
+	<div class="weui-panel weui-panel_access">
 		<div class="weui-panel__bd">
-			<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+			<a href="/guanke/mobile.teacher/detail.html?id={$detail.teacher_id}" class="weui-media-box weui-media-box_appmsg">
 				<div class="weui-media-box__hd">
-					<img class="weui-media-box__thumb" :src="live.teacher.avatar">
+					<img class="weui-media-box__thumb" src="{$detail.teacher.avatar}">
 				</div>
 				<div class="weui-media-box__bd">
-					<h4 class="weui-media-box__title">主讲老师：{{live.teacher.name}}</h4>
-					<p class="weui-media-box__desc">{{live.teacher.intro}}</p>
+					<h4 class="weui-media-box__title">主讲老师：{$detail.teacher.name}</h4>
+					<p class="weui-media-box__desc">{$detail.teacher.intro}}</p>
 				</div>
 			</a>
 		</div>
 	</div>
-	<div class="weui-panel weui-panel_access" v-if="course.contenttype==1">
-		<div class="weui-panel__bd">
-			<a :href="course.contenturl" class="weui-media-box weui-media-box_appmsg">
-				<div class="weui-media-box__hd">
-					<img class="weui-media-box__thumb" src="{$school.logo}">
-				</div>
-				<div class="weui-media-box__bd">
-					<h4 class="weui-media-box__title">{{course.name}}</h4>
-					<p class="weui-media-box__desc">{{course.intro}}</p>
-				</div>
-			</a>
-		</div>
-	</div>
-	<div class="school-tab-content">
-		<article class="weui-article" v-if="course.contenttype==2">
-			<div v-html="course.content"></div>
+	{/neq}
+	<div class="ui-tab-content">
+		<article class="weui-article">
+			<div v-html="content"></div>
 		</article>
 	</div>
 	
-	<!-- 悬浮发布 -->
-	<div class="ui-button-float" id="publishTopic" v-on:click="doSubscribe" style="z-index:1">
-		<img src="/guanke/images/icons/qrcode.png" />
-	</div>
+	<!-- 报名及状态 -->
 	<div class="weui-footer weui-footer_fixed-bottom">
-		<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0" v-if="isfinish">已结束</button>
-		<button class="weui-btn weui-btn_primary" v-on:click="doFavorMobile" style="border-radius: 0" v-if="isshowfavor">立即报名</button>
-		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
+		{switch $detail.process.status}
+			{case finish}
+				<button class="weui-btn weui-btn_default weui-btn_disabled" style="border-radius: 0">已结束</button>
+			{/case}
+			{default/}
+				<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-show="favor.isshow">{{favor.text}}</button>
+		{/switch}
+		
 	</div>	
-</div>
-
-<div id="wechat" class='weui-popup__container'>
-	<div class="weui-popup__overlay"></div>
-	<div class="weui-popup__modal">
-		<div class="toolbar">
-			<div class="toolbar-inner">
-				<a href="javascript:;" class="picker-button close-popup">关闭</a>
-	            <h1 class="title">长按识别二维码</h1>
-			</div>
-		</div>
-		<div class="modal-content" style="text-align:center;margin-top:200px;">
-			<img src='{$wechat.qrcode_url}' width='200' height='200'/>
-		</div>
-	</div>
 </div>
 {/block} 
 {block name="script"}
 <script type="text/javascript">
-		var live_id = {$live_id};
-		var isneedmobile = {$isneedmobile};
-		var mobile = '';
 		var vm = new Vue({
 			el:'#app',
 			data : {
-				live:{
-					course:{'banner':''},
-					teacher:{},
-					camera:{'url':''},
-					member:{'url':''}
+				video:{
+					url:''
 				},
-				course:{
-					content:'',
-					contenturl:'',
-					contenttype:''
+				favor:{
+					text:'立即报名',
+					isshow:false
 				},
-				isshowfavor:false,
-				isshowveryfy:false,
-				isshowqrcode:false,
-				isready:false,
-				isfinish:false
+				content:'',
 			},
 			created:function(){
-				$.showLoading();
-				this.getLive();
+				//获得课程详细
+				this.getContent();
+				$(".ui-content").removeClass('ui-hide');
 			},
 			methods:{
-				getLive:function(e){
+				videoinfo:function(){
 					let _this = this;
-					$.get('detaildata.html',{live_id:live_id},function(res){
-						_this.live = res.data;
-						_this.getCourse(_this.live.course_id);
-						$.hideLoading();
-						$(".school-bd").removeClass('ui-hide');
-						if(_this.live.process.status=='finish'){
-							_this.isfinish = true;
-							return;
-						}
-						if(_this.live.process.status=='ready'){
-							_this.isready = true;
-							$("#readycount").countdown(_this.live.starttime, function(event) {
-								$(this).html(event.strftime('%D 天 %H : %M : %S'));
-						  	});
-						}
-						if(res.code==1){
+					$.get('videoinfo.html',{live_id:"{$detail.id}"},function(res){
+						if(res['code']==1){
+							_this.video = res['video'];
 							$("#video").load();
+							_this.videoplay();
 						}else{
-							_this.isshowfavor=false;
-							_this.isshowveryfy=false;
-							_this.isshowqrcode=false;
-							if(res.error=="unfavor"){
-								_this.isshowfavor = true;
-								if(isneedmobile){
-									$.prompt({
-										  title: '立即报名观看',
-										  text: '请输入您的手机号',
-										  input: '',
-										  empty: false, // 是否允许为空
-										  onOK: function (input) {
-											  mobile = input;
-											  _this.doFavor();
-										  },
-										  onCancel: function () {
-										  }
-									});									
-								}else{
-									$.modal({
-								          title: "友情提示",
-								          text: "本课程需报名才可观看",
-								          buttons: [
-											{ text: "取消", className: "default"},
-								            { text: "立即报名", 
-								              onClick: function(){
-								            	_this.doFavor();
-								              }
-								            }
-								          ]
-								    });									
-								}
-								return;
-							}
-							if(res.error=="unveryfy"){
-								_this.isshowveryfy = true;
-								return;
-							}
-							
-							if(res.error=="unsubscribe"){
-								_this.isshowqrcode = true;
-								_this.doSubscribe();
-								return;
-							}
-							
-							$.alert(res.msg, "错误");
+							_this.isFavor(res);
+							$.alert(res['msg']);
 						}
-						
-						
 					})
 				},
-				getCourse:function(course_id){
+				
+				videoplay:function(){
+					$.get('videoplay.html',{live_id:"{$detail.id}"},function(res){
+						$("#video").play();
+					})
+				},
+				
+				getContent:function(){
+					$.showLoading();
 					let _this = this;
-					$.get('/guanke/mobile.course/detaildata.html',{course_id:course_id},function(res){
-						console.log(res.data);
+					$.get('/guanke/mobile.course/content.html',{course_id:"{$detail.course_id}"},function(res){
 						if(res.code==1){
-							_this.course = res.data;
+							_this.content = res;
+							_this.videoinfo();
 						}else{
 							 $.alert("加载失败，请重新打开页面", "网速不给力");
 						}
+						$.hideLoading();
 					})
 				},
-				doFavorMobile:function(){
+				
+				doFavor:function(){
 					let _this = this;
-					if(_this.isshowfavor && isneedmobile){
+					if("{:empty($detail.member.mobile)}" == "true"){
 						$.prompt({
-							  title: '立即报名观看',
-							  text: '请输入您的手机号',
+							  title: '立即报名-手机号报名',
+							  text: '注册成为会员，免费享受更多精彩直播课程',
 							  input: '',
 							  empty: false, // 是否允许为空
 							  onOK: function (input) {
-								  mobile = input;
-								  _this.doFavor();
+								  $.get('favor.html',{live_id:live_id,mobile:input},function(res){
+									  if(res['code']!=1){
+										  _this.isFavor(res);
+										  $.alert(res['msg']);
+									  }
+								  }
 							  },
 							  onCancel: function () {
 							  }
 						});									
-					}
-				},				
-				
-				doFavor:function(e){
-					let _this = this;
-					$.get('favor.html',{live_id:live_id,mobile:mobile},function(res){
-						console.log(res);
-						if(res.code==1){
-							$.alert(res.msg, "友情提示");
-							_this.isshowfavor = false;
-							_this.isshowveryfy = false;
-							_this.live.member.url = res.url;
-							$("#video").load();
-						}else{
-							if(res.error=='unveryfy'){
-								$.alert(res.msg, "友情提示");
-								_this.isshowfavor = false;
-								_this.isshowveryfy = true;
-								return;
-							}
-							$.alert("加载失败，请重新打开页面", "网速不给力");
-						}
-					})
-				},
-				doSubscribe:function(e){
-					let _this = this;
-					if(_this.isshowqrcode){
-						$.modal({
-				          title: "友情提示",
-				          text: '您尚未关注公众号，无法播放',
-				          buttons: [
-							{ text: "取消", className: "default"},
-				            { text: "立即关注", 
-				              onClick: function(){
-				            	//if('{$wechat.history_url}'!=''){
-				            	//	document.location.href = '{$wechat.history_url|raw}';
-				            	//}else{
-				            		$("#wechat").popup();
-				            	//}
-				              }
-				            }
-				          ]
-				        });
 					}else{
-						$("#wechat").popup();
-						return;
+						$.get('favor.html',{live_id:live_id},function(res){
+							if(res['code']!=1){
+							 _this.isFavor(res);
+							 $.alert(res['msg']);
+							}
+					  	}
+					}
+				},
+				
+				isFavor:function(res){
+					switch(res['error']){
+						case 'unfavor':
+							_this.favor.text = '立即报名';
+							_this.favor.ishow = true;
+							break;
+						case 'unveryfy':
+							_this.favor.text = '审核中';
+							_this.favor.ishow = true;
+							break;
 					}
 				}
 			}
 		})
 
-function startplay(){
-	$.get('/guanke/mobile.livecourse/startplay.html',{live_id:live_id},function(res){
-		if(res.code!=1){
-			 $.alert("加载失败，请重新打开页面", "网速不给力");
-		}
-	})
-}
+$(function(){
+	//修正内容距离顶部的高度
+	$(".ui-content").css('padding-top',$(".course-hd").height());
+	
+	//显示倒计时
+	if("{$detail.process.status}" == 'ready'){
+		$("#readycount").countdown("{$detail.starttime}", function(event) {
+			$(this).html(event.strftime('%D 天 %H : %M : %S'));
+	  	});
+	}
+})
 </script>
 
 

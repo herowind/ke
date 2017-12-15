@@ -14,16 +14,17 @@
 // +----------------------------------------------------------------------
 namespace app\guanke\controller\mobile;
 
+
 class Member extends SchoolController {
 	public function initialize() {
 		parent::initialize ();
+		parent::initMember();
 	}
 	
 	/**
 	 * 会员主页
 	 */
-	public function index() {
-		
+	public function index() {	
 		return $this->fetch ();
 	}
 }

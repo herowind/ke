@@ -85,22 +85,15 @@ class MobileController extends MobileBaseController{
 	    	}
 	    }
 	}
-	/**
-	 * 获得微信关注链接
-	 */
-	protected function getQrcode(){
-		return WechatSetting::field('qrcode_url,history_url')->find($this->getCid());
-	}
 	
 	/**
 	 * 初始化微信
 	 */
 	protected function initOfficialAccount(){
 		$openPlatform = Factory::openPlatform(config('wechat.component'));
-		$this->wechat = WechatSetting::field('cid,appid,qrcode_url,history_url,authorizer_refresh_token,authorizer_info')->find($this->getCid());
+		$this->wechat = WechatSetting::field('appid,authorizer_refresh_token')->find($this->getCid());
 		if($this->wechat){
 			$this->officialAccount = $openPlatform->officialAccount($this->wechat->appid, $this->wechat->authorizer_refresh_token);
 		}
 	}
-
 }

@@ -17,6 +17,21 @@
 	<div class="page" id="app">
 	{block name="body"}{/block}
 	</div>
+	
+	<div id="wxqrcode" class='weui-popup__container popup-bottom'>
+		<div class="weui-popup__overlay"></div>
+		<div class="weui-popup__modal">
+			<div class="toolbar">
+				<div class="toolbar-inner">
+					<a href="javascript:;" class="picker-button close-popup">关闭</a>
+		            <h1 class="title">长按识别二维码</h1>
+				</div>
+			</div>
+			<div class="modal-content" style="text-align:center;">
+				<img id="qrcode_url" src='' width='200' height='200'/>
+			</div>
+		</div>
+	</div>	
 	<!-- 公共脚本层 -->
 	<script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
@@ -25,5 +40,25 @@
 	<script src="/lib/components/countdown/jquery.countdown.min.js"></script>
 	<script src="/lib/components/vue/vue.min.js"></script>
 	{block name="script"}{/block}
+	<script>
+		function wxqrcode(){
+			if($("#qrcode_url").attr('src') == ''){
+				$.get('/wechat/mobile.api/qrcode_url.html',{},function(res){
+					if(res!=''){
+						$("#qrcode_url").attr('src',res);
+						$("#wxqrcode").popup();
+					}
+				})
+			}else{
+				$("#wxqrcode").popup();
+			}
+		}
+		
+		function wxissubscribe(callback){
+			$.get('/wechat/mobile.api/issubscribe.html',{},function(res){
+				callback(res);
+			})
+		}
+	</script>
 </body>
 </html>

@@ -57,6 +57,15 @@ class School extends SchoolController {
 		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
 	}
 	
+	public function content(){
+		$contentpageid = $this->school->contentpageid;
+		if($contentpageid){
+			return GuankeContentpage::where('id',$contentpageid)->value('content'); 
+		}else{
+			return '';
+		}
+	}
+	
 	/**
 	 * 课程列表页
 	 */

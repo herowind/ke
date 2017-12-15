@@ -1,96 +1,155 @@
-{extend name="mobile@template/common"/} {block name="style"}
+{extend name="mobile@template/common"/} 
+{block name="style"}
 <style>
 .weui-footer_fixed-bottom {
 	bottom: 0;
 }
-
-.starter{
-	position:absolute;
-	width:100%;
-	height:100px;
-	top:20px;
-	left:0;
-}
-.starter-template {
-	width:220px;
-	border-radius:5px;
-	border-top:5px solid green;
-	margin:auto;
-	padding: 10px 15px;
-	font-size:18px;
-	color:#333;
-	text-align: center;
-	position:relative;
-	background:rgba(255,255,255,0.8);
-}
 </style>
 {/block} 
 {block name="body"}
-<div class="course-hd">
-	<div class="course-camera">
-		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="live.member.url" :poster="school.banner" controls="controls" width="100%" style=""></video>
+<div class="ui-video-fixed">
+	<div class="ui-video-box">
+		<video id="video" class="video" x5-playsinline="" playsinline="" webkit-playsinline="" onplay="startplay()" :src="video.url" :poster="{$detail.course.banner}" controls="controls" width="100%" style=""></video>
 	</div>
+	<div class="ui-title">{$school.name}<button class="green ui-btn ui-btn-xs focus-btn" id="publishTopic" onclick="wxqrcode()"><img src="/guanke/images/icons/qrcode.png"/>&nbsp;关注</button></div>
 </div>
-<div class="school-bd">
-	<div class="weui-panel weui-panel_access">
-		<div class="weui-panel__bd">
-			<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-				<div class="weui-media-box__hd">
-					<img class="weui-media-box__thumb" src="{$school.logo}">
-				</div>
-				<div class="weui-media-box__bd">
-					<h4 class="weui-media-box__title">{$school.name}-{{live.name}}</h4>
-					<p class="weui-media-box__desc">{$school.intro}</p>
-				</div>
-			</a>
-		</div>
-	</div>
-	
+<div class="ui-content ui-hide">
 	<div class="school-tab-content">
-	<div class="weui-cells__title"><b>监控开放时间表</b></div>
-	<div class="weui-cells">
-		<div class="weui-cell" v-for="item in live.timesection">
-			<div class="weui-cell__bd">
-			  <p>{{item.w}}</p>
+		<div class="weui-cells__title"><b>监控开放时间表</b></div>
+		<div class="weui-cells">
+			{volist name="detail.tiimesection" id="item"}
+			<div class="weui-cell">
+				<div class="weui-cell__bd">
+				  <p>{$item.w}</p>
+				</div>
+				{eq name="item.is" value="1"}
+				<div class="weui-cell__ft">{$item.o}-{$item.c}</div>
+				{else/}
+				<div class="weui-cell__ft">暂不开放</div>
+				{/if}
 			</div>
-			<div class="weui-cell__ft" v-if="item.is==1">{{item.o}}-{{item.c}}</div>
-			<div class="weui-cell__ft" v-else>暂不开放</div>
+			{/volist}
 		</div>
 	</div>
-	</div>
 	<div class="school-tab-content">
-		<article class="weui-article" v-if="school.contenttype==2">
+		<article class="weui-article">
 		<div v-html="school.content"></div>
 		</article>
 	</div>
-
-</div>
-
-<div id="wechat" class='weui-popup__container'>
-	<div class="weui-popup__overlay"></div>
-	<div class="weui-popup__modal">
-		<div class="toolbar">
-			<div class="toolbar-inner">
-				<a href="javascript:;" class="picker-button close-popup">关闭</a>
-	            <h1 class="title">长按识别二维码</h1>
-			</div>
-		</div>
-		<div class="modal-content" style="text-align:center;margin-top:50px;">
-	          <img src='{$wechat.qrcode_url}' width='200' height='200'/>
-		</div>
-	</div>
-</div>
-
-<!-- 悬浮发布 -->
-<div class="ui-button-float" id="publishTopic" v-on:click="doSubscribe" style="z-index:1">
-	<img src="/guanke/images/icons/qrcode.png" />
-</div>
-<div class="weui-footer weui-footer_fixed-bottom">
-	<button class="weui-btn weui-btn_primary" v-on:click="doFavorMobile" style="border-radius: 0" v-if="isshowfavor">立即申请</button>
-	<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-if="isshowveryfy">审核中</button>
+	
+	<!-- 报名及状态 -->
+	<div class="weui-footer weui-footer_fixed-bottom">
+		<button class="weui-btn weui-btn_primary" v-on:click="doFavor" style="border-radius: 0" v-show="favor.isshow">{{favor.text}}</button>
+	</div>	
 </div>
 {/block} 
 {block name="script"}
+<script type="text/javascript">
+		var vm = new Vue({
+			el:'#app',
+			data : {
+				video:{
+					url:''
+				},
+				favor:{
+					text:'立即报名',
+					isshow:false
+				},
+				content:''
+			},
+			created:function(){
+				//获得课程详细
+				this.getContent();
+				$(".ui-content").removeClass('ui-hide');
+			},
+			methods:{
+				videoinfo:function(){
+					let _this = this;
+					$.get('videoinfo.html',{live_id:"{$detail.id}"},function(res){
+						if(res['code']==1){
+							_this.video = res['video'];
+							$("#video").load();
+							_this.videoplay();
+						}else{
+							_this.isFavor(res);
+							$.alert(res['msg']);
+						}
+					})
+				},
+				
+				videoplay:function(){
+					$.get('videoplay.html',{live_id:"{$detail.id}"},function(res){
+						$("#video").play();
+					})
+				},
+				
+				getContent:function(){
+					$.showLoading();
+					let _this = this;
+					$.get('/guanke/mobile.school/content.html',{school_id:"{$school.id}"},function(res){
+						_this.content = res;
+						_this.videoinfo();
+						$.hideLoading();
+					})
+				},
+				
+				doFavor:function(){
+					let _this = this;
+					if("{:empty($detail.member.mobile)}" == "true"){
+						$.prompt({
+							  title: '立即报名-手机号报名',
+							  text: '注册成为会员，免费享受更多精彩直播课程',
+							  input: '',
+							  empty: false, // 是否允许为空
+							  onOK: function (input) {
+								  $.get('favor.html',{live_id:live_id,mobile:input},function(res){
+									  if(res['code']!=1){
+										  _this.isFavor(res);
+										  $.alert(res['msg']);
+									  }
+								  }
+							  },
+							  onCancel: function () {
+							  }
+						});									
+					}else{
+						$.get('favor.html',{live_id:live_id},function(res){
+							if(res['code']!=1){
+							 _this.isFavor(res);
+							 $.alert(res['msg']);
+							}
+					  	}
+					}
+				},
+				
+				isFavor:function(res){
+					switch(res['error']){
+						case 'unfavor':
+							_this.favor.text = '立即报名';
+							_this.favor.ishow = true;
+							break;
+						case 'unveryfy':
+							_this.favor.text = '审核中';
+							_this.favor.ishow = true;
+							break;
+					}
+				}
+			}
+		})
+
+$(function(){
+	//修正内容距离顶部的高度
+	$(".ui-content").css('padding-top',$(".course-hd").height());
+	
+	//显示倒计时
+	if("{$detail.process.status}" == 'ready'){
+		$("#readycount").countdown("{$detail.starttime}", function(event) {
+			$(this).html(event.strftime('%D 天 %H : %M : %S'));
+	  	});
+	}
+})
+</script>
+
 <script type="text/javascript">
 		var live_id = {$live_id};
 		var isneedmobile = {$isneedmobile};

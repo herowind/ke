@@ -24,11 +24,16 @@ class SchoolController extends MobileController {
 		$this->initSchool();
 	}
 	
+	
 	/**
 	 * cookie url
 	 */
 	
 	protected function getSchoolId(){
+		return $this->school->id;
+	}
+	
+	protected function getSid(){
 		return $this->school->id;
 	}
 	
@@ -51,6 +56,5 @@ class SchoolController extends MobileController {
 		}
 		$this->assign('school',$this->school);
 		$this->assign('pageTitle',$this->school->name);
-	
 	}
 }

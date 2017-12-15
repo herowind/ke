@@ -16,6 +16,7 @@ namespace app\wechat\service;
 
 use think\Db;
 use EasyWeChat\Factory;
+use app\wechat\model\WechatUsertemplate;
 
 class TemplateSvc
 {
@@ -53,9 +54,9 @@ class TemplateSvc
     {
     	//准备数据
     	$msgData = [];
-    	$form = json_decode($task['form'],true);
+    	$form = is_array($task['form'])?$task['form']:json_decode($task['form'],true);  
     	foreach ($form as $val){
-    		$msgData[$val['k']] = $val['v'];
+    		$msgData[$val['k']] = ['value'=>$val['v'],'color'=>$val['c']];
     	}
 		//开始发送
     	if($task['touser'] == '0'){
@@ -112,7 +113,7 @@ class TemplateSvc
     public static function openidSend($officialAccount,$task){
     	//准备数据
     	$msgData = [];
-    	$form = json_decode($task['form'],true);
+    	$form = is_array($task['form'])?$task['form']:json_decode($task['form'],true);    	
     	foreach ($form as $val){
     		$msgData[$val['k']] = ['value'=>$val['v'],'color'=>$val['c']];
     	}
@@ -136,7 +137,7 @@ class TemplateSvc
     public static function modelSend($officialAccount,$task){
     	//准备数据
     	$msgData = [];
-    	$form = json_decode($task['form'],true);
+    	$form = is_array($task['form'])?$task['form']:json_decode($task['form'],true);  
     	foreach ($form as $val){
     		$msgData[$val['k']] = ['value'=>$val['v'],'color'=>$val['c']];
     	}
@@ -156,6 +157,10 @@ class TemplateSvc
     			}
     		}
     	}
+    }
+    
+    public static function getTemplateIdByCid($cid,$short_id){
+    	return WechatUsertemplate::where('cid',$cid)->where('short_id',$short_id)->value('template_id');
     }
 
 }

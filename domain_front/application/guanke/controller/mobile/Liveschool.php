@@ -15,13 +15,11 @@
 namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLiveschool;
-use app\zhibo\model\ZhiboCamera;
-use app\manage\service\UserTradeSvc;
-use app\guanke\model\GuankeLivemember;
 
-class Liveschool extends SchoolController {
+class Liveschool extends LiveController {
 	public function initialize() {
 		parent::initialize ();
+		$this->livetype = 'liveschool';
 	}
 	
 	/**
@@ -37,12 +35,10 @@ class Liveschool extends SchoolController {
 	 * 直播监控详细页
 	 */
 	public function detail(){
-		$live_id = $this->request->param('live_id');
 		$this->initMember();
-		$wechat = $this->getQrcode();
-		$this->assign('live_id',$live_id);
-		$this->assign('wechat',$wechat);
-		$this->assign('isneedmobile',$this->member->mobile?false:true);
+		$live_id = $this->request->param('live_id');
+		$detail = GuankeLiveschool::find($live_id);
+		$this->assign('detail',$detail);
 		return $this->fetch ();
 	}
 	
@@ -53,47 +49,19 @@ class Liveschool extends SchoolController {
 		$list = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
 	}
-	
+
 	public function detaildata(){
 		$live_id = $this->request->param('live_id');
-		$this->initMember();
-		//$this->initMember();
-		$this->initOfficialAccount();
 		$detail = GuankeLiveschool::find($live_id);
-		$detail->member = (object)['issubscribe'=>0,'isfavor'=>0,'isveryfy'=>0,'url'=>''];
-		$detail->wechat = (object)[
-				'qrcode_url' => $this->wechat['qrcode_url'],
-				'history_url' => $this->wechat['history_url'],
-		];
-		
-		//①判断是否需要报名
-		if($detail->membervisibility != 1){
-			$liveMember = GuankeLivemember::where('livetype','liveschool')->where('live_id',$detail->id)->where('member_id',$this->getMid())->find();
-			if(empty($liveMember)){
-				//需报名
-				$detail->member->isfavor = 0;
-				return ['code'=>0,'msg'=>'您尚未报名','error'=>'unfavor','data'=>$detail];
-			}else{
-				$detail->member->isfavor = $liveMember['isfavor'];
-				$detail->member->isveryfy = $liveMember['isveryfy'];
-				if($detail->member->isveryfy !=1){
-					return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy','data'=>$detail];
-				}
-			}
-		}
-		
-		//②判断是否强制关注公众号
-		if($detail->issubscribe == 1){
-			//验证是否关注,没有关注弹出二维码
-			$user = $this->officialAccount->user->get($this->getOpenid());
-			$detail->member->issubscribe = $user['subscribe'];
-			if($detail->member->issubscribe !=1){
-				return ['code'=>0,'msg'=>'您尚未关注公众平台，无法播放','error'=>'unsubscribe','data'=>$detail];
-			}
-		}
-		
-		//③时间判断
-		if(!empty($detail->timesection)){
+		$detail->append(['process'])->toArray();
+		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
+	}
+
+	/**
+	 * 验证是否在播放时间
+	 */
+	private function checktime($live){
+		if(!empty($live->timesection)){
 			$currentTime = date('H:i');
 			$currentWeekKey = date('w');
 			if(date('w') == 0){
@@ -101,62 +69,11 @@ class Liveschool extends SchoolController {
 			}else{
 				$currentWeekKey--;
 			}
-			$timesction = $detail->timesection[$currentWeekKey];
+			$timesction = $live->timesection[$currentWeekKey];
 			if($currentTime < $timesction['o'] || $currentTime > $timesction['c'] || $timesction['is'] != 1){
-				return ['code'=>0,'msg'=>'未到观看时间，详情中有观看时间表','error'=>'untime','data'=>$detail];
+				return ['code'=>0,'msg'=>'未到观看时间，详情中有观看时间表','error'=>'untime'];
 			}
 		}
-		
-		$detail->member->url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
-		return ['code'=>1,'msg'=>'查询成功','data'=>$detail];
+		return ['code'=>1,'msg'=>'验证通过'];
 	}
-	
-	/**
-	 * 报名观看
-	 */
-	public function favor(){
-		//验证登录
-		$this->initMember();
-		//获取直播详情
-		$live_id = $this->request->param('live_id');
-		$detail = GuankeLiveschool::find($live_id);
-		//验证是否报过名
-		$liveMember = GuankeLivemember::where('livetype','liveschool')->where('live_id',$live_id)->where('member_id',$this->getMid())->find();
-		if(empty($liveMember)){
-			//未报过名，进行报名
-			$mobile = $this->request->param('mobile',$this->member->mobile);
-			$data = [
-					'livetype'=>'liveschool',
-					'live_id' => $live_id,
-					'member_id'=>$this->getMid(),
-					'cid'=>$this->getCid(),
-					'openid'=>$this->getOpenid(),
-					'nickname'=>$this->member->nickname,
-					'mobile'=>$mobile,
-					'isfavor'=>1,
-					'isveryfy'=>$detail->membervisibility == 2 ? 1 : 0,
-			];
-			$liveMember = GuankeLivemember::create($data);	
-		}
-
-		
-		if($liveMember->isveryfy == 1){
-			$url = ZhiboCamera::where('id',$detail->camera_id)->value('url');
-			return ['code'=>1,'msg'=>'已申请成功，可以观看了','url'=>$url];
-		}else{
-			return ['code'=>0,'msg'=>'已申请成功，审核中请稍等','error'=>'unveryfy'];
-		}
-	}
-	
-	/**
-	 * 开始播放
-	 */
-	public function startplay(){
-		$this->initMember();
-		$goods = GuankeLiveschool::field('id,name,camera_id')->where('id',$this->request->param('live_id'))->find();
-		$goods['type'] = 'livecourse';
-		$rtnData = UserTradeSvc::memberPayDaikou($this->getCid(),$this->getMid(), $goods);
-		return $rtnData;
-	}
-
 }
