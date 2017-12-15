@@ -14,9 +14,7 @@
 // +----------------------------------------------------------------------
 namespace app\guanke\controller\mobile;
 
-use app\zhibo\model\ZhiboCamera;
 use app\guanke\model\GuankeLiveactive;
-use app\guanke\model\GuankeLivemember;
 use app\guanke\model\GuankeContentpage;
 
 class Liveactive extends LiveController {
@@ -41,6 +39,7 @@ class Liveactive extends LiveController {
 		$this->initMember();
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLiveactive::find($live_id);
+		$this->setPageTitle($detail->name);
 		$this->assign('detail',$detail);
 		return $this->fetch ();
 	}

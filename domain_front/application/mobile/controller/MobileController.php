@@ -35,6 +35,9 @@ class MobileController extends MobileBaseController{
 	    $this->assign('pageTitle',$this->pageTitle);
 	}
 	
+	protected function setPageTitle($title){
+		$this->assign('pageTitle',$title);
+	}
 	/**
 	 * 获得登录用户UID
 	 */

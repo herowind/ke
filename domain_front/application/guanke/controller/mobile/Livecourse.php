@@ -40,6 +40,7 @@ class Livecourse extends LiveController {
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLivecourse::find($live_id);
 		$detail['member'] = $this->member;
+		$this->setPageTitle($detail->name);
 		$this->assign('detail',$detail);
 		return $this->fetch ();
 	}

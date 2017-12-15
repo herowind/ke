@@ -38,6 +38,7 @@ class Liveschool extends LiveController {
 		$this->initMember();
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLiveschool::find($live_id);
+		$this->setPageTitle($detail->name);
 		$this->assign('detail',$detail);
 		return $this->fetch ();
 	}
