@@ -169,6 +169,8 @@ $(function(){
 			$(this).html(event.strftime('%D 天 %H : %M : %S'));
 	  	});
 	}
+	
+	initShare({title:"{$detail.name}",desc:"你的好友 {$detail['member']->nickname}，邀请您观看直播课程，精彩不容错过",link:window.location.href});
 })
 </script>
 
