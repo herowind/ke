@@ -37,6 +37,7 @@ class Livecourse extends LiveController {
 	 */
 	public function detail(){
 		$this->initMember();
+		$this->initOfficialAccount();
 		$live_id = $this->request->param('live_id');
 		$detail = GuankeLivecourse::find($live_id);
 		$detail['member'] = $this->member;
