@@ -61,6 +61,7 @@
 </div>
 {/block} 
 {block name="script"}
+<script src="/site/js/wechat.js"></script>
 <script type="text/javascript">
 		var vm = new Vue({
 			el:'#app',
@@ -170,7 +171,12 @@ $(function(){
 	  	});
 	}
 	
-	initShare({title:"{$detail.name}",desc:"你的好友 {$detail['member']->nickname}，邀请您观看直播课程，精彩不容错过",link:window.location.href});
+	wechatShare.init();
+	wechatShare.share({
+		title:"{$detail.name}",
+		desc:"你的好友 {$detail['member']->nickname}，邀请您观看直播课程，精彩不容错过",
+		shareUrl:window.location.href
+	},wx);
 })
 </script>
 

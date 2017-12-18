@@ -64,4 +64,16 @@ class Api {
 		return -1;
 		
 	}
+	
+	public function jssdkconfig(){
+		$cid = cookie('currentCid');
+		$openPlatform = Factory::openPlatform(config('wechat.component'));
+		$wechat = WechatSetting::field('appid,authorizer_refresh_token')->find($cid);
+		if($wechat){
+			$officialAccount = $openPlatform->officialAccount($wechat->appid, $wechat->authorizer_refresh_token);
+			$config = $officialAccount->jssdk->buildConfig(array('onMenuShareTimeline', 'onMenuShareAppMessage'), false);
+			return $config;
+		}
+		return '';
+	}
 }
