@@ -71,6 +71,7 @@ class Api {
 		$wechat = WechatSetting::field('appid,authorizer_refresh_token')->find($cid);
 		if($wechat){
 			$officialAccount = $openPlatform->officialAccount($wechat->appid, $wechat->authorizer_refresh_token);
+			$officialAccount->jssdk->setUrl($this->request->param('url'));
 			$config = $officialAccount->jssdk->buildConfig(array('onMenuShareTimeline', 'onMenuShareAppMessage'), false);
 			return $config;
 		}
