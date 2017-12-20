@@ -189,7 +189,7 @@ class Livecourse extends ManageController
 		if(empty($id)){
 			$this->error('请先完善直播基本信息','edit');
 		}
-		$pageData = Db::view('GuankeLivemember', 'id,livetype,live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'mobile,openid,nickname,avatar,province,city', "GuankeLivemember.member_id = UserMember.id and GuankeLivemember.livetype='livecourse' and GuankeLivemember.live_id ={$id}")->paginate(20);
+		$pageData = Db::view('GuankeLivemember', 'id,livetype,live_id,mobile,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'openid,nickname,avatar,province,city', "GuankeLivemember.member_id = UserMember.id and GuankeLivemember.livetype='livecourse' and GuankeLivemember.live_id ={$id}")->paginate(20);
 		$detail = GuankeLivecourse::manage()->find($id);
 		$this->assign('pageData',$pageData);
 		$this->assign('detail',$detail);
@@ -216,6 +216,10 @@ class Livecourse extends ManageController
 		}else{
 			$this->error('操作失败','',$detail->$field);
 		}
+	}
+	
+	public function postertemplate(){
+		return $this->fetch();
 	}
 	
 	

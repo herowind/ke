@@ -175,7 +175,7 @@ class Liveactive extends ManageController
 		if(empty($id)){
 			$this->error('请先完善直播基本信息','edit');
 		}
-		$pageData = Db::view('GuankeLivemember', 'id,livetype,live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'mobile,openid,nickname,avatar,province,city', "GuankeLivemember.member_id = UserMember.id and GuankeLivemember.livetype='liveactive' and GuankeLivemember.live_id ={$id}")->paginate(20);
+		$pageData = Db::view('GuankeLivemember', 'id,livetype,mobile,live_id,member_id,isfavor,isveryfy,create_time')->view('UserMember', 'openid,nickname,avatar,province,city', "GuankeLivemember.member_id = UserMember.id and GuankeLivemember.livetype='liveactive' and GuankeLivemember.live_id ={$id}")->paginate(20);
 		$detail = GuankeLiveactive::manage()->find($id);
 		$this->assign('pageData',$pageData);
 		$this->assign('detail',$detail);
