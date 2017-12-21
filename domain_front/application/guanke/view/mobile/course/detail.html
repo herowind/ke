@@ -35,7 +35,11 @@
 {block name="body"}
 <div class="school-hd">
 	<div style="position:relative;">
+		{empty name="detail.video_demo"}
 		<img src="{$detail.banner}" style="width:100%;">
+		{else/}
+		<iframe width="100%%" height="100%" frameborder="0" src="{$detail.video_demo}" allowfullscreen=""></iframe>
+		{/empty}
 		<div  class="course-ft">
 			<div class="course-name">{$detail.name}</div>
 			<div class="course-intro">{$detail.intro}</div>
