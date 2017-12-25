@@ -212,7 +212,7 @@ abstract class LiveController extends SchoolController {
 				];
 				$task['template_id'] = TemplateSvc::getTemplateIdByCid($live['school']->cid, 'OPENTM413025199');
 				$task['touser'] = $openids;
-				$task['tourl'] = APP_SITE."/guanke/mobile.teacher/authmemberlist.html?sid={$live['school']->cid}&isveryfy=0";
+				$task['tourl'] = APP_SITE."/guanke/mobile.teacher/authmember.html?sid={$live['school']->cid}&isveryfy=0";
 				if($task['template_id']){
 					TemplateSvc::openidSend($this->officialAccount, $task);
 				}
