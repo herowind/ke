@@ -158,6 +158,7 @@ class Teacher extends SchoolController {
 	 * 查看审核信息
 	 */
 	public function authmemberlist(){
+		$this->initMember();
 		$params = $this->request->param();
 		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
 		if(empty($teacher) || empty($teacher['isreceive'])){
@@ -170,6 +171,7 @@ class Teacher extends SchoolController {
 	 * 授权信息
 	 */
 	public function doauth(){
+		$this->initMember();
 		$params = $this->request->param();
 		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
 		if(empty($teacher) || empty($teacher['isreceive'])){
@@ -185,6 +187,7 @@ class Teacher extends SchoolController {
 	 * 删除信息
 	 */
 	public function doauthdelete(){
+		$this->initMember();
 		$params = $this->request->param();
 		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
 		if(empty($teacher) || empty($teacher['isreceive'])){
