@@ -175,7 +175,7 @@ abstract class LiveController extends SchoolController {
 			switch($live['livetype']){
 				case 'livecourse':
 					$templateShortId = 'TM00080';
-					$authtype='课程申请';
+					$authtype='课程报名';
 					$task['form'] = [
 						['k'=>'userName',   't'=>'用户名',    'v'=>$live['member']->nickname?:'课官',    'c'=>'#0033cc'],
 						['k'=>'courseName', 't'=>'课程名称',  'v'=>$live['name'],                'c'=>'#0033cc'],
@@ -190,7 +190,7 @@ abstract class LiveController extends SchoolController {
 					break;
 				case 'liveactive':
 					$templateShortId = 'TM00080';
-					$authtype='活动申请';
+					$authtype='活动报名';
 					$task['form'] = null;
 					break;
 			}
@@ -204,7 +204,7 @@ abstract class LiveController extends SchoolController {
 			if($live['membervisibility'] == 3){
 				$openids = GuankeTeacher::where('cid',$this->getCid())->where('isreceive',1)->column('openid');
 				$task['form'] = [
-						['k'=>'first',   	't'=>'头部信息',  'v'=>'有个新的申请等待审核（'.$live['member']->nickname?:'新客户）',    'c'=>'#0033cc'],
+						['k'=>'first',   	't'=>'头部信息',  'v'=>'有个新的申请等待审核-'.$live['member']->nickname?:'新客户',    'c'=>'#0033cc'],
 						['k'=>'keyword1', 	't'=>'申请日期',  'v'=>date('Y-m-d H:s'),                'c'=>'#0033cc'],
 						['k'=>'keyword2',   't'=>'申请主题',  'v'=>$authtype,           			'c'=>'#0033cc'],
 						['k'=>'keyword3',   't'=>'申请内容',  'v'=>$live['name'], 'c'=>'#ff3333'],
