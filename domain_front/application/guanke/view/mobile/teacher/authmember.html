@@ -19,16 +19,19 @@
 			<div class="weui-panel__bd">
 				<div v-for="item in memberList"  class="weui-media-box weui-media-box_appmsg">
 					<div class="weui-media-box__hd">
-						<img class="weui-media-box__thumb" :src="item.avatar" style="border-raidus:4px;">
+						<img class="weui-media-box__thumb" :src="item.avatar" style="border-radius:3px;">
 					</div>
 					<div class="weui-media-box__bd">
 						<h4 class="weui-media-box__title">{{item.nickname?item.nickname:'新用户'}}<a :href="'tel:'+item.mobile" class="weui-badge" style="background:rgba(0,194,116,0.5);margin-top:-5px;" ><img style="float:left;margin-top:1px;" src="/guanke/images/icons/tel.png" width="12" height="12"><span>{{item.mobile}}</span></a></h4>
 						<p class="weui-media-box__desc" v-if="item.livetype=='livecourse'"><span class="text-blue">课程报名</span>：{{item.live_name}}</p>
 						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveschool'"><span class="text-orange">看护申请</span>：{{item.live_name}}</p>
 						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveactive'"><span class="text-red">活动报名</span>：{{item.live_name}}</p>
+						<ul class="weui-media-box__info">
+			              <li class="weui-media-box__info__meta">{{item.create_time}}</li>
+			              <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><a href="javascript:void(0)" class="text-blue"  @click="doDelete(item.id)">删除</a></li>
+			            </ul>
 					</div>
 					<span class="weui-cell__ft">
-						<button class="weui-btn weui-btn_plain-default weui-btn_mini" @click="doDelete(item.id)">删除</button>
 						<button class="weui-btn weui-btn_primary weui-btn_mini" @click="doAuth(item.id,1)" v-show="activeTab==0">同意</button>
 						<button class="weui-btn weui-btn_warn weui-btn_mini" @click="doAuth(item.id,0)" v-show="activeTab==1">拒绝</button></span>
 				</div>
