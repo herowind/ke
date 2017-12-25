@@ -91,4 +91,8 @@ class Livecourse extends LiveController {
 		return ['code'=>0,'msg'=>'直播状态异常','error'=>'untime'];
 	
 	}
+	
+	public function invitecard(){
+		return $this->fetch();
+	}
 }

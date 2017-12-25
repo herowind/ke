@@ -10,12 +10,13 @@
 // +----------------------------------------------------------------------
 
 // +----------------------------------------------------------------------
-// | 直播观看者模型
+// | 观课模板模型
 // +----------------------------------------------------------------------
 namespace app\guanke\model;
 
 use app\manage\model\CommonMod;
 
-class GuankeLivemember extends CommonMod
+class GuankePostertemplate extends CommonMod
 {
+    
 }

@@ -21,6 +21,7 @@ use app\guanke\model\GuankeLiveactive;
 use app\wechat\service\TemplateSvc;
 use app\zhibo\model\ZhiboCamera;
 use app\manage\service\UserTradeSvc;
+use app\guanke\model\GuankeTeacher;
 
 abstract class LiveController extends SchoolController {
 	//直播类型 livecourse,liveactive,liveschool;
@@ -83,6 +84,7 @@ abstract class LiveController extends SchoolController {
 					'member_id'		=> $live['member']->id,
 					'openid'		=> $live['member']->openid,
 					'nickname'		=> $live['member']->nickname,
+					'avatar'		=> $live['member']->avatar,
 					'mobile'		=> $params['mobile']?:$live['member']->mobile,
 					'isfavor'		=> 1,											//报名成功
 					'isveryfy'		=> $live['membervisibility'] == 3 ? 0 : 1,		//是否需要审核
@@ -168,10 +170,12 @@ abstract class LiveController extends SchoolController {
 	protected function favorWxnotice($live){
 		$this->initOfficialAccount();
 		//如果绑定了微信公众号，则发送通知
+		
 		if($this->officialAccount){
 			switch($live['livetype']){
 				case 'livecourse':
 					$templateShortId = 'TM00080';
+					$authtype='课程申请';
 					$task['form'] = [
 						['k'=>'userName',   't'=>'用户名',    'v'=>$live['member']->nickname?:'课官',    'c'=>'#0033cc'],
 						['k'=>'courseName', 't'=>'课程名称',  'v'=>$live['name'],                'c'=>'#0033cc'],
@@ -181,10 +185,12 @@ abstract class LiveController extends SchoolController {
 					break;
 				case 'liveschool':
 					$templateShortId = 'TM00080';
+					$authtype='看护申请';
 					$task['form'] = null;
 					break;
 				case 'liveactive':
 					$templateShortId = 'TM00080';
+					$authtype='活动申请';
 					$task['form'] = null;
 					break;
 			}
@@ -193,6 +199,20 @@ abstract class LiveController extends SchoolController {
 			$task['tourl'] = APP_SITE."/guanke/mobile.{$live['livetype']}/detail.html?sid={$live['school']->cid}&live_id={$live['id']}";
 			if($task['template_id']){
 				TemplateSvc::openidSend($this->officialAccount, $task);
+			}
+			//需要审核，则通知管理员
+			if($live['membervisibility'] == 3){
+				$openids = GuankeTeacher::where('cid',$this->getCid())->find('isreceive',1)->column('openid');
+				$task['form'] = [
+						['k'=>'first',   	't'=>'头部信息',  'v'=>'有个新的申请等待审核（'.$live['member']->nickname?:'新客户）',    'c'=>'#0033cc'],
+						['k'=>'keyword1', 	't'=>'申请日期',  'v'=>date('Y-m-d H:s'),                'c'=>'#0033cc'],
+						['k'=>'keyword2',   't'=>'申请主题',  'v'=>$authtype,           			'c'=>'#0033cc'],
+						['k'=>'keyword3',   't'=>'申请内容',  'v'=>$live['name'], 'c'=>'#ff3333'],
+						['k'=>'remark',     't'=>'备注信息',  'v'=>'点击进行审核☞', 'c'=>'#ff3333'],
+				];
+				$task['template_id'] = TemplateSvc::getTemplateIdByCid($live['school']->cid, 'OPENTM413025199');
+				$task['touser'] = $openids;
+				$task['tourl'] = APP_SITE."/guanke/mobile.teacher/authmemberlist.html?sid={$live['school']->cid}&isveryfy=0";
 			}
 		}
 	}

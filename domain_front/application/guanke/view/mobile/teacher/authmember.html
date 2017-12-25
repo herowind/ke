@@ -1,0 +1,116 @@
+{extend name="mobile@template/common"/} 
+{block name="style"}
+<style>
+
+
+</style>
+{/block}
+{block name="body"}
+
+<div class="ui-content">
+	<!-- 菜单 -->
+	<div class="ui-tabs">
+        <div class="ui-tabs-wrap">
+            <div class="ui-tab" v-for="(item, index) in tabs" :class="{active:index == activeTab?'active':''}"  @click="tab(index)">{{item.name}}</div>
+        </div>
+	</div>
+	<div class="ui-tab-content ui-hide">
+		<div class="weui-panel weui-panel_access">
+			<div class="weui-panel__bd">
+				<div v-for="item in memberList"  class="weui-media-box weui-media-box_appmsg">
+					<div class="weui-media-box__hd">
+						<img class="weui-media-box__thumb" :src="item.avatar" style="border-raidus:4px;">
+					</div>
+					<div class="weui-media-box__bd">
+						<h4 class="weui-media-box__title">{{item.nickname?item.nickname:'新用户'}}<a :href="'tel:'+item.mobile" class="weui-badge" style="background:rgba(0,194,116,0.5);margin-top:-5px;" ><img style="float:left;margin-top:1px;" src="/guanke/images/icons/tel.png" width="12" height="12"><span>{{item.mobile}}</span></a></h4>
+						<p class="weui-media-box__desc" v-if="item.livetype=='livecourse'"><span class="text-blue">课程报名</span>：{{item.live_name}}</p>
+						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveschool'"><span class="text-orange">看护申请</span>：{{item.live_name}}</p>
+						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveactive'"><span class="text-red">活动报名</span>：{{item.live_name}}</p>
+					</div>
+					<span class="weui-cell__ft">
+						<button class="weui-btn weui-btn_plain-default weui-btn_mini" @click="doDelete(item.id)">删除</button>
+						<button class="weui-btn weui-btn_primary weui-btn_mini" @click="doAuth(item.id,1)" v-show="activeTab==0">同意</button>
+						<button class="weui-btn weui-btn_warn weui-btn_mini" @click="doAuth(item.id,0)" v-show="activeTab==1">拒绝</button></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/block} {block name="script"}
+<script>
+var school_id = '{$school.id}';
+var vm = new Vue({
+	el:'#app',
+	data : {
+		memberList:[],
+		tabs:[
+			{id:'veryfy0',name:'待审核'},
+			{id:'veryfy1',name:'已审核'},
+		],
+		activeTab: 0
+	},
+	created:function(){
+		this.tab(this.activeTab);
+	},
+	methods:{
+		tab:function(index){
+			this.activeTab = index;
+			switch(this.tabs[this.activeTab].id){
+				case 'veryfy0':
+					this.getMemberList(0);
+					break;
+					
+				case 'veryfy1':
+					this.getMemberList(1);
+					break;				
+			}
+		},
+		
+		getMemberList:function(isveryfy){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.teacher/authmemberlist.html',{isveryfy:isveryfy},function(res){
+				_this.memberList = res.data;
+				$.hideLoading();
+				$(".ui-tab-content").removeClass("ui-hide");
+			})
+		},
+		doAuth:function(id,isveryfy){
+			$.showLoading();
+			let _this = this;
+			let _memberList = this.memberList;
+			$.get('/guanke/mobile.teacher/doauth.html',{id:id,isveryfy:isveryfy},function(res){
+				if(res.code==1){
+					for(let i=0,len=_memberList.length; i<len; i++) {
+				      	if(_memberList[i].id == id) {
+				      		_memberList.splice(i, 1);
+				        	break;
+				      	}
+				    }
+					_this.memberList = _memberList;
+				}
+				$.hideLoading();
+			})
+		},
+		doDelete:function(id){
+			$.showLoading();
+			let _this = this;
+			let _memberList = this.memberList;
+			$.get('/guanke/mobile.teacher/doauthdelete.html',{id:id},function(res){
+				if(res.code==1){
+					for(let i=0,len=_memberList.length; i<len; i++) {
+				      	if(_memberList[i].id == id) {
+				      		_memberList.splice(i, 1);
+				        	break;
+				      	}
+				    }
+					_this.memberList = _memberList;
+				}
+				$.hideLoading();
+			})
+		}
+	}
+})
+
+</script>
+{/block}

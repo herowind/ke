@@ -1,0 +1,202 @@
+{extend name="manage@template/iframe"/}
+{block name="style"}
+<link rel="stylesheet" type="text/css" href="/lib/components/colorpicker/spectrum.css">
+<style>
+#poster{
+	box-shadow:0 0 12px #999;
+	position:relative;
+	
+}
+.draggable{
+	box-sizing:border-box; 
+	-moz-box-sizing:border-box;
+	padding:5px;
+}
+.draggable.active{
+	border:2px solid #f00;
+}
+</style>
+{/block}
+{block name="body"}
+<div id="app" class="view-page">
+    <!-- 页面标题 -->
+    <div class="page-head">
+        <h6 class="padding-left page-head-title">课程推广海报
+        <span class="fr text-small text-normal padding-top"><b class="text-main"></b></span>
+        </h6>
+    </div>
+        
+    <div class="page-content">
+    	<div style = "display:inline-flex">
+    		<div id="poster"  style="width:320px;height:520px;margin-left:20px;background:#eee;">
+    			<div id="poster-container" style="background:url(http://invitecard-1253442168.image.myqcloud.com/invitecard_temp/invitecard_231_94f6c9bc1032233d13f2557a1a1cbbd9.jpg);background-size:100%;height:100%;">
+					<div id="drag_title" class="draggable"  @click="initEditor('title',$event)">
+						<p id="title" :style="title.style">{{title.value}}</p>
+				  	</div>
+				  	<div id="drag_starttime" class="draggable" @click="initEditor('starttime',$event)">
+						<p id="starttime" :style="starttime.style">{{starttime.value}}</p>
+				  	</div>
+				  	<div id="drag_user" class="draggable" style="width:50%;text-align:center;" @click="initEditor('nickname',$event)">
+				  		<img id="avatar" src="/site/images/icons/poster-avatar.png" style="width:48px;height:48px;">
+						<p id="nickname" :style="nickname.style">{{nickname.value}}</p>
+				  	</div>
+				  	<div id="drag_qrcode" class="draggable" style="width:100px;height:100px;padding:5px;" @click="initEditor('qrcode',$event)">
+						<img id="qrcode" :src="qrcode.value" :style="qrcode.style">
+				  	</div>
+    			</div>
+    		</div>
+    		<div class="editor" style="width:320px;height:520px;margin-left:50px;background:#eee;">
+    			<div class="form-unit-style" v:if="editor.type == 'text'">
+					<div class="form-group clearfix">
+						<div class="label-zoon">颜色</div>
+						<div class="input-zoon">
+							<input id="colorPicker" class="width-sm form-control" v-model="editor.ele.style.color"/>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<div class="label-zoon">字号</div>
+						<div class="input-zoon">
+							<select class="width-sm form-control"  v-model="editor.ele.style['font-size']" @change="editEle">
+								<option :style="'font-size:'+(n+11)+'px'" :value="(n+11)+'px'" v-for="n in 20">{{n+11}}px</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<div class="label-zoon">位置</div>
+						<div class="input-zoon">
+							<select class="width-sm form-control" v-model="editor.ele.style['text-align']" @change="editEle">
+								<option value="center">居中</option>
+								<option value="left">左对齐</option>
+								<option value="right">右对齐</option>
+							</select>
+						</div>
+					</div>
+				</div>
+    		</div>
+    	</div>
+	</div>
+</div>
+
+{/block}
+{block name="script"}
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="/lib/components/colorpicker/spectrum.js"></script>
+<script src="/lib/components/vue/vue.js"></script>
+<script>
+
+$(function() {
+	$( ".draggable" ).draggable({ containment: "#poster-container", scroll: false });
+	
+	//颜色选择
+	$("#colorPicker").spectrum({
+	    showPaletteOnly: true,
+	    togglePaletteOnly: true,
+	    togglePaletteMoreText: 'more',
+	    togglePaletteLessText: 'less',
+	    color: 'blanchedalmond',
+	    palette: [
+	        ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+	        ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+	        ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+	        ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+	        ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+	        ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+	        ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+	        ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+	    ]
+	});
+	$("#colorPicker").on("change",function(){
+		vm.editor.ele.style.color = $(this).val();
+	})
+	
+})
+
+var vm = new Vue({
+	el:'#app',
+	data : {
+		title:{
+			id:'title',
+			name:'课程标题',
+			value:'课程标题',
+			type:'text',
+			style:{
+				'color':'#ccc',
+				'font-size':'18px',
+				'text-align':'center'
+			}
+		},
+		starttime:{
+			id:'starttime',
+			name:'开课时间',
+			value:'2017-12-12 星期四 09:00',
+			type:'text',
+			style:{
+				'color':'#fff',
+				'font-size':'18px',
+				'text-align':'center'
+			}
+		},
+		nickname:{
+			id:'nickname',
+			name:'微信昵称',
+			value:'昵称',
+			type:'text',
+			style:{
+				'color':'#fff',
+				'font-size':'18px',
+				'text-align':'center'
+			}		
+		},
+		qrcode:{
+			id:'qrcode',
+			name:'分享二维码',
+			value:'/site/images/icons/poster-qrcode.png',
+			type:'image',
+			style:{
+				'width':'100%',
+				'height':'100%'
+			}			
+		},
+		editor:{
+			type:'',
+			ele:{id:'title',
+				name:'课程标题',
+				value:'课程标题',
+				type:'text',
+				style:{
+					'color':'#fff',
+					'font-size':'18px',
+					'text-align':'center'
+				}}
+		}
+	},
+	created:function(){
+		let _this = this;
+	},
+	methods:{
+		initEditor:function(ele,event){
+			console.log(event);
+			console.log($(event.currentTarget).position().top);
+			console.log($(event.currentTarget).position().left);
+			$(".draggable").removeClass('active');
+			$("#"+event.currentTarget.id).addClass('active');
+			let _this = this;
+			_this.editor.type = _this[ele].type;
+			_this.editor.ele = _this[ele];
+			$("#colorPicker").spectrum("set", _this.editor.ele.style.color);
+		},
+		editEle:function(){
+			let _this = this;
+			console.log(_this.editor.ele);
+			_this[_this.editor.ele.id] = _this.editor.ele;
+		}
+	}
+	
+})
+
+vm.$watch("editor.ele.style", function (newValue, oldValue) {
+	this[oldValue.id] = newValue;
+})
+
+</script>
+{/block}

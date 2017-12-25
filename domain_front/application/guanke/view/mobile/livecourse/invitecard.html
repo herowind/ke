@@ -1,0 +1,352 @@
+{extend name="mobile@template/common"/} {block name="style"}
+<style>
+.weui-footer_fixed-bottom {
+	bottom: 0;
+}
+.page {
+	color: #333;
+	font-size: 12px;
+	max-width: 480px;
+	margin: 0 auto;
+	box-sizing: border-box;
+	position: relative;
+	min-height: 100vh
+}
+
+.page__hd {
+	padding: 15px
+}
+
+.page__title {
+	color: #555;
+	font-weight: 400;
+	font-size: 20px
+}
+
+.page__desc {
+	color: #888;
+	margin-top: 5px
+}
+
+.page__ft {
+	margin-top: 30px;
+	margin-bottom: 30px
+}
+
+.sharecard-slide-page {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    background-color: #353535;
+}
+.sharecard-slide-page-qrcode {
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    position: absolute;
+    right: 15px;
+    bottom: 113px;
+    z-index: 100;
+    border-radius: 50%;
+    box-shadow: 0 0 5px 2px rgba(26,173,25,.2);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    opacity: .8;
+}
+.sharecard-slide-page-top {
+    width: 100%;
+    height: calc(100vh - 98px);
+}
+
+.sharecard-slide-page-top_content {
+    position: absolute;
+    height: calc(100vh - 98px);
+    width: 100%;
+    padding: 23px 46px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+#sharecard-slide {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 330px;
+    box-shadow: 0 0 10px 0 rgba(66,66,66,.3);
+    border-radius: 10px;
+}
+img {
+    border: 0 none;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    vertical-align: top;
+    letter-spacing: 0;
+}
+
+
+.sharecard-slide-page-footer {
+    height: 98px;
+    width: 100%;
+    background-color: #fff;
+    bottom: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.sharecard-slide-page-footer_list-container {
+    padding: 0 10px;
+    overflow: hidden;
+}
+.sharecard-slide-page-footer_list {
+    white-space: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sharecard-slide-page-footer_list span {
+    margin-right: 15px;
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 54px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+.sharecard-slide-page-footer_list .sc-clide-active:after {
+    content: "";
+    background-image: url(https://staticqc.weike.fm/static/media/sharecard-slide-select.47c2dc62.png);
+    background-position: 50%;
+    background-size: contain;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    width: 24px;
+    height: 24px;
+}
+
+img {
+    border: 0 none;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    vertical-align: top;
+    letter-spacing: 0;
+}
+
+</style>
+{/block} {block name="body"}
+<div class="ui-content">
+	<div class="sharecard-slide-page">
+		<div style="display: none;">
+			<div class="weui-mask_transparent"></div>
+			<div class="weui-toast">
+				<i class="weui-loading weui-icon_toast"></i>
+				<p class="weui-toast_content">邀请卡生成中</p>
+			</div>
+		</div>
+		<div class="sharecard-slide-page-qrcode">
+			<img
+				src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAA2CAYAAACMRWrdAAAAAXNSR0IArs4c6QAAA2NJREFUaAXtWs1rE1EQn0niQZEU68VuyEmtaAWNFVQSCn6CBw/Z2HvBkzc9edOC14Io+EdIaaJXwYMXFVvxICoVBEF3c7OYluohu+OkySb78dLdZDcfu+xe9r1582bmN/Pe2/feLEorUz8A4QAM6MkXC5PLuKzZxUvlqT92WlB1JNxMIWKaiNJBCfUsh2BgOgkJEp4NCRljymwvAv5ltF/MtD7KR6HXaCBssp5vfegydcHjQLTPIFiA8VxbV+XqWaOxn7dUll4C0NVe+rJDVxVZvdxLHzsvz9k1ps0a9MgOxRiYEeKwvK1zTGC1VJEeINE5QRMAJtaVonJX2OaTmFmRlgDphFAM4ppSVO8L21pEV2CowywBXBcJYcCTInoQNNZ5nlfXvEgWcoPbE88xNw+NW3scsXGLiJs9kY2Y66rI689XXteFqx8h+N1XdnU8In0iViB8yF2vKzC1pN4TCh8wUZGrt/2oiOxQjIH5GRaj6GuZY3xFcCRTll75NCTnvuFxaMj51UtA02apFmDcsJ/BXTIzDKPMOhuXSYHqjefYMCIX64g9EHsg9sDIPYDzNJ8cpBWihERDnx+9MzBDi7iom+22y0P+4v9ufSDNfIGV83IhJQLHWZ4+NihNsxATjxVZuWMYmX2RndPq9ddGnW+0a/EHuu2NkBSse8WdrAe+82M7n3nP8NA+6EdGEH0twDjr8Z2zHtf8CG5mW6CnbIsffd36WoB1YxoWnbOrKue43jr14UU+lgjvXRq8pDkvR8YKGBG8V0vVm3ZgvHK/4VvtC3a6Ucck52brRq35juyq6BqxnawHQMHqj2YNET7/ktVborZR01yBsYHTPL7FaSTn0B4OHqKJbCV7uK1M1zLtcqvgBZi9z8jr7OgFTa8v7GZIZOdYDGy3sI9jWyjm2KE9cGVLT3s+XqXSKfIADFe75DwagfL5N423WH+4oW574+xwuQJTSsrDDnt4SpFdPFwjNg4xylSkp6TTScOWZAIf/Syqz416ppw5RaQ/Mep8gt4OBTDeAOfY6PYmWNPhWRsEFxLJxIRW1+dMtJoVGMEx3kl/NDH0XORdQWer03Pv4DpYgLFRe9k7p4MTPzpJEV48iDb45Dp017LODadS2nLS+IRMUDPz873dPzOfRlrd0k5U+w8tgOLdscCKngAAAABJRU5ErkJggg=="
+				alt="">
+		</div>
+		<div class="sharecard-slide-page-top">
+			<div class="sharecard-slide-page-top_content">
+				<img src="http://invitecard-1253442168.image.myqcloud.com/sharecard_tmp/2017-12-19/1513647251_8a87fc7237396927d5b6196334caab14.jpg" alt="" id="sharecard-slide">
+			</div>
+		</div>
+		<div class="sharecard-slide-page-footer">
+			<p>长按上图保存邀请卡发送给好友</p>
+			<div class="sharecard-slide-page-footer_list-container">
+				<div class="sharecard-slide-page-footer_list">
+					<span class=""><img data-id="93" data-index="0" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_93_09ed8427b6fd6599f1e116109287684b.jpg" alt=""></span><span class=""><img data-id="231" data-index="1" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_231_94f6c9bc1032233d13f2557a1a1cbbd9.jpg" alt=""></span><span class=""><img data-id="117" data-index="2" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_960c11ffc0b16c09d131f60194656d90.jpg" alt=""></span><span class=""><img data-id="80" data-index="3" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_d57a164ab4ce3c346b530a7fce4063d4.jpg" alt=""></span><span
+						class="sc-clide-active"><img data-id="82" data-index="4" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_82_9674606f8735e34370178cb07a8ac5ae.jpg" alt=""></span><span class=""><img data-id="77" data-index="5" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_77_de6749a5f1d63e7e6c14245e7f7d6e02.jpg" alt=""></span><span class=""><img data-id="76" data-index="6" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_d72e6f6b238dd149a8bcc558a51c829b.jpg" alt=""></span><span class=""><img data-id="65" data-index="7" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_c6e7aefe2c6aa5ed2e0f2fef1fd60e31.jpg" alt=""></span><span
+						class=""><img data-id="85" data-index="8" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_af3e15c102abb53b3e3322ca7c6dbab5_Ec9Jb61.jpg" alt=""></span><span class=""><img data-id="54" data-index="9" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_None_a7f415d2c79c90602531f595bdb12cc5.jpg" alt=""></span><span class=""><img data-id="31" data-index="10" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_31_a08b89d3a935814c46c6042148ae05ca.jpg" alt=""></span><span class=""><img data-id="22" data-index="11" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_22_e66c137eda785a5d712a611a6daed756.jpg" alt=""></span><span
+						class=""><img data-id="4" data-index="12" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_4_8fe5876ee3a5522208e9c9ca69f542a2.jpg" alt=""></span><span class=""><img data-id="7" data-index="13" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_7_36d92ec529dea7224132a8cd72126f70.jpg" alt=""></span><span class=""><img data-id="34" data-index="14" src="http://invitecard-1253442168.image.myqcloud.com/invitecard_temp_avatar/invitecard_34_441fb34b1c206c750514720dc2160f2c.jpg" alt=""></span>
+				</div>
+			</div>
+		</div>
+		<div class="" style="display: none;">
+			<div class="qr-dialog">
+				<div class="weui-mask"></div>
+				<div class="content">
+					<div class="content-title">添加二维码或链接至宣传渠道</div>
+					<div class="liveroom-setting-header margin-bottom">
+						<div class="rect"></div>
+						<div class="title">
+							<!-- react-text: 91 -->
+							长按二维码保存
+							<!-- /react-text -->
+						</div>
+					</div>
+					<div class="qr">
+						<img
+							src="data:image/png;base64,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"
+							alt="二维码">
+					</div>
+					<div class="qr-desc">
+						<!-- react-text: 95 -->
+						二维码过期时间为：
+						<!-- /react-text -->
+						<!-- react-text: 96 -->
+						2018-01-08
+						<!-- /react-text -->
+					</div>
+					<div class="liveroom-setting-header ">
+						<div class="rect"></div>
+						<div class="title">
+							<!-- react-text: 100 -->
+							点击复制链接
+							<!-- /react-text -->
+						</div>
+					</div>
+					<div class="url-wrap">
+						<div class="url"></div>
+						<button id="copy-btn" data-clipboard-text="" class="weui-btn weui-btn_primary copy-btn">复制链接</button>
+					</div>
+					<button class="weui-btn weui-btn_primary close-btn">关闭</button>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;">
+			<div class="weui-mask_transparent"></div>
+			<div class="weui-toast">
+				<i class="weui-icon-success-no-circle weui-icon_toast"></i>
+				<p class="weui-toast_content">复制成功</p>
+			</div>
+		</div>
+	</div>
+</div>
+{/block} {block name="script"}
+<script type="text/javascript">
+	var vm = new Vue({
+		el : '#app',
+		data : {
+			video : {
+				url : ''
+			},
+			favor : {
+				text : '立即报名',
+				isshow : false
+			},
+			content : '',
+		},
+		created : function() {
+			//获得课程详细
+			//this.getContent();
+			//$(".ui-content").removeClass('ui-hide');
+		},
+		methods : {
+			videoinfo : function() {
+				let
+				_this = this;
+				$.get('videoinfo.html', {
+					live_id : "{$detail.id}"
+				}, function(res) {
+					if (res['code'] == 1) {
+						_this.video = res['video'];
+						$("#video").load();
+						_this.videoplay();
+					} else {
+						_this.isFavorSuccess(res);
+					}
+				})
+			},
+
+			videoplay : function() {
+				$.get('videoplay.html', {
+					live_id : "{$detail.id}"
+				}, function(res) {
+					$("#video").play();
+				})
+			},
+
+			getContent : function() {
+				$.showLoading();
+				let
+				_this = this;
+				$.get('/guanke/mobile.course/content.html', {
+					course_id : "{$detail.course_id}"
+				}, function(res) {
+					_this.content = res;
+					_this.videoinfo();
+					$.hideLoading();
+				})
+			},
+
+			doFavor : function() {
+				let
+				_this = this;
+				if (_this.favor.text == '审核中') {
+					$.alert('请耐心等待审核');
+					return;
+				}
+				if ("{:empty($detail['member']->mobile)}" == "1") {
+					$.prompt({
+						title : '立即报名',
+						text : '输入手机号免费注册成为会员，免费观看更多精彩直播课程及体验线下活动',
+						input : '',
+						empty : false, // 是否允许为空
+						onOK : function(input) {
+							$.get('favor.html', {
+								live_id : "{$detail.id}",
+								mobile : input
+							}, function(res) {
+								_this.isFavorSuccess(res);
+							})
+						},
+						onCancel : function() {
+						}
+					});
+				} else {
+					$.get('favor.html', {
+						live_id : "{$detail.id}"
+					}, function(res) {
+						_this.isFavorSuccess(res);
+					})
+				}
+			},
+
+			isFavorSuccess : function(res) {
+				let
+				_this = this;
+				if (res['code'] != 1) {
+					switch (res['error']) {
+					case 'unfavor':
+						_this.favor.text = '立即报名';
+						_this.favor.isshow = true;
+						break;
+					case 'unveryfy':
+						_this.favor.text = '审核中';
+						_this.favor.isshow = true;
+						break;
+					default:
+						_this.favor.isshow = false;
+					}
+				} else {
+					_this.favor.isshow = false;
+				}
+				$.alert(res['msg']);
+			}
+		}
+	})
+
+	$(function() {
+		//修正内容距离顶部的高度
+		$(".ui-content").css('padding-top', $(".ui-video-fixed").height());
+	})
+</script>
+
+
+{/block}

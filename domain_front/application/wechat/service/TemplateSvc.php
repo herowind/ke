@@ -117,7 +117,12 @@ class TemplateSvc
     	foreach ($form as $val){
     		$msgData[$val['k']] = ['value'=>$val['v'],'color'=>$val['c']];
     	}
-    	$openids = explode(',', $task['touser']);
+    	if(!is_array($task['touser'])){
+    		$openids = explode(',', $task['touser']);
+    	}else{
+    		$openids = $task['touser'];
+    	}
+    	
     	foreach ($openids as $val){
     		$officialAccount->template_message->send([
     				'touser' => $val,

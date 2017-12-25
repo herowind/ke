@@ -17,6 +17,8 @@ namespace app\guanke\controller\mobile;
 use app\guanke\model\GuankeContentpage;
 use app\guanke\model\GuankeTeacher;
 use app\manage\model\UserMember;
+use app\guanke\model\GuankeLivemember;
+use think\Db;
 
 class Teacher extends SchoolController {
 	public function initialize() {
@@ -134,6 +136,7 @@ class Teacher extends SchoolController {
 					'member_id' => $this->getMid(),
 					'avatar' =>$memberDetail['headimgurl'],
 					'name' =>$memberDetail['nickname'],
+					'openid' =>$this->getOpenid(),
 					'mobile' =>$mobile,
 					'isdisplay' =>0,
 					'isveryfy' =>0,
@@ -145,4 +148,51 @@ class Teacher extends SchoolController {
 			$this->error('请先关注公众号');
 		}
 	}
+	
+	public function authmember(){
+		$this->initMember();
+		return $this->fetch();
+	}
+	
+	/**
+	 * 查看审核信息
+	 */
+	public function authmemberlist(){
+		$params = $this->request->param();
+		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
+		if(empty($teacher) || empty($teacher['isreceive'])){
+			$this->error('无权查看');
+		}
+		$pageData = GuankeLivemember::where('cid',$this->getCid())->where('isveryfy',$params['isveryfy'])->order('create_time desc')->paginate(20);
+		return $pageData;
+	}
+	/**
+	 * 授权信息
+	 */
+	public function doauth(){
+		$params = $this->request->param();
+		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
+		if(empty($teacher) || empty($teacher['isreceive'])){
+			$this->error('无权审核');
+		}
+		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
+		$member->isveryfy = $params['isveryfy'];
+		$member->save();
+		return ['code'=>1,'msg'=>'操作成功'];
+	}
+	
+	/**
+	 * 删除信息
+	 */
+	public function doauthdelete(){
+		$params = $this->request->param();
+		$teacher = GuankeTeacher::where('cid',$this->getCid())->where('openid',$this->getOpenid())->find();
+		if(empty($teacher) || empty($teacher['isreceive'])){
+			$this->error('无权审核');
+		}
+		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
+		$member->delete(true);
+		return ['code'=>1,'msg'=>'操作成功'];
+	}
+	
 }

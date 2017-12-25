@@ -9,6 +9,9 @@ a{
   height: 100%;
 }
 
+.text-red{color:#b10;}
+.text-orange{color:#f60;}
+.text-blue{color:#0ae;}
 
 /** 通用头部-跑马灯通知信息 */
 .ui-notice {
@@ -570,6 +573,41 @@ a{
 .ui-content{
   position: relative;
   background: #fff;
+}
+
+.ui-tabs {
+  padding-bottom: 5px;
+  z-index: 2;
+  padding-top: 5px;
+  width: 100%;
+  background-color: #fff;
+  flex: 0 0 auto;
+}
+
+.ui-tabs-fixed {
+  top: 0px;
+  position: fixed;
+}
+
+.ui-tabs-wrap {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 16px;
+  line-height: 2em;
+}
+
+.ui-tab {
+  color: #000;
+  line-height: 1.7em;
+  font-size: 16px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #fff;
+}
+
+.ui-tab.active {
+  border-bottom: 2px solid rgba(0,194,116,1);
+  color: rgba(0,194,116,1);
 }
 
 .ui-tab-content {
