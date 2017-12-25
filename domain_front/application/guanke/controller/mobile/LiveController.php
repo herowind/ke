@@ -202,7 +202,7 @@ abstract class LiveController extends SchoolController {
 			}
 			//需要审核，则通知管理员
 			if($live['membervisibility'] == 3){
-				$openids = GuankeTeacher::where('cid',$this->getCid())->find('isreceive',1)->column('openid');
+				$openids = GuankeTeacher::where('cid',$this->getCid())->where('isreceive',1)->column('openid');
 				$task['form'] = [
 						['k'=>'first',   	't'=>'头部信息',  'v'=>'有个新的申请等待审核（'.$live['member']->nickname?:'新客户）',    'c'=>'#0033cc'],
 						['k'=>'keyword1', 	't'=>'申请日期',  'v'=>date('Y-m-d H:s'),                'c'=>'#0033cc'],
