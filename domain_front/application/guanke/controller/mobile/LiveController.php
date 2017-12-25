@@ -80,6 +80,7 @@ abstract class LiveController extends SchoolController {
 			$data = [
 					'livetype'		=> $live['livetype'],
 					'live_id' 		=> $live['id'],
+					'live_name' 	=> $live['name'],
 					'cid'			=> $live['member']->cid,
 					'member_id'		=> $live['member']->id,
 					'openid'		=> $live['member']->openid,
