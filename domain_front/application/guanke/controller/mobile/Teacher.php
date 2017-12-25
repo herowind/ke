@@ -18,6 +18,10 @@ use app\guanke\model\GuankeContentpage;
 use app\guanke\model\GuankeTeacher;
 use app\manage\model\UserMember;
 use app\guanke\model\GuankeLivemember;
+use app\guanke\model\GuankeLivecourse;
+use app\guanke\model\GuankeLiveschool;
+use app\guanke\model\GuankeLiveactive;
+use app\wechat\service\TemplateSvc;
 use think\Db;
 
 class Teacher extends SchoolController {
@@ -180,6 +184,11 @@ class Teacher extends SchoolController {
 		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
 		$member->isveryfy = $params['isveryfy'];
 		$member->save();
+		//发送通知
+		if($member->isveryfynotice){
+			$this->authWxnotice($member);
+			GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->update(['isveryfynotice' => 1]);
+		}
 		return ['code'=>1,'msg'=>'操作成功'];
 	}
 	
@@ -196,6 +205,42 @@ class Teacher extends SchoolController {
 		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
 		$member->delete(true);
 		return ['code'=>1,'msg'=>'操作成功'];
+	}
+	
+	
+	/**
+	 * 发送微信报名通知
+	 * @param unknown $live
+	 */
+	protected function authWxnotice($member){
+		$this->initOfficialAccount();
+		switch($member->livetype){
+			case 'livecourse':
+				$live['livetypetext'] = '课程报名';
+				break;
+			case 'liveschool':
+				$live['livetypetext'] = '看护申请';
+				break;
+			case 'liveactive':
+				$live['livetypetext'] = '活动报名';
+				break;
+			default:
+				return ['code'=>0,'msg'=>'信息获取失败,请重新操作'];
+		}
+		
+		//如果绑定了微信公众号，则发送通知
+		$task['form'] = [
+				['k'=>'first',    't'=>'通知信息',  'v'=>"您好，您的 {$live['livetypetext']} 已受理完毕",    'c'=>'#000'],
+				['k'=>'keyword1', 't'=>'审核内容',  'v'=>$member->live_name,                			'c'=>'#0033cc'],
+				['k'=>'keyword2', 't'=>'审核结果',  'v'=>$member->isveryfy==1?'审核通过':'审核拒绝',           'c'=>'#0033cc'],
+				['k'=>'remark',   't'=>'备注',      'v'=>'请点击查看详情☞', 'c'=>'#ff3333'],
+		];
+		$task['template_id'] = TemplateSvc::getTemplateIdByCid($member->cid, 'OPENTM401683926');
+		$task['touser'] = $member->openid;
+		$task['tourl'] = APP_SITE."/guanke/mobile.{$live['livetype']}/detail.html?sid={$member->school_id}&live_id={$member->live_id}";
+		if($task['template_id']){
+			TemplateSvc::openidSend($this->officialAccount, $task);
+		}
 	}
 	
 }

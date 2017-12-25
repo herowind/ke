@@ -81,6 +81,7 @@ abstract class LiveController extends SchoolController {
 					'livetype'		=> $live['livetype'],
 					'live_id' 		=> $live['id'],
 					'live_name' 	=> $live['name'],
+					'school_id'		=> $live['school']->id,
 					'cid'			=> $live['member']->cid,
 					'member_id'		=> $live['member']->id,
 					'openid'		=> $live['member']->openid,
@@ -197,7 +198,7 @@ abstract class LiveController extends SchoolController {
 			}
 			$task['template_id'] = TemplateSvc::getTemplateIdByCid($live['school']->cid, $templateShortId);
 			$task['touser'] = $live['member']->openid;
-			$task['tourl'] = APP_SITE."/guanke/mobile.{$live['livetype']}/detail.html?sid={$live['school']->cid}&live_id={$live['id']}";
+			$task['tourl'] = APP_SITE."/guanke/mobile.{$live['livetype']}/detail.html?sid={$live['school']->id}&live_id={$live['id']}";
 			if($task['template_id']){
 				TemplateSvc::openidSend($this->officialAccount, $task);
 			}
@@ -213,7 +214,7 @@ abstract class LiveController extends SchoolController {
 				];
 				$task['template_id'] = TemplateSvc::getTemplateIdByCid($live['school']->cid, 'OPENTM413025199');
 				$task['touser'] = $openids;
-				$task['tourl'] = APP_SITE."/guanke/mobile.teacher/authmember.html?sid={$live['school']->cid}&isveryfy=0";
+				$task['tourl'] = APP_SITE."/guanke/mobile.teacher/authmember.html?sid={$live['school']->id}&isveryfy=0";
 				if($task['template_id']){
 					TemplateSvc::openidSend($this->officialAccount, $task);
 				}

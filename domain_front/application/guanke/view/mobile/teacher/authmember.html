@@ -22,18 +22,18 @@
 						<img class="weui-media-box__thumb" :src="item.avatar" style="border-radius:3px;">
 					</div>
 					<div class="weui-media-box__bd">
-						<h4 class="weui-media-box__title">{{item.nickname?item.nickname:'新用户'}}<a :href="'tel:'+item.mobile" class="weui-badge" style="background:rgba(0,194,116,0.5);margin-top:-5px;" ><img style="float:left;margin-top:1px;" src="/guanke/images/icons/tel.png" width="12" height="12"><span>{{item.mobile}}</span></a></h4>
-						<p class="weui-media-box__desc" v-if="item.livetype=='livecourse'"><span class="text-blue">课程报名</span>：{{item.live_name}}</p>
+						<h4 class="weui-media-box__title">{{item.nickname?item.nickname:'新用户'}}<a :href="'tel:'+item.mobile" class="weui-badge" style="background:rgba(0,0,0,1);margin-top:-4px;" ><img style="float:left;margin-top:1px;" src="/guanke/images/icons/tel.png" width="12" height="12"><span>{{item.mobile}}</span></a></h4>
+						<p class="weui-media-box__desc" v-if="item.livetype=='livecourse'" style="padding-top:3px;"><span class="text-blue">课程报名</span>：{{item.live_name}}</p>
 						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveschool'"><span class="text-orange">看护申请</span>：{{item.live_name}}</p>
 						<p class="weui-media-box__desc" v-else-if="item.livetype=='liveactive'"><span class="text-red">活动报名</span>：{{item.live_name}}</p>
-						<ul class="weui-media-box__info">
+						<ul class="weui-media-box__info" style="margin-top:5px;">
 			              <li class="weui-media-box__info__meta">{{item.create_time}}</li>
 			              <li class="weui-media-box__info__meta weui-media-box__info__meta_extra"><a href="javascript:void(0)" class="text-blue"  @click="doDelete(item.id)">删除</a></li>
 			            </ul>
 					</div>
-					<span class="weui-cell__ft">
-						<button class="weui-btn weui-btn_primary weui-btn_mini" @click="doAuth(item.id,1)" v-show="activeTab==0">同意</button>
-						<button class="weui-btn weui-btn_warn weui-btn_mini" @click="doAuth(item.id,0)" v-show="activeTab==1">拒绝</button></span>
+					<div>
+						<button class="weui-btn weui-btn_primary weui-btn_mini" @click="doAuth(item.id,1)" v-show="activeTab==0" >同意</button>
+						<button class="weui-btn weui-btn_warn weui-btn_mini" @click="doAuth(item.id,0)" v-show="activeTab==1">拒绝</button></div>
 				</div>
 			</div>
 		</div>
@@ -96,20 +96,23 @@ var vm = new Vue({
 			})
 		},
 		doDelete:function(id){
-			$.showLoading();
 			let _this = this;
 			let _memberList = this.memberList;
-			$.get('/guanke/mobile.teacher/doauthdelete.html',{id:id},function(res){
-				if(res.code==1){
-					for(let i=0,len=_memberList.length; i<len; i++) {
-				      	if(_memberList[i].id == id) {
-				      		_memberList.splice(i, 1);
-				        	break;
-				      	}
-				    }
-					_this.memberList = _memberList;
-				}
-				$.hideLoading();
+			$.confirm("您确定要删除?", "确认删除?", function() {
+		        $.showLoading();
+						$.get('/guanke/mobile.teacher/doauthdelete.html',{id:id},function(res){
+							if(res.code==1){
+								for(let i=0,len=_memberList.length; i<len; i++) {
+							      	if(_memberList[i].id == id) {
+							      		_memberList.splice(i, 1);
+							        	break;
+							      	}
+							    }
+								_this.memberList = _memberList;
+							}
+							$.hideLoading();
+							});
+		      }, function() {
 			})
 		}
 	}
