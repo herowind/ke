@@ -178,11 +178,13 @@ class Teacher extends SchoolController {
 		if(empty($teacher) || empty($teacher['isreceive'])){
 			$this->error('无权审核');
 		}
+		
 		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
 		$member->isveryfy = $params['isveryfy'];
+		$isveryfynotice = $member->isveryfynotice;
 		$member->save();
 		//发送通知
-		if($member->isveryfynotice){
+		if($isveryfynotice){
 			$this->authWxnotice($member);
 			GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->update(['isveryfynotice' => 1]);
 		}
