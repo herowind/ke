@@ -181,10 +181,8 @@ class Teacher extends SchoolController {
 		
 		$member = GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->find();
 		$member->isveryfy = $params['isveryfy'];
-		$isveryfynotice = $member->isveryfynotice;
 		$member->save();
-		//发送通知
-		if($isveryfynotice){
+		if(empty($member->isveryfynotice)){
 			$this->authWxnotice($member);
 			GuankeLivemember::where('cid',$this->getCid())->where('id',$params['id'])->update(['isveryfynotice' => 1]);
 		}
@@ -229,14 +227,14 @@ class Teacher extends SchoolController {
 		
 		//如果绑定了微信公众号，则发送通知
 		$task['form'] = [
-				['k'=>'first',    't'=>'通知信息',  'v'=>"您好，您的 {$live['livetypetext']} 已受理完毕",    'c'=>'#000'],
-				['k'=>'keyword1', 't'=>'审核内容',  'v'=>$member->live_name,                			'c'=>'#0033cc'],
+				['k'=>'first',    't'=>'通知信息',  'v'=>"您好，您的请求已受理完毕",    'c'=>'#000'],
+				['k'=>'keyword1', 't'=>'审核内容',  'v'=>"[{$live['livetypetext']}]".$member->live_name,                			'c'=>'#0033cc'],
 				['k'=>'keyword2', 't'=>'审核结果',  'v'=>$member->isveryfy==1?'审核通过':'审核拒绝',           'c'=>'#0033cc'],
 				['k'=>'remark',   't'=>'备注',      'v'=>'请点击查看详情☞', 'c'=>'#ff3333'],
 		];
 		$task['template_id'] = TemplateSvc::getTemplateIdByCid($member->cid, 'OPENTM401683926');
 		$task['touser'] = $member->openid;
-		$task['tourl'] = APP_SITE."/guanke/mobile.{$live['livetype']}/detail.html?sid={$member->school_id}&live_id={$member->live_id}";
+		$task['tourl'] = APP_SITE."/guanke/mobile.{$member->livetype}/detail.html?sid={$member->school_id}&live_id={$member->live_id}";
 		if($task['template_id']){
 			TemplateSvc::openidSend($this->officialAccount, $task);
 		}
