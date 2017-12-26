@@ -18,9 +18,6 @@ use app\guanke\model\GuankeContentpage;
 use app\guanke\model\GuankeTeacher;
 use app\manage\model\UserMember;
 use app\guanke\model\GuankeLivemember;
-use app\guanke\model\GuankeLivecourse;
-use app\guanke\model\GuankeLiveschool;
-use app\guanke\model\GuankeLiveactive;
 use app\wechat\service\TemplateSvc;
 use think\Db;
 
