@@ -27,9 +27,7 @@ class Livecourse extends LiveController {
 	 * 直播课程列表页
 	 */
 	public function index(){
-		$list = GuankeLivecourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
-		$this->assign('list',$list);
-		return $this->fetch (); 
+		return $this->fetch(); 
 	}
 	
 	/**
