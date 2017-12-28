@@ -8,210 +8,182 @@
     background-size: contain;
 }
 
-.ui-cards{
-	padding-top:15px;
+.cb-card {
+    background: transparent;
+	margin: 0;
 }
-.ui-cards-hd{
-	border-left:3px solid #996666;
-	line-height:28px;
-	padding-left:10px;
-	margin-left:10px;
-	color:#fff;
+
+.cb-card__wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 570px;
+}
+
+.cb-card .header {
+    background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat top;
+    background-size: 100% 100%;
+    border: none;
+    position: relative;
+    z-index: 2;
+	height: 18px;
+	bottom: -1px;
+}
+
+
+.cb-card .footer{
+	background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat bottom; 
+	-webkit-transform:rotate(180deg);   
+	background-size: 100% 100%;
+    border: none;
+    position: relative;
+    z-index: 2;
+	height: 18px;
+	bottom: 1px;
+}
+.cb-card__content{
+	background: #fff7ef;
+    position: relative;
+    border-left: 2px solid #ffb518;
+    border-right: 2px solid #ffb518;
+	padding-bottom: 12px;
+	padding-left: 8px;
+    padding-right: 8px;
+}
+
+
+.cb-card .cb-card__title {
+    text-align: center;
+    letter-spacing: 5px;
+    line-height: 40px;
+    margin-bottom: 25px;
+    height: 40px;
+	font-size: 22px;
 	font-weight:bold;
+	font-style: italic;
+	font-family:'微软雅黑';
 }
-.ui-cards-bd{
-	display:flex;
-	flex-wrap:wrap;
+
+.cb-card .cb-card__title .title2 {
+	margin-left: 20px;
+    margin-right: 20px;
+	background-image: -webkit-linear-gradient(left, #FE940E , #FE2202);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cb-card .cb-card__title .lingxing1{
+	color:#FFE89A;
+	font-size:11px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+.cb-card .cb-card__title .lingxing2{
+	color:#FFDD5B;
+	font-size:16px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+
+.cb-card .bubble{
+	text-align: center;
+	font-size:12px;
+}
+
+.cb-card .bubble span {
+    color: #ff9300;
+    border-radius: 10px;
+    background-color: #ffd9a6;
+    letter-spacing: 1px;
+	padding: 5px;
+	padding-left: 8px;
+    padding-right: 8px;
+	
+
+}
+
+.cb-card .cb-card__media{
 	width:100%;
-	justify-content:flex-start;
-	padding:10px 5px;
+	height:100%;
+	padding:10px 30px;
 	box-sizing:border-box;
+	border-bottom:2px dashed #FE940E;
 	
 }
-.ui-cards .ui-card50{
-	width:50%;
-	padding:5px;
-	box-sizing:border-box;	
-}
 
-.ui-cards .ui-card100{
+.cb-card .cb-card__media img{
 	width:100%;
-	padding:5px;
-	box-sizing:border-box;	
+	height:100%;
+	border-radius:5px;
+	-webkit-box-shadow: #666 0px 0px 18px;
 }
 
-.ui-card-box{
-	background:#fff;
-	border-radius:5px;
-	box-sizing:border-box;
+.cb-card .cb-card__info{
+	margin-top:10px;
+	color: #ff9300;
 	text-align:center;
-	-webkit-box-shadow: #666 0px 0px 8px;
-	-moz-box-shadow: #666 0px 0px 8	px;
-	border-bottom-left-radius:2px;
-	border-bottom-right-radius:2px;
-}
-
-.ui-card-box_pic{
-	width:100%;
-	border-top-left-radius:3px;
-	border-top-right-radius:3px;
-}
-.ui-card-box_name{
-	display:block;
-	line-height:30px;
-	text-align:left;
-	padding-left:5px;
-	font-size:13px;
-	color:#336699;
-  background-image: -webkit-gradient(linear, left top, right top, color-stop(0, #fefefe), color-stop(1, #ccc));
-  margin-top:-7px;
-  border-bottom-left-radius:2px;
-	border-bottom-right-radius:2px;
-	border-left:2px solid #336699;
-}
-
-
-.ui-card-box_hd{
-	position:relative;
-}
-.ui-card-box_hd .live{
-	position:absolute;
-	color:#f76260;
-	background: rgba(255,255,255,0.2);
-	width:60px;
-	font-size:13px;
-	padding-right:10px;
-	font-weight:bold;
-	border-top-right-radius:20px;
-	border-bottom-right-radius:20px;
-	line-height:30px;
-	top:15px;
-	left:0;
-}
-
-
-.ui-card-box_hd .time{
-	position:absolute;
-	width:100%;
-	height:100px;
-	top:30px;
-	left:0;
-}
-.ui-card-box_hd .time-template{
-	width:180px;
-	height:60px;
-	border-radius:5px;
-	border-top:5px solid green;
-	margin:auto;
-	font-size:14px;
-	color:#fff;
-	text-align: center;
-	position:relative;
-	background:rgba(0,0,0,0.5);
-}
-
-.ui-card-box_hd .time-template span{
-	display:block;
-	margin-top:-18px;
-}
-
-.ui-card-box_bd .time-alert{
-  width: 16px;
-  height: 16px;
-}
-.ui-card-box_bd{
-	text-align:left;
 	font-size:16px;
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ccc));
-}
-
-.ui-card-box_bd .status-bd__btn {
-  border: 1px solid #f76260;
-  border-radius: 5px;
-  text-align:center;
-  line-height:20px;
-  height:20px;
-  width:55px; 
-  background: #fff;
-  color: #f76260;
-  font-size: 12px;
-  font-weight:800;  
-}
-
-.ui-card-box_hd .live.ready {
-  border: 1px solid rgba(0,194,116,1);
-  color:rgba(0,194,116,1);
-  background: rgba(255,255,255,0.5)
-}
-
-.ui-card-box_hd .live.finish {
-  border: 1px solid #ccc;
-  color:#ccc;
-  background: rgba(255,255,255,0.5)
-}
-
-.coursename{
-	font-size:13px;
-	color:#f76260;
-}
-
-.ui-card-box_bd  span.start{
-	color:#f76260;
-}
-
-.ui-card-box_bd span.finish{
-	color:#ccc;
-}
-
-.ui-card-box_bd  span.ready{
-	color:rgba(0,194,116,1);
+	font-weight:bold;
 }
 
 .course-item{
 	position:relative;
+	display:block;
 	text-align:center;
-	max-width:480px;
-	height:300px;
-	margin:auto;
+	height:200px;
+	margin-left:-20px;
 }
+
+.course-item .course-container{
+	position:relative;
+	margin-left:-40px;
+}
+
+.course-item:nth-child(2n) .course-container{
+ margin-left:-10px;
+}
+
 .course-item img.course-box{
-	width:480px;
-	height:270px;
-	position:absolute;;
+	position:absolute;
+	width:340px;
+	height:200px;
 	margin:auto;
 	z-index:99;
+	
 }
 
 .course-item img.course-img{
-	width:350px ;
-	height:175px;
-	margin-top:30px;
-	margin-left:45px;
+	position:relative;
+	width:250px ;
+	height:125px;
+	margin-top:20px;
+	padding-left:30px;
 	z-index:0;
+	
 }
 
-.course-item:nth-child(2) img.course-box{
+.course-item:nth-child(2n) img.course-box{
 	transform: rotateY(180deg)
 }
 
-.course-item:nth-child(2) img.course-img{
+.course-item:nth-child(2n) img.course-img{
+	margin-left:30px;
+}
+
+.course-item:nth-child(2n) .course-info{
 	margin-left:85px;
 }
 
-.course-item:nth-child(2) .course-info{
-	margin-left:120px;
-}
 
-
-.course-info{
+.course-item .course-info{
+	display:block;
 	position:relative;
-
-	font-size:18px;	
+  	text-align:center;
+	font-size:14px;	
 	color:#fff;
-	padding:10px;
-	width:300px;
+	padding:5px;
+	width:250px;
 	background:rgba(0,0,0,0.7);
-	margin-top:-40px;
+	margin-top:-20px;
 	margin-left:100px;
 	z-index:1;
 }
@@ -219,57 +191,39 @@
 </style>
 {/block}
 {block name="body"}
-<div class="swiper-container">
-	<div class="swiper-wrapper">
-		<!-- Slides -->
-		<div class="swiper-slide">
-			<img src="{$school.banner}" />
-		</div>
-		{volist name="slide" id="item"}
-		<div class="swiper-slide">
-			{empty name="item.link"}
-			<img src="{$item.banner}" />
-			{else/}
-			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
-			{/empty}			
-		</div>
-		{/volist}
-	</div>
-	<div class="swiper-pagination"></div>
-</div>
 
 
 
 <div class="ui-content ui-hide">
 
-		<div class="ui-cards" style="padding-top:0px;" v-if="courseList.length>0">
-			<div class="ui-cards-bd">
-				<a class="ui-card100" v-for="item in livecourseList" :href="'/guanke/mobile.livecourse/detail.html?school_id={$school.id}&live_id='+item.id">
-					<div class="ui-card-box">
-						<div class="ui-card-box_hd">
-							<img class="ui-card-box_pic" :src="item.course.banner">
-							<span class="live" :class="item.process.status">{{item.process.button}}</span>
-						</div>
-						
-						<div class="ui-card-box_bd">
-							<div class="" style="color:#333;padding-left:8px;">{{item.name}}</div>
-							<div style="display:flex;text-align:left;padding-bottom:5px;font-size:13px;">
-								<span :class="item.process.status"  style="margin-left:8px;width:50%;">课程：{{item.course.name}}</span>
-								<span :class="item.process.status" style="margin-right:8px;width:50%;text-align:right;"><img class="time-alert swing animated infinite " style="vertical-align:middle;margin-top:-3px;" src="/guanke/images/icons/time_alert.png" /> {{item.process.time}}</span>
-							</div>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
-
-	<div class="ui-tab-content" >	
-		<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
-			<div class="course-item" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
+	<div class="cb-card" v-for="item in livecourseList">
+		<div class="cb-card__wrapper">
+			<div class="header"></div>
+			<div class="cb-card__content">
+				<div class="cb-card__title">
+					<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
+					<span class="title2">课堂直播</span>
+					<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
+				</div>
 				
-				<img class="course-box" src="/guanke/images/course_box.png">
-				<img class="course-img" :src="item.banner" >
-				<div class="course-info">{{item.name}}</div>
+				<div class="cb-card__media">
+					<img :src="item.course.banner">
+				</div>
+				<div class="cb-card__info">
+					<div>{{item.name}}</div>
+				</div>
+			</div>
+			<div class="footer"></div>
+		</div>
+	</div>
+
+
+	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
+		<div class="course-item" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
+			<div class = "course-container">
+			<img class="course-box" src="/guanke/images/course_box.png">
+			<img class="course-img" :src="item.banner" >
+			<div class="course-info">{{item.name}}</div>
 			</div>
 		</div>
 	</div>
