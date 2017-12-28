@@ -245,12 +245,22 @@
 	margin-left:100px;
 	z-index:1;
 }
-
+.share {
+    background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-share.png) no-repeat;
+    background-size: 100% 100%;
+    widows: 100%;
+    margin: 0;
+    text-align: center;
+	color:#fff;
+	font-size:16px;
+	line-height:35px;
+	height:35px;
+}
 </style>
 {/block}
 {block name="body"}
 
-<div class="swiper-container">
+<div class="swiper-container" >
 	<!-- Additional required wrapper -->
 	<div class="swiper-wrapper">
 		<!-- Slides -->
@@ -289,6 +299,8 @@
 				<div class="cb-card__info">
 					<div>{{item.name}}</div>
 				</div>
+				<div class="share">进入观看</div>
+				
 			</div>
 			<div class="footer"></div>
 		</div>
