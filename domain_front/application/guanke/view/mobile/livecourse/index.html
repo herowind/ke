@@ -250,10 +250,26 @@
 {/block}
 {block name="body"}
 
-
-
+<div class="swiper-container">
+	<!-- Additional required wrapper -->
+	<div class="swiper-wrapper">
+		<!-- Slides -->
+		<div class="swiper-slide">
+			<img src="{$school.banner}" />
+		</div>
+		{volist name="slide" id="item"}
+		<div class="swiper-slide">
+			{empty name="item.link"}
+			<img src="{$item.banner}" />
+			{else/}
+			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
+			{/empty}			
+		</div>
+		{/volist}
+	</div>
+	<div class="swiper-pagination"></div>
+</div>
 <div class="ui-content ui-hide">
-
 	<div class="cb-card" v-for="item in livecourseList">
 		<div class="cb-card__wrapper">
 			<div class="header"></div>
