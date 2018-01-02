@@ -16,6 +16,7 @@ namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeSchool;
 use app\guanke\model\GuankeContentpage;
+use app\guanke\model\GuankeSlide;
 
 class School extends SchoolController {
 	public function initialize() {
@@ -72,5 +73,10 @@ class School extends SchoolController {
 	public function listdata(){
 		$list = GuankeSchool::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
+	}
+	
+	public function listslide(){
+		$slide = GuankeSlide::where('cid',$this->getCid())->where('channel','school')->where('channelid',$this->getSid())->select();
+		return ['code'=>1,'msg'=>'查询成功','data'=>$slide];
 	}
 }

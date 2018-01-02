@@ -299,15 +299,9 @@ background: transparent;
 		<div class="swiper-slide">
 			<img src="{$school.banner}" class="main-img"/>
 		</div>
-		{volist name="slide" id="item"}
-		<div class="swiper-slide">
-			{empty name="item.link"}
-			<img src="{$item.banner}" class="main-img"/>
-			{else/}
-			<img src="{$item.banner}" class="main-img" onclick="document.location.href='{$item.link}'"/>
-			{/empty}			
+		<div class="swiper-slide" v-for="item in slideList">
+			<img :src="item.banner" class="main-img"/>
 		</div>
-		{/volist}
 	</div>
 	<div class="swiper-pagination"></div>
 </div>
@@ -365,9 +359,11 @@ var vm = new Vue({
 	data : {
 		livecourseList:[],
 		courseList:[],
+		slideList:[],
 	},
 	created:function(){
 		this.getLivecourseList();
+		this.getSlide();
 	},
 	methods:{
 		getLivecourseList:function(e){
@@ -379,6 +375,13 @@ var vm = new Vue({
 				_this.courseList = res.data.courseList;
 				$.hideLoading();
 				$(".ui-content").removeClass("ui-hide");
+			})
+		},
+		getSlide:function(e){
+			let _this = this;
+			$.get('/guanke/mobile.school/listslide.html',{school_id:school_id},function(res){
+				console.log(res.data);
+				_this.slideList = res.data;
 			})
 		}
 	}
