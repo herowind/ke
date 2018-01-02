@@ -242,7 +242,7 @@ a{
 
 .ui-item-box {
   display: flex;
-  margin: 12px 10px;
+  margin: 12px 0px;
   width: 100%;
   text-align: -webkit-match-parent;
   overflow: hidden;
@@ -258,7 +258,7 @@ a{
 
 .item-sec1 img {
   height: 100px;
-  width: 160px;
+  width: 120px;
   border-radius:5px;
 }
 

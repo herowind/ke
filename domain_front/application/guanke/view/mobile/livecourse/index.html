@@ -1,17 +1,21 @@
 {extend name="mobile@template/common"/} 
 {block name="style"}
 <style>
-.ui-content{
-	position: relative;
-    background: -webkit-linear-gradient(#ff5400,#ff9300);
+.page{
+	background: -webkit-linear-gradient(#ff5400,#ff9300);
     background: linear-gradient(#ff5400,#ff9300);
     background-size: contain;
+}
+.ui-content{
+	position: relative;
+background: transparent;
     padding:20px 20px
 }
 
 .cb-card {
   background: transparent;
 	margin: 0;
+	margin-bottom:15px;
 }
 
 .cb-card__wrapper {
@@ -256,6 +260,34 @@
 	line-height:35px;
 	height:35px;
 }
+
+.swiper-container {
+	width: 100%;
+	-webkit-perspective: 1200px;
+	-moz-perspective: 1200px;
+	-ms-perspective: 1200px;
+	perspective: 1200px
+}
+
+.swiper-wrapper {
+	margin-top: 10px
+}
+
+.swiper-slide {
+	width: 80%;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d
+}
+
+.swiper-slide .main-img {
+	width: 80%;
+	margin: 0 auto;
+	display: block;
+	border-radius:8px;
+}
+
 </style>
 {/block}
 {block name="body"}
@@ -265,14 +297,14 @@
 	<div class="swiper-wrapper">
 		<!-- Slides -->
 		<div class="swiper-slide">
-			<img src="{$school.banner}" />
+			<img src="{$school.banner}" class="main-img"/>
 		</div>
 		{volist name="slide" id="item"}
 		<div class="swiper-slide">
 			{empty name="item.link"}
-			<img src="{$item.banner}" />
+			<img src="{$item.banner}" class="main-img"/>
 			{else/}
-			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
+			<img src="{$item.banner}" class="main-img" onclick="document.location.href='{$item.link}'"/>
 			{/empty}			
 		</div>
 		{/volist}
@@ -305,16 +337,24 @@
 			<div class="footer"></div>
 		</div>
 	</div>
-
-
 	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
-		<div class="course-item" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
-			<div class = "course-container">
-			<img class="course-box" src="/guanke/images/course_box.png">
-			<img class="course-img" :src="item.banner" >
-			<div class="course-info">{{item.name}}</div>
+		<a class="ui-item"  v-for="item in courseList" href="/guanke/mobile.livecourse/detail.html?id={$item.id}&school_id={$school.id}">
+			<div class="ui-item-box">
+				<div class="item-sec1">
+					<img :src="item.banner" />
+				</div>
+				<div class="item-sec2">
+					<div class="sec2-hd">{{item.name}}</div>
+					<div class="sec2-bd">
+						<div class="sec2-bd__tags">推荐</div>
+						<div class="sec2-bd__btn">小班授课</div>
+					</div>
+					<div class="sec2-ft">
+						<img class="sec2-ft__icon swing animated infinite " src="/guanke/images/icons/time_alert.png" /> <label>上课地点</label>
+					</div>
+				</div>
 			</div>
-		</div>
+		</a>
 	</div>
 </div>
 {/block} {block name="script"}
@@ -343,6 +383,13 @@ var vm = new Vue({
 		}
 	}
 })
+
+var mySwiper=new Swiper(".swiper-container",
+	{	slidesPerView:"auto",
+		centeredSlides:!0,
+		watchSlidesProgress:!0,
+		pagination:".swiper-pagination",
+	});
 
 
 $(function(){
