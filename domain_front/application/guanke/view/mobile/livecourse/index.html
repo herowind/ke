@@ -262,6 +262,31 @@ background: transparent;
 }
 
 
+.swiper-container {
+	width: 100%;
+	-webkit-perspective: 1200px;
+	-moz-perspective: 1200px;
+	-ms-perspective: 1200px;
+	perspective: 1200px
+}
+
+.swiper-wrapper {
+	margin-top: 10px
+}
+
+.swiper-slide {
+	width: 80%;
+	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d
+}
+
+.swiper-slide .main-img {
+	width: 80%;
+	margin: 0 auto;
+	display: block
+}
 </style>
 {/block}
 {block name="body"}
@@ -340,7 +365,9 @@ var vm = new Vue({
 		$.get('/guanke/mobile.school/listslide.html',{school_id:school_id},function(res){
 			_this.slideList = res.data;	
 			$(".swiper-container").swiper({
-		       autoplay: 3000
+		       autoplay: 3000,
+		       slidesPerView:"auto",
+				centeredSlides:!0
 		    });
 		})		
 	},
