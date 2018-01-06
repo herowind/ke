@@ -335,6 +335,15 @@ var vm = new Vue({
 		this.getLivecourseList();
 		this.getSlide();
 	},
+	mounted:function(){
+		let _this = this;
+		$.get('/guanke/mobile.school/listslide.html',{school_id:school_id},function(res){
+			_this.slideList = res.data;	
+			$(".swiper-container").swiper({
+		       autoplay: 3000
+		    });
+		})		
+	},
 	methods:{
 		getLivecourseList:function(e){
 			$.showLoading();
@@ -350,18 +359,12 @@ var vm = new Vue({
 		getSlide:function(e){
 			let _this = this;
 			$.get('/guanke/mobile.school/listslide.html',{school_id:school_id},function(res){
-				console.log(res.data);
-				_this.slideList = res.data;
-				 $(".swiper-container").swiper({
-				        autoplay: 3000
-				    });
-
+				_this.slideList = res.data;	
 			})
 		}
 	}
 })
 $(function(){
-   	
 })
 
 </script>
