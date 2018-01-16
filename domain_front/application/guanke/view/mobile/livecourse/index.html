@@ -2,61 +2,35 @@
 {block name="style"}
 <style>
 .page{
-	background: -webkit-linear-gradient(#ff5400,#ff9300);
-    background: linear-gradient(#ff5400,#ff9300);
-    background-size: contain;
+	background: #fff;
 }
 .ui-content{
 	position: relative;
-background: transparent;
-    padding:20px 20px
+	background: #f0f0f0;
+    padding:0;
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: contain;	
 }
 
-.cb-card {
-  background: transparent;
-	margin: 0;
-	margin-bottom:15px;
+.livecourse {
+	background: #fff;
+	padding-top:10px;
+	padding-bottom:5px;
 }
 
-.cb-card__wrapper {
+.livecourse__wrapper {
     margin-right: auto;
     margin-left: auto;
     max-width: 570px;
 }
 
-.cb-card .header {
-    background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat top;
-    background-size: 100% 100%;
-    border: none;
-    position: relative;
-    z-index: 2;
-	height: 18px;
-	bottom: -1px;
-}
-
-
-.cb-card .footer{
-	background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat bottom; 
-	-webkit-transform:rotate(180deg);   
-	background-size: 100% 100%;
-    border: none;
-    position: relative;
-    z-index: 2;
-	height: 18px;
-	bottom: 1px;
-}
-.cb-card__content{
-	background: #fff7ef;
-    position: relative;
-    border-left: 2px solid #ffb518;
-    border-right: 2px solid #ffb518;
-	padding-bottom: 12px;
-	padding-left: 8px;
-    padding-right: 8px;
-}
-
-
-.cb-card .cb-card__title {
+.livecourse .livecourse__header {
     text-align: center;
     letter-spacing: 5px;
     line-height: 40px;
@@ -68,7 +42,7 @@ background: transparent;
 	font-family:'微软雅黑';
 }
 
-.cb-card .cb-card__title .title2 {
+.livecourse .livecourse__header .header {
 	margin-left: 20px;
     margin-right: 20px;
 	background-image: -webkit-linear-gradient(left, #FE940E , #FE2202);
@@ -76,54 +50,48 @@ background: transparent;
     -webkit-text-fill-color: transparent;
 }
 
-.cb-card .cb-card__title .lingxing1{
+.livecourse .livecourse__header .lingxing1{
 	color:#FFE89A;
 	font-size:11px;
 	-webkit-transform:rotate(90deg);
 	transform:rotate(90deg);
 }
-.cb-card .cb-card__title .lingxing2{
+.livecourse .livecourse__header .lingxing2{
 	color:#FFDD5B;
 	font-size:16px;
 	-webkit-transform:rotate(90deg);
 	transform:rotate(90deg);
 }
 
-.cb-card .bubble{
-	text-align: center;
-	font-size:12px;
-}
-
-.cb-card .bubble span {
-    color: #ff9300;
-    border-radius: 10px;
-    background-color: #ffd9a6;
-    letter-spacing: 1px;
-	padding: 5px;
+.livecourse .livecourse__list{
 	padding-left: 8px;
     padding-right: 8px;
-	
-
 }
 
-.cb-card .cb-card__media{
+.livecourse .livecourse__item{
+	position:relative;
+	margin-bottom:15px;
+}
+
+.livecourse .livecourse__media{
+	position: relative;
 	width:100%;
 	height:100%;
-	padding:10px 15px;
 	box-sizing:border-box;
-	border-bottom:2px dashed #FE940E;
 	z-index:10;
 	
 }
 
-.cb-card .cb-card__media img{
+.livecourse .livecourse__media img{
+	display:block;
 	width:100%;
 	height:100%;
-	border-radius:5px;
-	-webkit-box-shadow: #666 0px 0px 18px;
-	z-index:0; 
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	z-index:-1;
+	background-color:rgba(0,0,0,0.7);
 }
-.cb-card .cb-card__media .mask{  
+.livecourse .livecourse__media .mask{  
     width: 60px;
     height: 60px;
     position: absolute;
@@ -135,7 +103,7 @@ background: transparent;
 	border-radius:50%;
 }  
 
-.cb-card .cb-card__media .arrow {
+.livecourse .livecourse__media .arrow {
     width: 13px;
     height: 15px;
     position: absolute;
@@ -146,7 +114,7 @@ background: transparent;
 	z-index: 8;
 }
 
-.cb-card .cb-card__media .video-btn {
+.livecourse .livecourse__media .video-btn {
     width: 45px;
     height: 45px;
     background: url(/guanke/images/icons/circle_border.png) no-repeat;
@@ -158,6 +126,22 @@ background: transparent;
      animation: rotate 4s .1s linear infinite;
     -webkit-animation: rotate 4s .1s linear infinite;
 	
+}
+
+.livecourse  .livecourse__info{
+	position:absolute;
+	width:100%;
+	color: #fff;
+	text-align:center;
+	height:40px;
+	line-height:40px;
+	font-size:14px;
+	font-weight:bold;
+	background:rgba(0,0,0,0.7);
+	z-index:999;
+	border-bottom-left-radius:5px;
+	border-bottom-right-radius:5px;
+	margin-top:-40px;
 }
 
 
@@ -177,78 +161,109 @@ background: transparent;
 }
 
 
-.cb-card .cb-card__info{
-	margin-top:10px;
-	color: #ff9300;
-	text-align:center;
-	font-size:16px;
-	font-weight:bold;
+.activity__couponspa .couponspa__showTime {
+    transition: all 1s;
+    position: relative;
 }
 
-
-
-.course-item{
-	position:relative;
-	display:block;
-	text-align:center;
-	height:200px;
-	margin-left:-20px;
+.course__wrapper {
+    background: #f0f0f0;
 }
 
-.course-item .course-container{
-	position:relative;
-	margin-left:-40px;
+.course__wrapper .course__list {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 15px 10px 5px;
 }
 
-.course-item:nth-child(2n) .course-container{
- margin-left:-10px;
+.course__list .course__item {
+    width: calc(50% - 10px);
+	margin:5px;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    padding: 10px 10px 15px;
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    border-radius: 4px;
+    overflow: hidden;
+	box-sizing:border-box;
 }
 
-.course-item img.course-box{
-	position:absolute;
-	width:340px;
-	height:200px;
-	margin:auto;
-	z-index:99;
-	
+.course__item img {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+    background-position: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
-.course-item img.course-img{
-	position:relative;
-	width:250px ;
-	height:125px;
-	margin-top:20px;
-	padding-left:30px;
-	z-index:0;
-	
+.course__item .item__title {
+    color: #512b0c;
+    width: 100%;
+    height: 32px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
-.course-item:nth-child(2n) img.course-box{
-	transform: rotateY(180deg)
+.course__item .item__title span{
+	color: #f04141;
 }
 
-.course-item:nth-child(2n) img.course-img{
-	margin-left:30px;
+.course__item .item__tags {
+    color: #999;
+    font-size: 12px;
+    line-height: 12px;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
 }
 
-.course-item:nth-child(2n) .course-info{
-	margin-left:85px;
+.course__item .item__bottom {
+    text-align: center;
 }
 
-
-.course-item .course-info{
-	display:block;
-	position:relative;
-  	text-align:center;
-	font-size:14px;	
-	color:#fff;
-	padding:5px;
-	width:250px;
-	background:rgba(0,0,0,0.7);
-	margin-top:-20px;
-	margin-left:100px;
-	z-index:1;
+.course__item .item__bottom button {
+    background: #f8573f;
+    box-shadow: 2px 2px 4px 0 rgba(255,82,62,.4);
+    border-radius: 6px;
+    font-size: 12px;
+    color: #fff;
+    width: 122px;
+    line-height: 12px;
+    height: 36px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-image: linear-gradient(90deg,#ff8a79,#f04141);
 }
+
 .share {
     background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-share.png) no-repeat;
     background-size: 100% 100%;
@@ -262,32 +277,7 @@ background: transparent;
 }
 
 
-.swiper-container {
-	width: 100%;
-	-webkit-perspective: 1200px;
-	-moz-perspective: 1200px;
-	-ms-perspective: 1200px;
-	perspective: 1200px
-}
 
-.swiper-wrapper {
-	margin-top: 15px
-}
-
-.swiper-slide {
-	width: 95%;
-	-webkit-transform-style: preserve-3d;
-	-moz-transform-style: preserve-3d;
-	-ms-transform-style: preserve-3d;
-	transform-style: preserve-3d
-}
-
-.swiper-slide .main-img {
-	width: 95%;
-	margin: 0 auto;
-	display: block;
-	border-radius:5px;
-}
 </style>
 {/block}
 {block name="body"}
@@ -302,31 +292,44 @@ background: transparent;
 	<div class="swiper-pagination"></div>
 </div>
 <div class="ui-content ui-hide">
-	<div class="cb-card" v-for="item in livecourseList">
-		<div class="cb-card__wrapper">
-			<div class="header"></div>
-			<div class="cb-card__content">
-				<div class="cb-card__title">
-					<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
-					<span class="title2">课堂直播</span>
-					<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
-				</div>
-				
-				<div class="cb-card__media">
-					<img :src="item.course.banner">
-					<span class="arrow"></span>
-					<span class="video-btn"></span>
-					<span class="mask"></span>
-				</div>
-				<div class="cb-card__info">
-					<div>{{item.name}}</div>
-				</div>
-				<div class="share">进入观看</div>
-				
+
+	<div class="livecourse">
+		<div class="livecourse__wrapper">
+			<div class="livecourse__header">
+				<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
+				<span class="header">课堂直播</span>
+				<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
 			</div>
-			<div class="footer"></div>
+			<div class="livecouse__list" >
+				<div class="livecourse__item" v-for="item in livecourseList">
+					<div class="livecourse__media">
+						<img :src="item.course.banner">
+						<span class="arrow"></span>
+						<span class="video-btn"></span>
+						<span class="mask"></span>
+					</div>
+					<div class="livecourse__info">
+						<div>{{item.name}}</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+	
+	<div class="course">
+		<div class="course__wrapper">
+			<div class="course__list" >
+				<div class="course__item" v-for="item in courseList">
+					<div class="item__media"><img :src="item.banner" /></div>
+					<div class="item__title"><span>【{{item.name}}】</span>{{item.intro}}</div>
+					<div class="item__tags"><div>1239人试听过</div><div>12课时</div></div>
+					<div class="item__bottom"><button>报名试听</button></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
 	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
 		<a class="ui-item"  v-for="item in courseList" href="/guanke/mobile.livecourse/detail.html?id={$item.id}&school_id={$school.id}">
 			<div class="ui-item-box">
@@ -368,7 +371,7 @@ var vm = new Vue({
 			$(".swiper-container").swiper({
 		       autoplay: 3000,
 		       slidesPerView:"auto",
-				centeredSlides:!0
+			   centeredSlides:!0
 		    });
 		})		
 	},
