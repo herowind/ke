@@ -109,7 +109,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -7px 0 0 -6px;
+    margin: -17px 0 0 -6px;
     background: url(/guanke/images/icons/arrow.png) no-repeat;
 	z-index: 8;
 }
@@ -122,7 +122,7 @@
     z-index: 2;
     left: 50%;
     top: 50%;
-    margin: -22.5px 0 0 -22.5px;
+    margin: -32.5px 0 0 -22.5px;
      animation: rotate 4s .1s linear infinite;
     -webkit-animation: rotate 4s .1s linear infinite;
 	
@@ -180,7 +180,7 @@
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    padding: 10px;
+    padding: 10px 5px;
 }
 
 .course__list .course__item {
@@ -325,27 +325,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	
-	
-	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
-		<a class="ui-item"  v-for="item in courseList" href="/guanke/mobile.livecourse/detail.html?id={$item.id}&school_id={$school.id}">
-			<div class="ui-item-box">
-				<div class="item-sec1">
-					<img :src="item.banner" />
-				</div>
-				<div class="item-sec2">
-					<div class="sec2-hd">{{item.name}}</div>
-					<div class="sec2-bd">
-						<div class="sec2-bd__tags">推荐</div>
-						<div class="sec2-bd__btn">小班授课</div>
-					</div>
-					<div class="sec2-ft">
-						<img class="sec2-ft__icon swing animated infinite " src="/guanke/images/icons/time_alert.png" /> <label>上课地点</label>
-					</div>
-				</div>
-			</div>
-		</a>
 	</div>
 </div>
 {/block} {block name="script"}
