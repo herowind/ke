@@ -26,8 +26,8 @@ class Liveschool extends LiveController {
 	 * 直播监控列表页
 	 */
 	public function index(){
-		$list = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
-		$this->assign('list',$list);
+		//$list = GuankeLiveschool::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		//$this->assign('list',$list);
 		return $this->fetch (); 
 	}
 	
