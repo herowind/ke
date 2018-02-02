@@ -1,13 +1,70 @@
 {extend name="mobile@template/common"/} 
 {block name="style"}
 <style>
-.ui-content{
-	position: relative;
-    background: -webkit-linear-gradient(#ff5400,#ff9300);
-    background: linear-gradient(#ff5400,#ff9300);
-    background-size: contain;
-    padding:20px 20px
+
+.page{
+	background: #fff;
 }
+.ui-content{
+    background: -webkit-linear-gradient(#660099,#6699CC);
+    background: linear-gradient(#660099,#6699CC);
+    background-size: contain;
+    padding:0;
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    background-repeat: no-repeat;	
+}
+
+.liveschool {
+
+	padding-bottom:5px;
+	padding:10px;
+}
+
+.liveschool__wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 570px;
+}
+
+.liveschool .liveschool__header {
+    text-align: center;
+    letter-spacing: 5px;
+    line-height: 40px;
+    margin-bottom: 15px;
+    height: 40px;
+	font-size: 22px;
+	font-weight:bold;
+	font-style: italic;
+	font-family:'微软雅黑';
+}
+
+
+.liveschool .liveschool__header .header {
+	margin-left: 20px;
+    margin-right: 20px;
+	background-image: -webkit-linear-gradient(left, #FE940E , #FE2202);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.liveschool .liveschool__header .lingxing1{
+	color:#FFE89A;
+	font-size:11px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+.liveschool .liveschool__header .lingxing2{
+	color:#FFDD5B;
+	font-size:16px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+
 
 .cb-card {
   background: transparent;
@@ -55,17 +112,16 @@
 
 .cb-card .cb-card__title {
     text-align: center;
-    letter-spacing: 5px;
+    letter-spacing: 2px;
     line-height: 40px;
     margin-bottom: 15px;
     height: 40px;
 	font-size: 22px;
-	font-weight:bold;
-	font-style: italic;
 	font-family:'微软雅黑';
 }
 
 .cb-card .cb-card__title .title2 {
+	font-size:16px;
 	margin-left: 20px;
     margin-right: 20px;
 	background-image: -webkit-linear-gradient(left, #FE940E , #FE2202);
@@ -108,7 +164,6 @@
 	height:100%;
 	padding:10px 15px;
 	box-sizing:border-box;
-	border-bottom:2px dashed #FE940E;
 	z-index:10;
 	
 }
@@ -261,95 +316,65 @@
 {/block}
 {block name="body"}
 
-<div class="swiper-container" >
-	<!-- Additional required wrapper -->
-	<div class="swiper-wrapper">
-		<!-- Slides -->
-		<div class="swiper-slide">
-			<img src="{$school.banner}" />
-		</div>
-		{volist name="slide" id="item"}
-		<div class="swiper-slide">
-			{empty name="item.link"}
-			<img src="{$item.banner}" />
-			{else/}
-			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
-			{/empty}			
-		</div>
-		{/volist}
-	</div>
-	<div class="swiper-pagination"></div>
-</div>
 <div class="ui-content ui-hide">
-	<div class="cb-card" v-for="item in livecourseList">
-		<div class="cb-card__wrapper">
-			<div class="header"></div>
-			<div class="cb-card__content">
-				<div class="cb-card__title">
-					<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
-					<span class="title2">课堂直播</span>
-					<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
-				</div>
-				
-				<div class="cb-card__media">
-					<img :src="item.course.banner">
-					<span class="arrow"></span>
-					<span class="video-btn"></span>
-					<span class="mask"></span>
-				</div>
-				<div class="cb-card__info">
-					<div>{{item.name}}</div>
-				</div>
-				<div class="share">进入观看</div>
-				
+
+	<div class="liveschool">
+		<div class="liveschool__wrapper">
+			<div class="liveschool__header">
+				<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
+				<span class="header">教学看护</span>
+				<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
 			</div>
-			<div class="footer"></div>
-		</div>
-	</div>
-
-
-	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
-		<div class="course-item" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
-			<div class = "course-container">
-			<img class="course-box" src="/guanke/images/course_box.png">
-			<img class="course-img" :src="item.banner" >
-			<div class="course-info">{{item.name}}</div>
+			<div class="cb-card" v-for="item in liveschoolList">
+				<div class="cb-card__wrapper" v-on:click="livedetail(item)">
+					<div class="header"></div>
+					<div class="cb-card__content">
+						<div class="cb-card__title">
+							<span class="title2">{{item.name}}</span>
+						</div>
+						
+						<div class="cb-card__media">
+							<img :src="item.school.banner">
+							<span class="arrow"></span>
+							<span class="video-btn"></span>
+							<span class="mask"></span>
+						</div>
+						<div class="share">进入观看</div>
+						
+					</div>
+					<div class="footer"></div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 {/block} {block name="script"}
 <script>
-var school_id = '{$school.id}';
 var vm = new Vue({
 	el:'#app',
 	data : {
-		liveschoolList:[],
+		liveschoolList:[]
 	},
 	created:function(){
-		this.getLivecourseList();
+		this.getLiveschoolList();
 	},
 	methods:{
-		getLivecourseList:function(e){
+		getLiveschoolList:function(e){
 			$.showLoading();
 			let _this = this;
-			$.get('/guanke/mobile.liveschool/alllistdata.html',{},function(res){
+			$.get('/guanke/mobile.liveschool/listdata.html',{},function(res){
 				console.log(res.data);
-				_this.livecourseList = res.data.livecourseList;
-				_this.courseList = res.data.courseList;
+				_this.liveschoolList = res.data;
 				$.hideLoading();
 				$(".ui-content").removeClass("ui-hide");
 			})
+		},
+		livedetail:function(item){
+			document.location.href="/guanke/mobile.liveschool/detail.html?live_id="+item.id;
 		}
 	}
 })
 
-
-$(function(){
-    $(".swiper-container").swiper({
-        autoplay: 3000
-    });	
-})
 
 </script>
 {/block}
