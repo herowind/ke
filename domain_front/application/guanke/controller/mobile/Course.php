@@ -16,6 +16,8 @@ namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeCourse;
 use app\guanke\model\GuankeContentpage;
+use think\facade\Validate;
+use app\guanke\model\GuankeEnroll;
 
 class Course extends SchoolController {
 	public function initialize() {
@@ -26,6 +28,7 @@ class Course extends SchoolController {
 	 * 课程首页面
 	 */
 	public function index(){
+		//$this->initMember();
 		$list = GuankeCourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
 		$this->assign('list',$list);
 		return $this->fetch ();
@@ -70,7 +73,31 @@ class Course extends SchoolController {
 	 * 课程列表页
 	 */
 	public function listdata(){
-		$list = GuankeCourse::where('cid',$this->getCid())->where('isdisplay',1)->select();
+		$list = GuankeCourse::field('id,cid,name,intro,type,totalfee,favors,period')->where('cid',$this->getCid())->where('isdisplay',1)->select();
 		return ['code'=>1,'msg'=>'查询成功','data'=>$list];
+	}
+	
+	/**
+	 * 课程报名试听
+	 */
+	public function enrolltry(){
+		//$this->initMember();
+		$enrollData = $this->request->param('enroll_data/a');
+		if(!Validate::checkRule($enrollData['mobile'],'must|mobile')){
+			$this->error('请输入正确的手机号码');
+		}
+		$data = [
+				'cid'	=> $this->getCid(),
+				'type' => 'course',
+				'mobile' => $enrollData['mobile'],
+				'content' => $enrollData['item'],
+				
+		];
+		$data = GuankeEnroll::create($data);
+		if($data){
+			$this->success('预约成功');
+		}else{
+			$this->success('预约失败');
+		}
 	}
 }

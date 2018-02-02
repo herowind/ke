@@ -1,0 +1,356 @@
+{extend name="mobile@template/common"/} 
+{block name="style"}
+<style>
+.ui-content{
+	position: relative;
+    background: -webkit-linear-gradient(#ff5400,#ff9300);
+    background: linear-gradient(#ff5400,#ff9300);
+    background-size: contain;
+    padding:20px 20px
+}
+
+.cb-card {
+  background: transparent;
+	margin: 0;
+	margin-bottom:15px;
+}
+
+.cb-card__wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 570px;
+}
+
+.cb-card .header {
+    background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat top;
+    background-size: 100% 100%;
+    border: none;
+    position: relative;
+    z-index: 2;
+	height: 18px;
+	bottom: -1px;
+}
+
+
+.cb-card .footer{
+	background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-bar-top.png) no-repeat bottom; 
+	-webkit-transform:rotate(180deg);   
+	background-size: 100% 100%;
+    border: none;
+    position: relative;
+    z-index: 2;
+	height: 18px;
+	bottom: 1px;
+}
+.cb-card__content{
+	background: #fff7ef;
+    position: relative;
+    border-left: 2px solid #ffb518;
+    border-right: 2px solid #ffb518;
+	padding-bottom: 12px;
+	padding-left: 8px;
+    padding-right: 8px;
+}
+
+
+.cb-card .cb-card__title {
+    text-align: center;
+    letter-spacing: 5px;
+    line-height: 40px;
+    margin-bottom: 15px;
+    height: 40px;
+	font-size: 22px;
+	font-weight:bold;
+	font-style: italic;
+	font-family:'微软雅黑';
+}
+
+.cb-card .cb-card__title .title2 {
+	margin-left: 20px;
+    margin-right: 20px;
+	background-image: -webkit-linear-gradient(left, #FE940E , #FE2202);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cb-card .cb-card__title .lingxing1{
+	color:#FFE89A;
+	font-size:11px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+.cb-card .cb-card__title .lingxing2{
+	color:#FFDD5B;
+	font-size:16px;
+	-webkit-transform:rotate(90deg);
+	transform:rotate(90deg);
+}
+
+.cb-card .bubble{
+	text-align: center;
+	font-size:12px;
+}
+
+.cb-card .bubble span {
+    color: #ff9300;
+    border-radius: 10px;
+    background-color: #ffd9a6;
+    letter-spacing: 1px;
+	padding: 5px;
+	padding-left: 8px;
+    padding-right: 8px;
+	
+
+}
+
+.cb-card .cb-card__media{
+	width:100%;
+	height:100%;
+	padding:10px 15px;
+	box-sizing:border-box;
+	border-bottom:2px dashed #FE940E;
+	z-index:10;
+	
+}
+
+.cb-card .cb-card__media img{
+	width:100%;
+	height:100%;
+	border-radius:5px;
+	-webkit-box-shadow: #666 0px 0px 18px;
+	z-index:0; 
+}
+.cb-card .cb-card__media .mask{  
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -30px 0 0 -30px;
+    z-index: 1;
+	background-color:rgba(0,0,0,0.7);
+	border-radius:50%;
+}  
+
+.cb-card .cb-card__media .arrow {
+    width: 13px;
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -7px 0 0 -6px;
+    background: url(/guanke/images/icons/arrow.png) no-repeat;
+	z-index: 8;
+}
+
+.cb-card .cb-card__media .video-btn {
+    width: 45px;
+    height: 45px;
+    background: url(/guanke/images/icons/circle_border.png) no-repeat;
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    margin: -22.5px 0 0 -22.5px;
+     animation: rotate 4s .1s linear infinite;
+    -webkit-animation: rotate 4s .1s linear infinite;
+	
+}
+
+
+@keyframes rotate{
+	0% {
+	    transform: rotate(0deg);
+	    -webkit-transform: rotate(0deg);
+	}
+	50% {
+	    transform: rotate(180deg);
+	    -webkit-transform: rotate(180deg);
+	}
+	100% {
+	    transform: rotate(360deg);
+	    -webkit-transform: rotate(360deg);
+	}
+}
+
+
+.cb-card .cb-card__info{
+	margin-top:10px;
+	color: #ff9300;
+	text-align:center;
+	font-size:16px;
+	font-weight:bold;
+}
+
+
+
+.course-item{
+	position:relative;
+	display:block;
+	text-align:center;
+	height:200px;
+	margin-left:-20px;
+}
+
+.course-item .course-container{
+	position:relative;
+	margin-left:-40px;
+}
+
+.course-item:nth-child(2n) .course-container{
+ margin-left:-10px;
+}
+
+.course-item img.course-box{
+	position:absolute;
+	width:340px;
+	height:200px;
+	margin:auto;
+	z-index:99;
+	
+}
+
+.course-item img.course-img{
+	position:relative;
+	width:250px ;
+	height:125px;
+	margin-top:20px;
+	padding-left:30px;
+	z-index:0;
+	
+}
+
+.course-item:nth-child(2n) img.course-box{
+	transform: rotateY(180deg)
+}
+
+.course-item:nth-child(2n) img.course-img{
+	margin-left:30px;
+}
+
+.course-item:nth-child(2n) .course-info{
+	margin-left:85px;
+}
+
+
+.course-item .course-info{
+	display:block;
+	position:relative;
+  	text-align:center;
+	font-size:14px;	
+	color:#fff;
+	padding:5px;
+	width:250px;
+	background:rgba(0,0,0,0.7);
+	margin-top:-20px;
+	margin-left:100px;
+	z-index:1;
+}
+.share {
+    background: url(//res.imtt.qq.com/bookshelf/images/carnival/carnival-share.png) no-repeat;
+    background-size: 100% 100%;
+    widows: 100%;
+    margin: 0;
+    text-align: center;
+	color:#fff;
+	font-size:16px;
+	line-height:35px;
+	height:35px;
+}
+</style>
+{/block}
+{block name="body"}
+
+<div class="swiper-container" >
+	<!-- Additional required wrapper -->
+	<div class="swiper-wrapper">
+		<!-- Slides -->
+		<div class="swiper-slide">
+			<img src="{$school.banner}" />
+		</div>
+		{volist name="slide" id="item"}
+		<div class="swiper-slide">
+			{empty name="item.link"}
+			<img src="{$item.banner}" />
+			{else/}
+			<img src="{$item.banner}" onclick="document.location.href='{$item.link}'"/>
+			{/empty}			
+		</div>
+		{/volist}
+	</div>
+	<div class="swiper-pagination"></div>
+</div>
+<div class="ui-content ui-hide">
+	<div class="cb-card" v-for="item in livecourseList">
+		<div class="cb-card__wrapper">
+			<div class="header"></div>
+			<div class="cb-card__content">
+				<div class="cb-card__title">
+					<span class="lingxing1">&diams;</span><span class="lingxing2">&diams;</span>
+					<span class="title2">课堂直播</span>
+					<span class="lingxing2">&diams;</span><span class="lingxing1">&diams;</span>
+				</div>
+				
+				<div class="cb-card__media">
+					<img :src="item.course.banner">
+					<span class="arrow"></span>
+					<span class="video-btn"></span>
+					<span class="mask"></span>
+				</div>
+				<div class="cb-card__info">
+					<div>{{item.name}}</div>
+				</div>
+				<div class="share">进入观看</div>
+				
+			</div>
+			<div class="footer"></div>
+		</div>
+	</div>
+
+
+	<div class="course-list" v-if="courseList.length>0" style="min-height:400px;">
+		<div class="course-item" v-for="item in courseList" :href="'/guanke/mobile.course/detail.html?school_id={$school.id}&course_id='+item.id">
+			<div class = "course-container">
+			<img class="course-box" src="/guanke/images/course_box.png">
+			<img class="course-img" :src="item.banner" >
+			<div class="course-info">{{item.name}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+{/block} {block name="script"}
+<script>
+var school_id = '{$school.id}';
+var vm = new Vue({
+	el:'#app',
+	data : {
+		livecourseList:[],
+		courseList:[],
+	},
+	created:function(){
+		this.getLivecourseList();
+	},
+	methods:{
+		getLivecourseList:function(e){
+			$.showLoading();
+			let _this = this;
+			$.get('/guanke/mobile.livecourse/alllistdata.html',{school_id:school_id},function(res){
+				console.log(res.data);
+				_this.livecourseList = res.data.livecourseList;
+				_this.courseList = res.data.courseList;
+				$.hideLoading();
+				$(".ui-content").removeClass("ui-hide");
+			})
+		}
+	}
+})
+
+
+$(function(){
+    $(".swiper-container").swiper({
+        autoplay: 3000
+    });	
+})
+
+</script>
+{/block}
