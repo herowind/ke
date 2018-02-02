@@ -16,6 +16,8 @@ namespace app\guanke\controller\mobile;
 
 use app\guanke\model\GuankeLivecourse;
 use app\guanke\model\GuankeCourse;
+use think\facade\Validate;
+use app\guanke\model\GuankeEnroll;
 
 class Livecourse extends LiveController {
 	public function initialize() {
@@ -92,5 +94,29 @@ class Livecourse extends LiveController {
 	
 	public function invitecard(){
 		return $this->fetch();
+	}
+	
+	/**
+	 * 课程报名试听
+	 */
+	public function enrolltry(){
+		//$this->initMember();
+		$enrollData = $this->request->param('enroll_data/a');
+		if(!Validate::checkRule($enrollData['mobile'],'must|mobile')){
+			$this->error('请输入正确的手机号码');
+		}
+		$data = [
+				'cid'	=> $this->getCid(),
+				'type' => 'livecourse',
+				'mobile' => $enrollData['mobile'],
+				'content' => $enrollData['item'],
+	
+		];
+		$data = GuankeEnroll::create($data);
+		if($data){
+			$this->success('申请成功，等待审核');
+		}else{
+			$this->success('申请失败');
+		}
 	}
 }
